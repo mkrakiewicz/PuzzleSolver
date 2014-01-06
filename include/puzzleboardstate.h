@@ -16,7 +16,7 @@ private:
     int sizeX, sizeY;
 };
 
-template <class T> ss
+template <class T>
 class TwoDimensionalStateContainer : public TwoDimensions {
 public:
     TwoDimensionalStateContainer(int sizeX,int sizeY) :
