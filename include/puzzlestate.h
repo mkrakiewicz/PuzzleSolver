@@ -5,27 +5,33 @@ class Point
 {
 public:
     Point(int x,int y);
-    void setNewPosition(Point p);
-protected:
-    int x,y;
+    inline int getX()
+    {
+        return X;
+    }
+    inline int getY()
+    {
+        return Y;
+    }
+
+private:
+    int X,Y;
 };
 
 template <class T>
-class PointState
+class PointState : public Point
 {
 public:
-    PointState(Point p):
-        Point(p)
+    PointState(Point p, T stateValue):
+        Point(p), state(stateValue)
     {
 
     }
-    void setNewState(T state)
-    {
-        this->state = state;
-    }
+
+    const T state;
 
 protected:
-    T state;
+
 };
 
 typedef PointState<int> NumericPointState;

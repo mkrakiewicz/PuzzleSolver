@@ -2,14 +2,25 @@
 #define PUZZLEBOARDSTATE_H
 
 #include "puzzlestate.h"
+#include <vector>
+
+using namespace std;
 
 class TwoDimensions
 {
 public:
     TwoDimensions(int sizeX, int sizeY);
 
-    int getHorizontalSize() const;
-    int getVerticalSize() const;
+    inline int getHorizontalSize() const
+    {
+
+        return sizeX;
+    }
+
+    inline int getVerticalSize() const
+    {
+        return sizeY;
+    }
 
 
 private:
@@ -26,23 +37,50 @@ public:
     }
 
     virtual void setState(PointState<T> pstate) = 0;
-    virtual void getStateAt(Point p) = 0;
+    virtual T getStateAt(Point p) = 0;
 };
 
+
+template <typename T>
+class TwoDimensionalVector : public vector< vector<T> > {};
+
+template <class T>
 class PointStateContainer : public TwoDimensionalStateContainer<T>
 {
 public:
-    PointStateContainer(int sizeX, int sizeY);
+    PointStateContainer(int sizeX, int sizeY):
+        TwoDimensionalStateContainer<T>(sizeX,sizeY),
+        states(TwoDimensionalVector<T>(this->getVerticalSize(), vector<T>(this->getHorizontalSize())))
+    {
 
-    virtual void setState(PointState<T> pstate);
-    virtual void getStateAt(Point p);
+    }
+
+    virtual void setState(PointState<T> pstate) {
+        states[pstate.getX()][pstate.getY()] = pstate.state;
+    }
+    virtual T getStateAt(Point p) {
+        return states[p.getX()][p.getY()];
+    }
+
+    T getStateAt(int x, int y) {
+        return getStateAt(Point(x,y));
+    }
+
+    void equalizeStates(T value){
+        for (int y=0; y<this->getVerticalSize(); y++)
+        {
+            for (int x=0; x<this->getHorizontalSize(); x++)
+            {
+                PointState<T> p(x,y,value);
+                setState(p);
+            }
+        }
+    }
+
 private:
-    // Create
-    vector< vector<int> > vec(4, vector<int>(4));
-    // Write
-    vec[2][3] = 10;
-    // Read
-    int a = vec[2][3];
+    TwoDimensionalVector<T> states;
 };
+
+typedef PointStateContainer<int> NumericPointStateContainer;
 
 #endif // PUZZLEBOARDSTATE_H
