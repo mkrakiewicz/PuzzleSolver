@@ -1,20 +1,28 @@
-#include "puzzleboardstate.h"
+#include <puzzleboardstate.h>
 
-PuzzleBoardState::PuzzleBoardState(int sizeX, int sizeY):
+TwoDimensions::TwoDimensions(int sizeX, int sizeY):
     sizeX(sizeX), sizeY(sizeY)
 {
 }
 
-int PuzzleBoardState::getHorizontalSize() const
+int TwoDimensions::getHorizontalSize() const
 {
     return sizeX;
 }
 
 
-int PuzzleBoardState::getVerticalSize() const
+int TwoDimensions::getVerticalSize() const
 {
     return sizeY;
 }
 
+
+void PointStateContainer::setState(PointState<T> pstate)
+{
+}
+
+void PointStateContainer::getStateAt(Point p)
+{
+}
 
 
