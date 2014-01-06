@@ -25,8 +25,14 @@ public:
         return !operator ==(toCompare);
     }
 
-
-
+    inline bool operator <(const Position2D &toCompare) const
+    {
+        if (X > toCompare.X)
+            return false;
+        if (Y > toCompare.Y)
+            return false;
+        return true;
+    }
 };
 
 
