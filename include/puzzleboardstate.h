@@ -2,9 +2,10 @@
 #define PUZZLEBOARDSTATE_H
 
 #include "puzzlestate.h"
+#include "exceptions.h"
 #include <vector>
+#include <sstream>
 
-using namespace std;
 
 class TwoDimensions
 {
@@ -21,10 +22,11 @@ public:
     {
         return sizeY;
     }
+    virtual ~TwoDimensions(){}
 
 
-private:
-    int sizeX, sizeY;
+protected:
+    const int sizeX, sizeY;
 };
 
 template <class T>
@@ -33,16 +35,15 @@ public:
     TwoDimensionalStateContainer(int sizeX,int sizeY) :
         TwoDimensions(sizeX, sizeY)
     {
-
+        if (sizeX <= 0 || sizeY <= 0 )
+            throw new Exception("Container size must be at least 1");
     }
 
     virtual void setState(PointState<T> pstate) = 0;
     virtual T getStateAt(Point p) = 0;
+    virtual ~TwoDimensionalStateContainer(){}
 };
 
-
-template <typename T>
-class TwoDimensionalVector : public vector< vector<T> > {};
 
 template <class T>
 class PointStateContainer : public TwoDimensionalStateContainer<T>
@@ -50,7 +51,7 @@ class PointStateContainer : public TwoDimensionalStateContainer<T>
 public:
     PointStateContainer(int sizeX, int sizeY):
         TwoDimensionalStateContainer<T>(sizeX,sizeY),
-        states(TwoDimensionalVector<T>(this->getVerticalSize(), vector<T>(this->getHorizontalSize())))
+        states(this->getVerticalSize(), std::vector<T>(this->getHorizontalSize()))
     {
 
     }
@@ -63,6 +64,12 @@ public:
     }
 
     T getStateAt(int x, int y) {
+        if (x<0 || x>=this->sizeX || y<0 || y>=this->sizeY)
+        {
+            std::stringstream msg;
+            msg << "Requested position " << x << ", " << y << " exceeds State Container Size: " << this->sizeX << ", " << this->sizeY;
+            throw Exception(msg.str());
+        }
         return getStateAt(Point(x,y));
     }
 
@@ -77,10 +84,27 @@ public:
         }
     }
 
+    virtual ~PointStateContainer(){}
+
 private:
-    TwoDimensionalVector<T> states;
+    std::vector< std::vector<T> > states; //Two dimensional vector
 };
 
 typedef PointStateContainer<int> NumericPointStateContainer;
+
+template <class T>
+class PuzzleBoardState : public PointStateContainer<T>
+{
+public:
+    PuzzleBoardState(int sizeX,int sizeY):
+        PointStateContainer<T>(sizeX, sizeY)
+    {
+
+    }
+
+    virtual ~PuzzleBoardState(){}
+};
+
+typedef  PuzzleBoardState<int> NumericPuzzleBoardState;
 
 #endif // PUZZLEBOARDSTATE_H
