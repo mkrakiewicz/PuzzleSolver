@@ -26,7 +26,7 @@ public:
 
 
 protected:
-    const int sizeX, sizeY;
+    const unsigned int sizeX, sizeY;
 };
 
 template <class T>
@@ -63,8 +63,8 @@ public:
         return states[p.getX()][p.getY()];
     }
 
-    T getStateAt(int x, int y) {
-        if (x<0 || x>=this->sizeX || y<0 || y>=this->sizeY)
+    T getStateAt(unsigned int x, unsigned int y) {
+        if (x>=this->sizeX || y>=this->sizeY)
         {
             std::stringstream msg;
             msg << "Requested position " << x << ", " << y << " exceeds State Container Size: " << this->sizeX << ", " << this->sizeY;
