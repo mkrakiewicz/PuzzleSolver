@@ -1,11 +1,13 @@
-#ifndef PUZZLEBOARDSTATE_H
-#define PUZZLEBOARDSTATE_H
+#ifndef PUZZLEBOARD_H
+#define PUZZLEBOARD_H
 
-#include "puzzle.h"
-#include "exceptions.h"
 #include <vector>
 #include <sstream>
 #include <memory>
+#include <map>
+#include "puzzle.h"
+#include "exceptions.h"
+#include "position2d.h"
 
 class Dimension2D
 {
@@ -16,92 +18,64 @@ public:
     const unsigned int horizontalSize, verticalSize;
 };
 
-template <class T>
-class PositionToObjectMapper : public Dimension2D {
-public:
-    PositionToObjectMapper(const Dimension2D &d) :
-        Dimension2D(d)
-    {
-        if (horizontalSize <= 0 || verticalSize <= 0 )
-            throw new Exception("Container size must be at least 1");
-    }
-
-    void setAt(std::shared_ptr<Dimension2D> pos, std::shared_ptr<T> object)
-    {
-
-    }
-
-    std::shared_ptr<T>  getAt(const Dimension2D &pos)
-    {
-
-    }
-
-    virtual ~PositionToObjectMapper(){}
-};
-
-
-/*template <class T>
-class PointStateContainer : public PositionToObjectMapper<T>
+template <class SourceObj,class DestObj>
+class PointerToPointerMapper
 {
 public:
-    PointStateContainer(const Dimension2D &d):
-        PositionToObjectMapper<T>(d),
-        states(this->getVerticalSize(), std::vector<T>(this->getHorizontalSize()))
+    PointerToPointerMapper()
     {
 
     }
 
-    virtual void setState(PointState<T> pstate) {
-        states[pstate.getX()][pstate.getY()] = pstate.state;
-    }
-    virtual T getStateAt(Point p) {
-        return states[p.getX()][p.getY()];
+    void mapPointerToPointer(std::shared_ptr<SourceObj> source, std::shared_ptr<DestObj> dest)
+    {
+        mappedPointers[source] = dest;
     }
 
-    T getStateAt(unsigned int x, unsigned int y) {
-        if (x>=this->sizeX || y>=this->sizeY)
-        {
-            std::stringstream msg;
-            msg << "Requested position " << x << ", " << y << " exceeds State Container Size: " << this->sizeX << ", " << this->sizeY;
-            throw Exception(msg.str());
-        }
-        return getStateAt(Point(x,y));
+    std::shared_ptr<DestObj>  getPointerFromPointer(std::shared_ptr<SourceObj> source)
+    {
+        return mappedPointers[source];
     }
 
-    void equalizeStates(T value){
-        for (int y=0; y<this->getVerticalSize(); y++)
-        {
-            for (int x=0; x<this->getHorizontalSize(); x++)
-            {
-                PointState<T> p(x,y,value);
-                setState(p);
-            }
-        }
-    }
-
-    virtual ~PointStateContainer(){}
+    virtual ~PointerToPointerMapper(){}
 
 private:
-    std::vector< std::vector<T> > states; //Two dimensional vector
+    std::map < std::shared_ptr<SourceObj>, std::shared_ptr<DestObj> > mappedPointers;
 };
 
-typedef PointStateContainer<int> NumericPointStateContainer;
+typedef PointerToPointerMapper<Position2D,Puzzle> PositionToPuzzleMapper;
 
 template <class T>
-class PuzzleBoardState : public PointStateContainer<T>
+class PuzzleBoard : public Dimension2D
 {
 public:
-    PuzzleBoardState(const Dimension2D &d):
-        PointStateContainer<T>(d)
+    PuzzleBoard(const Dimension2D &d):
+        Dimension2D(d)
     {
 
     }
 
-    T getPuzzleAt
+    virtual ~PuzzleBoard(){}
 
-    virtual ~PuzzleBoardState(){}
 };
 
-typedef  PuzzleBoardState<int> NumericPuzzleBoardState;*/
+typedef PuzzleBoard<int> NumericPuzzleBoard;
 
-#endif // PUZZLEBOARDSTATE_H
+//template <class T>
+//class PuzzleBoardState : public PointStateContainer<T>
+//{
+//public:
+//    PuzzleBoardState(const Dimension2D &d):
+//        PointStateContainer<T>(d)
+//    {
+
+//    }
+
+//    T getPuzzleAt
+
+//    virtual ~PuzzleBoardState(){}
+//};
+
+//typedef  PuzzleBoardState<int> NumericPuzzleBoardState;
+
+#endif // PUZZLEBOARD_H
