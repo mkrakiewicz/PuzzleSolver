@@ -1,7 +1,7 @@
 #include "puzzleboard.h"
+#include "position2d.h"
 
-
-PuzzleBoard::PuzzleBoard(const TwoDimensions &d):
-    TwoDimensions(d)
+Dimension2D::Dimension2D(int horizontalSize, int verticalSize):
+    horizontalSize(horizontalSize), verticalSize(verticalSize)
 {
 }
