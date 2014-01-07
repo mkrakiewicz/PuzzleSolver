@@ -16,6 +16,20 @@ public:
     virtual ~Dimension2D(){}
 
     const unsigned int horizontalSize, verticalSize;
+
+    inline bool operator==(const Dimension2D &toCompare) const
+    {
+        if (horizontalSize != toCompare.horizontalSize)
+            return false;
+        if (verticalSize != toCompare.verticalSize)
+            return false;
+        return true;
+    }
+
+    inline Dimension2D getDimensions()
+    {
+        return *this;
+    }
 };
 
 template <class SourceObj,class DestObj>
@@ -85,7 +99,7 @@ protected:
 };
 
 
-typedef PuzzleBoardContainer<int> NumericPuzzleBoardContainer;
+typedef PuzzleBoardContainer<NumericPuzzle> NumericPuzzleBoardContainer;
 
 
 template <class T>
@@ -109,6 +123,6 @@ protected:
      PuzzleBoardContainer<T> puzzleContainer;
 };
 
-typedef  PuzzleBoard<int> NumericPuzzleBoard;
+typedef  PuzzleBoard<NumericPuzzle> NumericPuzzleBoard;
 
 #endif // PUZZLEBOARD_H
