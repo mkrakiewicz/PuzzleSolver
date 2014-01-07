@@ -22,6 +22,7 @@ public:
     virtual PuzzleBoard<T> getEmptyBoard() = 0;
     virtual ~PuzzleBoardsManager(){}
 protected:
+    Dimension2D 
     Position2DMap points;
     std::map<T, std::shared_ptr<T> > puzzles;
 
