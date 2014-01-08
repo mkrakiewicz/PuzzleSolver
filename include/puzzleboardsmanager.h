@@ -5,12 +5,12 @@
 #include <map>
 #include <memory>
 
-typedef std::map<Position2D, std::shared_ptr<Position2D> > Position2DMap;
-typedef std::map<NumericPuzzle, std::shared_ptr<NumericPuzzle> > NumericPuzzleMap;
+/*typedef std::map<Position2D, std::shared_ptr<Position2D> > Position2DMap;
+typedef std::map<IntPuzzle, std::shared_ptr<IntPuzzle> > NumericPuzzleMap;
 
 
 template <class T>
-class PuzzleBoardsManager
+class PuzzleBoardsManager : public Dimension2D
 {
 public:
     PuzzleBoardsManager(const Dimension2D &d) :
@@ -19,7 +19,7 @@ public:
         fillPoints();
     }
 
-    virtual PuzzleBoard<T> getEmptyBoard() = 0;
+    virtual PuzzleBoard getEmptyBoard() = 0;
     virtual ~PuzzleBoardsManager(){}
 protected:
     Position2DMap points;
@@ -38,7 +38,7 @@ protected:
 };
 
 
-class NumericPuzzleBoardsManager : public PuzzleBoardsManager<NumericPuzzle>
+class NumericPuzzleBoardsManager : public PuzzleBoardsManager<IntPuzzle>
 {
 public:
     NumericPuzzleBoardsManager(const Dimension2D &d);
@@ -46,6 +46,6 @@ public:
     virtual NumericPuzzleBoard getEmptyBoard();
 protected:
 
-};
+};*/
 
 #endif // PUZZLEBOARDSMANAGER_H

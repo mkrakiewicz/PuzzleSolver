@@ -9,6 +9,8 @@
 #include "exceptions.h"
 #include "position2d.h"
 
+namespace boards {
+
 class Dimension2D
 {
 public:
@@ -26,103 +28,185 @@ public:
         return true;
     }
 
-    inline Dimension2D getDimensions()
+    inline Dimension2D getDimensions() const
     {
         return *this;
     }
 };
 
-template <class SourceObj,class DestObj>
-class PointerToPointerMapper
+typedef std::map < Position2D, std::shared_ptr<Puzzle> > PointToPuzzleMap;
+
+enum BoardType
 {
-public:
-    PointerToPointerMapper()
-    {
-
-    }
-
-    void mapPointerToPointer(std::shared_ptr<SourceObj> source, std::shared_ptr<DestObj> dest)
-    {
-        mappedPointers[source] = dest;
-    }
-
-    std::shared_ptr<DestObj>  getPointerFromPointer(std::shared_ptr<SourceObj> source)
-    {
-        return mappedPointers[source];
-    }
-
-    virtual ~PointerToPointerMapper(){}
-
-private:
-    std::map < std::shared_ptr<SourceObj>, std::shared_ptr<DestObj> > mappedPointers;
+    EMPTY,
+    ORDERED
 };
 
-typedef PointerToPointerMapper<Position2D,NumericPuzzle> PositionToNumericPuzzleMapper;
-
-
-template <class T>
-class PuzzleBoardContainer : public Dimension2D
-{
-public:
-    PuzzleBoardContainer(const Dimension2D &d):
-        Dimension2D(d)
-    {
-
-    }
-
-    void setPuzzle(std::shared_ptr<Position2D> pos, std::shared_ptr<T> puzzle)
-    {
-        this->puzzles.mapPointerToPointer(pos,puzzle);
-    }
-
-    std::shared_ptr<T> getPuzzle(std::shared_ptr<Position2D> pos)
-    {
-        return puzzles.getPointerFromPointer(pos);
-    }
-
-//    void setPuzzlesTo(T value){
-//           for (int y=0; y<this->verticalSize; y++)
-//           {
-//               for (int x=0; x<this->horizontalSize; x++)
-//               {
-//                   this->setPuzzle(std::shared_ptr<Position2D>(new Position2D(x,y)),std::shared_ptr<T>(new T(x,y)));
-//                   PointState<T> p(x,y,value);
-//                   setState(p);
-//               }
-//           }
-//       }
-
-    virtual ~PuzzleBoardContainer(){}
-
-protected:
-    PointerToPointerMapper<Position2D,T> puzzles;
-};
-
-
-typedef PuzzleBoardContainer<NumericPuzzle> NumericPuzzleBoardContainer;
-
-
-template <class T>
 class PuzzleBoard : public Dimension2D
 {
 public:
-     PuzzleBoard(const Dimension2D &d, const PuzzleBoardContainer<T> &container):
-         Dimension2D(d), puzzleContainer(container)
-     {
+    PuzzleBoard(const Dimension2D &d):
+        Dimension2D(d)
+    {
+        setCorrectAligment();
+    }
 
-     }
+    std::shared_ptr<Puzzle> getPuzzle(const Position2D &pos)
+    {
+        return puzzles[pos];
+    }
 
-     std::shared_ptr<T> getPuzzle(std::shared_ptr<Position2D> pos)
-     {
-         return puzzleContainer.getPuzzle(pos);
-     }
+    virtual void setCorrectAligment() = 0;
+    virtual std::shared_ptr<PuzzleBoard> clone() = 0;
+    virtual BoardType getBoardType() = 0;
+    virtual bool isEqual(PuzzleBoard &toCompare)
+    {
+        if (!(this->getDimensions() == toCompare.getDimensions()))
+            return false;
 
-     virtual ~PuzzleBoard(){}
+        for (u_int x=0; x<horizontalSize; x++)
+        {
+            for (u_int y=0; y<verticalSize; y++)
+            {
+                Position2D c(x,y);
+                if (*(getPuzzle(c)) !=  *(toCompare.getPuzzle(c)))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    void print()
+    {
+        for (u_int x=0; x<horizontalSize; x++)
+        {
+            for (u_int y=0; y<verticalSize; y++)
+            {
+                puzzles[Position2D(x,y)]->print();
+            }
+        }
+    }
+
+    inline bool operator==(PuzzleBoard &toCompare)
+    {
+        return this->isEqual(toCompare);
+    }
+
+    inline virtual bool operator!=(PuzzleBoard &toCompare)
+    {
+        return !this->isEqual(toCompare);
+    }
+
+    inline PuzzleBoard& operator=(PuzzleBoard &a)
+    {
+        return *this->clone();
+    }
+
+    virtual ~PuzzleBoard(){}
 
 protected:
-     PuzzleBoardContainer<T> puzzleContainer;
+    PointToPuzzleMap puzzles;
 };
 
-typedef  PuzzleBoard<NumericPuzzle> NumericPuzzleBoard;
+class EmptyBoard : public PuzzleBoard
+{
+public:
 
+    EmptyBoard(const Dimension2D &d):
+        PuzzleBoard(d)
+    {
+
+    }
+
+    virtual void setCorrectAligment()
+    {
+        Puzzle *p = new EmptyPuzzle;
+        for (u_int x=0; x<horizontalSize; x++)
+        {
+            for (u_int y=0; y<verticalSize; y++)
+            {
+                puzzles[Position2D(x,y)] = std::shared_ptr<Puzzle>(p);
+            }
+        }
+    };
+
+    virtual std::shared_ptr<PuzzleBoard> clone()
+    {
+        return std::shared_ptr<PuzzleBoard>(new EmptyBoard(*this));
+    };
+
+    virtual BoardType getBoardType()
+    {
+        return BoardType::EMPTY;
+    }
+
+    virtual bool isEqual(PuzzleBoard &toCompare)
+    {
+        if (toCompare.getBoardType() != EMPTY)
+            return false;
+        return PuzzleBoard::isEqual(toCompare);
+    };
+
+    virtual ~EmptyBoard() {}
+};
+
+class OrderedBoard : public PuzzleBoard
+{
+public:
+    OrderedBoard(const Dimension2D &d):
+        PuzzleBoard(d)
+    {
+    }
+    virtual BoardType getBoardType()
+    {
+        return BoardType::ORDERED;
+    }
+
+    virtual bool isEqual(PuzzleBoard &toCompare)
+    {
+        if (toCompare.getBoardType() != ORDERED)
+            return false;
+        return PuzzleBoard::isEqual(toCompare);
+    };
+
+    virtual ~OrderedBoard() {}
+};
+
+class IntPuzzleBoard : public OrderedBoard
+{
+public:
+    IntPuzzleBoard(const Dimension2D &d):
+        OrderedBoard(d)
+    {
+    }
+
+    void setCorrectAligment()
+    {
+        uint count = 1;
+        for (u_int x=0; x<horizontalSize; x++)
+        {
+            for (u_int y=0; y<verticalSize; y++)
+            {
+                if ((x == (horizontalSize-1)) && (y == (verticalSize - 1)))
+                    puzzles[Position2D(x,y)] = std::shared_ptr<Puzzle>(new EmptyPuzzle);
+                else
+                    puzzles[Position2D(x,y)] = std::shared_ptr<Puzzle>(new IntPuzzle(count++));
+            }
+        }
+    }
+
+    virtual std::shared_ptr<PuzzleBoard> clone()
+    {
+        return std::shared_ptr<PuzzleBoard>(new IntPuzzleBoard(*this));
+    };
+
+    virtual bool isEqual(PuzzleBoard &toCompare)
+    {
+        return OrderedBoard::isEqual(toCompare);
+    }
+
+    virtual ~IntPuzzleBoard(){}
+
+};
+}
 #endif // PUZZLEBOARD_H
