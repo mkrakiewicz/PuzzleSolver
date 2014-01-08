@@ -1,6 +1,7 @@
 #include "position2d.h"
 #include "puzzleboard.h"
 
+using namespace boards;
 
 Position2D::Position2D(int x, int y):
     X(x),Y(y)

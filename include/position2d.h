@@ -1,7 +1,11 @@
 #ifndef POSITION2D_H
 #define POSITION2D_H
 
+namespace boards  {
+
 class Dimension2D;
+
+}
 
 class Position2D
 {
@@ -9,7 +13,7 @@ public:
     Position2D(int x,int y);
     const int X,Y;
 
-    bool positionExceedsBounds(const Dimension2D &);
+    bool positionExceedsBounds(const boards::Dimension2D &);
 
     inline bool operator==(const Position2D &toCompare) const
     {

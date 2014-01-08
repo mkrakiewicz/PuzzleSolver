@@ -1,20 +1,35 @@
 #ifndef PUZZLE_H
 #define PUZZLE_H
 
+#include <iostream>
+
 enum PUZZLE_TYPES
 {
     EMPTY,
     OBJECT
 };
 
-class PuzzleBase
+class Puzzle
 {
 public:
     virtual PUZZLE_TYPES getType() = 0;
-    virtual ~PuzzleBase(){}
+    virtual void print() = 0;
+    virtual ~Puzzle(){}
+    inline bool operator==(Puzzle &toCompare)
+    {
+        return this->isEqual(&toCompare);
+    }
+
+    inline virtual bool operator!=(Puzzle &toCompare)
+    {
+        return !this->isEqual(&toCompare);
+    }
+
+protected:
+    virtual bool isEqual(Puzzle *obj) = 0;
 };
 
-class EmptyPuzzle : public PuzzleBase
+class EmptyPuzzle : public Puzzle
 {
 public:
     virtual PUZZLE_TYPES getType()
@@ -23,10 +38,22 @@ public:
     }
 
     virtual ~EmptyPuzzle(){}
+    virtual void print()
+    {
+        std :: cout << "X";
+    }
+
+protected:
+    virtual bool isEqual(Puzzle *obj)
+    {
+        if (obj->getType() == EMPTY)
+            return true;
+        return false;
+    }
 
 };
 
-class PuzzleObject : public PuzzleBase
+class PuzzleObject : public Puzzle
 {
 public:
     virtual PUZZLE_TYPES getType()
@@ -36,35 +63,52 @@ public:
 
     virtual ~PuzzleObject(){}
 
+protected:
+    virtual bool isEqual(Puzzle *obj)
+    {
+        if (obj->getType() == OBJECT)
+            return true;
+        return false;
+    }
+
 };
 
-class NumericPuzzle : public PuzzleObject
+class IntPuzzle : public PuzzleObject
 {
 public:
     int Value;
 
-    NumericPuzzle(int value):
+    IntPuzzle(const   PuzzleObject &p)    {
+    }
+
+    IntPuzzle(int value):
         Value(value)
     {
     }
-
+    virtual void print()
+    {
+        std :: cout << Value;
+    }
     inline operator int()
     {
         return Value;
     }
 
-    inline bool operator==(const NumericPuzzle &toCompare) const
+    virtual ~IntPuzzle(){}
+
+protected:
+    virtual bool isEqual(Puzzle *obj)
     {
-        if (Value == toCompare.Value)
+        if (!PuzzleObject::isEqual(obj))
+            return false;
+
+        if (Value == ((IntPuzzle*)obj)->Value)
             return true;
 
         return false;
     }
 
-    virtual ~NumericPuzzle(){}
 
 };
-
-typedef NumericPuzzle Puzzle;
 
 #endif // PUZZLE_H
