@@ -1,6 +1,8 @@
 #ifndef POSITION2D_H
 #define POSITION2D_H
 
+#include<memory>
+
 namespace boards  {
 
 class Dimension2D;
@@ -36,6 +38,11 @@ public:
         if (Y > toCompare.Y)
             return false;
         return true;
+    }
+
+    std::shared_ptr<Position2D> clone()
+    {
+        return std::shared_ptr<Position2D>(new Position2D(*this));
     }
 };
 

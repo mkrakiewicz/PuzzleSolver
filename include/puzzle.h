@@ -1,7 +1,7 @@
 #ifndef PUZZLE_H
 #define PUZZLE_H
 
-#include <iostream>
+#include <memory>
 
 enum PUZZLE_TYPES
 {
@@ -14,16 +14,20 @@ class Puzzle
 public:
     virtual PUZZLE_TYPES getType() = 0;
     virtual void print() = 0;
-    virtual ~Puzzle(){}
+
     inline bool operator==(Puzzle &toCompare)
     {
         return this->isEqual(&toCompare);
     }
 
-    inline virtual bool operator!=(Puzzle &toCompare)
+    inline bool operator!=(Puzzle &toCompare)
     {
         return !this->isEqual(&toCompare);
     }
+
+    virtual std::shared_ptr<Puzzle> clone() const = 0;
+
+    virtual ~Puzzle();
 
 protected:
     virtual bool isEqual(Puzzle *obj) = 0;
@@ -32,81 +36,44 @@ protected:
 class EmptyPuzzle : public Puzzle
 {
 public:
-    virtual PUZZLE_TYPES getType()
-    {
-        return PUZZLE_TYPES::EMPTY;
-    }
-
-    virtual ~EmptyPuzzle(){}
-    virtual void print()
-    {
-        std :: cout << "X";
-    }
-
+    virtual PUZZLE_TYPES getType();
+    virtual void print();
+    virtual std::shared_ptr<Puzzle> clone() const;
+    virtual ~EmptyPuzzle();
 protected:
-    virtual bool isEqual(Puzzle *obj)
-    {
-        if (obj->getType() == EMPTY)
-            return true;
-        return false;
-    }
+    virtual bool isEqual(Puzzle *obj);
 
 };
 
 class PuzzleObject : public Puzzle
 {
 public:
-    virtual PUZZLE_TYPES getType()
-    {
-        return PUZZLE_TYPES::OBJECT;
-    }
+    virtual PUZZLE_TYPES getType();
 
-    virtual ~PuzzleObject(){}
+    virtual ~PuzzleObject();
 
 protected:
-    virtual bool isEqual(Puzzle *obj)
-    {
-        if (obj->getType() == OBJECT)
-            return true;
-        return false;
-    }
+    virtual bool isEqual(Puzzle *obj);
 
 };
 
 class IntPuzzle : public PuzzleObject
 {
 public:
-    int Value;
+    const int Value;
 
-    IntPuzzle(const   PuzzleObject &p)    {
-    }
-
-    IntPuzzle(int value):
-        Value(value)
-    {
-    }
-    virtual void print()
-    {
-        std :: cout << Value;
-    }
+    IntPuzzle(int value);
+    virtual void print();
     inline operator int()
     {
         return Value;
     }
+    virtual std::shared_ptr<Puzzle> clone() const ;
 
-    virtual ~IntPuzzle(){}
+    virtual ~IntPuzzle();
 
 protected:
-    virtual bool isEqual(Puzzle *obj)
-    {
-        if (!PuzzleObject::isEqual(obj))
-            return false;
-
-        if (Value == ((IntPuzzle*)obj)->Value)
-            return true;
-
-        return false;
-    }
+    virtual bool isEqual(Puzzle *obj);
 
 
 };

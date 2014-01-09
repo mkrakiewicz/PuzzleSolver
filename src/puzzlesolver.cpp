@@ -27,8 +27,14 @@ std::shared_ptr<PuzzleBoard> PuzzleSolver::getResult()
 {
     if (result == 0)
     {
-        std::shared_ptr<PuzzleBoard> p(new EmptyBoard(boardToSolve->getDimensions()));
-        return p;
+        if (boardToSolve == 0)
+        {
+            std::shared_ptr<PuzzleBoard> p(new EmptyBoard(boardToSolve->getDimensions()));
+            return p;
+        } else
+        {
+            return boardToSolve;
+        }
     }
     return result;
 }

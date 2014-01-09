@@ -1,10 +1,13 @@
 #ifndef PUZZLEBOARD_H
 #define PUZZLEBOARD_H
 
+#include <iostream>
 #include <vector>
 #include <sstream>
 #include <memory>
 #include <map>
+#include <vector>
+#include <algorithm>
 #include "puzzle.h"
 #include "exceptions.h"
 #include "position2d.h"
@@ -28,13 +31,64 @@ public:
         return true;
     }
 
+    inline bool operator!=(const Dimension2D &toCompare) const
+    {
+        return !operator==(toCompare);
+    }
+
     inline Dimension2D getDimensions() const
     {
         return *this;
     }
 };
 
-typedef std::map < Position2D, std::shared_ptr<Puzzle> > PointToPuzzleMap;
+class PuzzlePositionContainer
+{
+public:
+    void insertPuzzle(std::shared_ptr<Puzzle> puzzle, std::shared_ptr<Position2D> point)
+    {
+
+        if (findPuzzle(*point).get() == 0)
+        {
+            puzzles.push_back(puzzle);
+            points.push_back(point);
+        } else
+        {
+            std::replace(puzzles.begin()+counter,puzzles.begin()+counter+1,puzzles.at(counter), puzzle);
+        }
+
+    }
+
+    std::shared_ptr<Puzzle> findPuzzle(Position2D &point)
+    {
+        int i;
+        bool found = false;
+
+        for (i=0; i<points.size(); i++)
+        {
+            if (*points[i] == point)
+            {
+                found = true;
+                break;
+            }
+        }
+        if (found)
+        {
+            counter = i;
+            return puzzles[i];
+        }
+
+        return std::shared_ptr<Puzzle>(0);
+    }
+
+protected:
+    std::vector< std::shared_ptr<Puzzle> > puzzles;
+    std::vector< std::shared_ptr<Position2D> > points;
+    int counter;
+
+};
+
+typedef PuzzlePositionContainer PointToPuzzleMap;
 
 enum BoardType
 {
@@ -48,20 +102,46 @@ public:
     PuzzleBoard(const Dimension2D &d):
         Dimension2D(d)
     {
-        setCorrectAligment();
+        EmptyPuzzle p;
+        fillWith(p);
     }
 
-    std::shared_ptr<Puzzle> getPuzzle(const Position2D &pos)
+    void setPuzzle(Position2D pos, const Puzzle &puz)
     {
-        return puzzles[pos];
+        puzzles.insertPuzzle(puz.clone(),pos.clone());
     }
 
-    virtual void setCorrectAligment() = 0;
+    std::shared_ptr<Puzzle> getPuzzle(Position2D &pos)
+    {
+        return puzzles.findPuzzle(pos);
+    }
+
+    void fillWith(Puzzle &puzzle){
+        {
+            std::shared_ptr<Puzzle> p = puzzle.clone();
+            for (u_int x=0; x<horizontalSize; x++)
+            {
+                for (u_int y=0; y<verticalSize; y++)
+                {
+                    Position2D pos(x,y);
+                    puzzles.insertPuzzle(p,pos.clone());
+                    puzzles.findPuzzle(pos)->getType();
+                }
+            }
+        }
+
+    }
+
+    virtual void setCorrectAligment()  = 0;
     virtual std::shared_ptr<PuzzleBoard> clone() = 0;
     virtual BoardType getBoardType() = 0;
-    virtual bool isEqual(PuzzleBoard &toCompare)
+
+    bool isEqual(PuzzleBoard &toCompare)
     {
-        if (!(this->getDimensions() == toCompare.getDimensions()))
+        if (this->getDimensions() != toCompare.getDimensions())
+            return false;
+
+        if (toCompare.getBoardType() != getBoardType())
             return false;
 
         for (u_int x=0; x<horizontalSize; x++)
@@ -78,12 +158,14 @@ public:
 
     void print()
     {
-        for (u_int x=0; x<horizontalSize; x++)
+        for (u_int y=0; y<verticalSize; y++)
         {
-            for (u_int y=0; y<verticalSize; y++)
+            for (u_int x=0; x<horizontalSize; x++)
             {
-                puzzles[Position2D(x,y)]->print();
+                Position2D pos(x,y);
+                puzzles.findPuzzle(pos)->print();
             }
+            std::cout << std::endl;
         }
     }
 
@@ -97,7 +179,7 @@ public:
         return !this->isEqual(toCompare);
     }
 
-    inline PuzzleBoard& operator=(PuzzleBoard &a)
+    inline  virtual PuzzleBoard& operator=(PuzzleBoard &a)
     {
         return *this->clone();
     }
@@ -120,32 +202,19 @@ public:
 
     virtual void setCorrectAligment()
     {
-        Puzzle *p = new EmptyPuzzle;
-        for (u_int x=0; x<horizontalSize; x++)
-        {
-            for (u_int y=0; y<verticalSize; y++)
-            {
-                puzzles[Position2D(x,y)] = std::shared_ptr<Puzzle>(p);
-            }
-        }
-    };
+       EmptyPuzzle p;
+       fillWith(p);
+    }
 
     virtual std::shared_ptr<PuzzleBoard> clone()
     {
         return std::shared_ptr<PuzzleBoard>(new EmptyBoard(*this));
-    };
+    }
 
     virtual BoardType getBoardType()
     {
         return BoardType::EMPTY;
     }
-
-    virtual bool isEqual(PuzzleBoard &toCompare)
-    {
-        if (toCompare.getBoardType() != EMPTY)
-            return false;
-        return PuzzleBoard::isEqual(toCompare);
-    };
 
     virtual ~EmptyBoard() {}
 };
@@ -162,13 +231,6 @@ public:
         return BoardType::ORDERED;
     }
 
-    virtual bool isEqual(PuzzleBoard &toCompare)
-    {
-        if (toCompare.getBoardType() != ORDERED)
-            return false;
-        return PuzzleBoard::isEqual(toCompare);
-    };
-
     virtual ~OrderedBoard() {}
 };
 
@@ -183,14 +245,14 @@ public:
     void setCorrectAligment()
     {
         uint count = 1;
-        for (u_int x=0; x<horizontalSize; x++)
+        for (u_int y=0; y<verticalSize; y++)
         {
-            for (u_int y=0; y<verticalSize; y++)
+            for (u_int x=0; x<horizontalSize; x++)
             {
                 if ((x == (horizontalSize-1)) && (y == (verticalSize - 1)))
-                    puzzles[Position2D(x,y)] = std::shared_ptr<Puzzle>(new EmptyPuzzle);
+                    puzzles.insertPuzzle(std::shared_ptr<Puzzle>(new EmptyPuzzle),std::shared_ptr<Position2D>(new Position2D(x,y)));
                 else
-                    puzzles[Position2D(x,y)] = std::shared_ptr<Puzzle>(new IntPuzzle(count++));
+                    puzzles.insertPuzzle(std::shared_ptr<Puzzle>(new IntPuzzle(count++)),std::shared_ptr<Position2D>(new Position2D(x,y)));
             }
         }
     }
@@ -198,11 +260,6 @@ public:
     virtual std::shared_ptr<PuzzleBoard> clone()
     {
         return std::shared_ptr<PuzzleBoard>(new IntPuzzleBoard(*this));
-    };
-
-    virtual bool isEqual(PuzzleBoard &toCompare)
-    {
-        return OrderedBoard::isEqual(toCompare);
     }
 
     virtual ~IntPuzzleBoard(){}
