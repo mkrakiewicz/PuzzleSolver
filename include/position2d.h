@@ -3,7 +3,7 @@
 
 #include<memory>
 
-namespace boards  {
+namespace board  {
 
 class Dimension2D;
 
@@ -12,10 +12,10 @@ class Dimension2D;
 class Position2D
 {
 public:
-    Position2D(int x,int y);
-    const int X,Y;
+    Position2D(int x = 0,int y = 0);
+    int X,Y;
 
-    bool positionExceedsBounds(const boards::Dimension2D &);
+    bool positionExceedsBounds(const board::Dimension2D &);
 
     inline bool operator==(const Position2D &toCompare) const
     {
@@ -33,17 +33,30 @@ public:
 
     inline bool operator <(const Position2D &toCompare) const
     {
-        if (X > toCompare.X)
-            return false;
-        if (Y > toCompare.Y)
-            return false;
-        return true;
+        if ((X < toCompare.X) && (Y < toCompare.Y))
+            return true;
+
+        int thisSum = X+Y , otherSum = toCompare.X+toCompare.Y;
+
+        if (thisSum < otherSum)
+            return true;
+
+        return false;
     }
 
     std::shared_ptr<Position2D> clone()
     {
         return std::shared_ptr<Position2D>(new Position2D(*this));
     }
+
+//    inline Position2D& operator=(const Position2D & pos)
+//    {
+//        *this = Position2D(pos.X,pos.Y);
+
+//        return *this;
+//    }
+
+    std::string toString();
 };
 
 

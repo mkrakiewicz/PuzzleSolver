@@ -14,9 +14,14 @@ Exception::Exception(string message) throw():
 {
 }
 
-std::string Exception::getMessage()
+std::string Exception::getMessage() const
 {
     return this->message;
+}
+
+const char* Exception::what() const _GLIBCXX_USE_NOEXCEPT
+{
+    return getMessage().c_str();
 }
 
 Exception::~Exception() throw()

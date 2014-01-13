@@ -2,7 +2,7 @@
 #include "puzzleboard.h"
 #include "exceptions.h"
 
-using namespace boards;
+using namespace board;
 
 PuzzleSolver::PuzzleSolver()
     :boardToSolve(0),result(0)
