@@ -1,8 +1,10 @@
 #include "puzzle.h"
-#include <iostream>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
+namespace puzzle {
 
 Puzzle::~Puzzle(){}
 
@@ -13,9 +15,9 @@ PUZZLE_TYPES EmptyPuzzle::getType()
 
 EmptyPuzzle::~EmptyPuzzle(){}
 
-void EmptyPuzzle::print()
+string EmptyPuzzle::toString()
 {
-    std :: cout << "X";
+    return string("[X]");
 }
 
 shared_ptr<Puzzle> EmptyPuzzle::clone() const
@@ -52,9 +54,11 @@ IntPuzzle :: IntPuzzle(int value):
 {
 }
 
-void IntPuzzle ::print()
+string IntPuzzle ::toString()
 {
-    std :: cout << Value;
+    stringstream s;
+    s << "[" <<  Value << "]";
+    return s.str();
 }
 
 
@@ -77,4 +81,4 @@ bool IntPuzzle ::isEqual(Puzzle *obj)
     return false;
 }
 
-
+}

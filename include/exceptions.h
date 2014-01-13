@@ -10,7 +10,8 @@ public:
     Exception() throw();
     Exception(std::string message) throw();
 
-    std::string getMessage();
+    std::string getMessage() const;
+    virtual const char* what() const _GLIBCXX_USE_NOEXCEPT;
 
     virtual ~Exception() throw();
 

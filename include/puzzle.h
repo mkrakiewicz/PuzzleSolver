@@ -3,17 +3,21 @@
 
 #include <memory>
 
-enum PUZZLE_TYPES
-{
-    EMPTY,
-    OBJECT
-};
+namespace puzzle {
+
+    enum PUZZLE_TYPES
+    {
+        EMPTY,
+        OBJECT
+    };
+
+
 
 class Puzzle
 {
 public:
     virtual PUZZLE_TYPES getType() = 0;
-    virtual void print() = 0;
+    virtual std::string toString() = 0;
 
     inline bool operator==(Puzzle &toCompare)
     {
@@ -37,7 +41,7 @@ class EmptyPuzzle : public Puzzle
 {
 public:
     virtual PUZZLE_TYPES getType();
-    virtual void print();
+    virtual std::string toString();
     virtual std::shared_ptr<Puzzle> clone() const;
     virtual ~EmptyPuzzle();
 protected:
@@ -63,7 +67,7 @@ public:
     const int Value;
 
     IntPuzzle(int value);
-    virtual void print();
+    virtual std::string toString();
     inline operator int()
     {
         return Value;
@@ -77,5 +81,7 @@ protected:
 
 
 };
+
+}
 
 #endif // PUZZLE_H
