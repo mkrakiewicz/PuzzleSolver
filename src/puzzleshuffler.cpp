@@ -234,3 +234,5 @@ void PuzzleShuffler::shuffleBySteps()
        tryMoveInAllDirections();
     }
 }
+
+

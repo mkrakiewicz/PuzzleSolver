@@ -11,9 +11,13 @@ using namespace board;
 PuzzleSolver::PuzzleSolver (const Dimension2D &dim) :
     steps(new vector<SolveStep> ),
     boardToSolve(0),
-    result(0),
     dimensionOfBoards(new Dimension2D(dim))
 {
+}
+
+void PuzzleSolver::newSearch()
+{
+
 }
 
 void PuzzleSolver::solve()
@@ -28,22 +32,6 @@ void PuzzleSolver::setBoardToSolve(PuzzleBoard &b) throw()
     boardToSolve = b.clone();
 }
 
-std::shared_ptr<PuzzleBoard> PuzzleSolver::getResult()
-{
-    if (result == 0)
-    {
-        if (boardToSolve == 0)
-        {
-
-            std::shared_ptr<PuzzleBoard> p(new EmptyBoard( *dimensionOfBoards ) );
-            return p;
-        } else
-        {
-            return boardToSolve;
-        }
-    }
-    return result;
-}
 
 std::vector<SolveStep> PuzzleSolver::getSolveSteps()
 {
@@ -51,24 +39,16 @@ std::vector<SolveStep> PuzzleSolver::getSolveSteps()
     return  a;
 }
 
-int PuzzleSolver::calculateHammingPriorityFor(std::shared_ptr<PuzzleBoardState> state)
+std::shared_ptr<PuzzleBoardState> PuzzleSolver::getStateWithHighestPriority()
 {
-    int misaligned = state->currentBoardState->getNumberOfPuzzlesInWrongPosition();
-    return misaligned + state->movesMadeSoFar;
+    return std::shared_ptr<PuzzleBoardState>(0);
 }
 
-void PuzzleSolver::_debug_steps(PuzzleShuffler &p)
+int PuzzleBoardState::calculateHammingPriorityFor(board::PuzzleBoard& board)
 {
-    auto s = p.getStepHistory();
-    for (int i = (s.size() -1); i>=0; i--)
-    {
-        steps->push_back(SolveStep(operator -(s[i].begin()->first)));
-    }
+    int misaligned = board.getNumberOfPuzzlesInWrongPosition();
+    return misaligned + this->movesMadeSoFar;
 }
-
-//void PuzzleSolver::_debug_set_next_step()
-//{
-//}
 
 
 SolveStep::SolveStep(SLIDE_DIRECTIONS slideDirection):slideDirection(slideDirection)
@@ -76,9 +56,10 @@ SolveStep::SolveStep(SLIDE_DIRECTIONS slideDirection):slideDirection(slideDirect
 }
 
 
-PuzzleBoardState::PuzzleBoardState(u_int movesMadeSoFar,  const board::PuzzleBoard & currentBoardState):
+PuzzleBoardState::PuzzleBoardState(u_int movesMadeSoFar,  std::shared_ptr<PuzzleBoardState> cameFrom, board::PuzzleBoard & currentBoardState):
     movesMadeSoFar(movesMadeSoFar),
-    currentBoardState(currentBoardState.clone())
+    cameFrom(cameFrom),
+    currentBoard(currentBoardState.clone())
 {
 
 }
