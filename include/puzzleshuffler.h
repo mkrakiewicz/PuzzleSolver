@@ -10,15 +10,30 @@
 
 namespace board {
     class PuzzleBoard;
+    class Dimension2D;
 }
 
 class Position2D;
 class string;
 
+typedef std::shared_ptr<board::PuzzleBoard>  PuzzleBoardSharedPtr; // because it is too long
+
+
 class PuzzleShuffler
 {
 public:
     PuzzleShuffler();
+
+    template <typename T> static PuzzleBoardSharedPtr createShuffledBoard(const board::Dimension2D &dim, float percentageShuffled = 0.5f)
+    {
+        PuzzleShuffler s;
+        T board(dim);
+        s.setBoardToShuffle(board);
+        s.setMinimumShuffledPuzzles(percentageShuffled);
+        s.shuffle();
+        return s.getResult();
+    }
+
     void setBoardToShuffle(board::PuzzleBoard &b);
     void setShuffleMoves(int);
     void setMinimumShuffledPuzzles(float);
