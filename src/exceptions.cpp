@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "exceptions.h"
 #include <string>
 

@@ -19,9 +19,11 @@ class PuzzleShuffler
 {
 public:
     PuzzleShuffler();
-    void setInitialBoard(board::PuzzleBoard &b);
-    void setSteps(int);
-    void shuffle(int = 100) throw();
+    void setBoardToShuffle(board::PuzzleBoard &b);
+    void setShuffleMoves(int);
+    void setMinimumShuffledPuzzles(float);
+    float getPercentageShuffled();
+    void shuffle() throw();
     std::shared_ptr<board::PuzzleBoard> getResult();
     void verifyBoard() throw();
     std::vector < std::map<board::SLIDE_DIRECTIONS, std::string> > getStepHistory();
@@ -30,6 +32,11 @@ public:
 
     virtual ~PuzzleShuffler(){}
 protected:
+    int shuffleSteps;
+    float shufflePercentage;
+
+    void shuffleByPercentage();
+    void shuffleBySteps();
     bool tryMoveInAllDirections();
     bool wasEmptyThere(Position2D &pos);
     bool trySlide(board::SLIDE_DIRECTIONS &direction);
@@ -37,13 +44,9 @@ protected:
     void resetForNewPass();
     board::SLIDE_DIRECTIONS getRandomDirection();
 
+    std::shared_ptr<board::PuzzleBoard> initialBoard;
+    std::shared_ptr<board::PuzzleBoard> boardToShuffle;
     std::shared_ptr < std::vector<std::map<board::SLIDE_DIRECTIONS, std::string>>  > slideHistory;
-
-
-    std::shared_ptr<board::PuzzleBoard> initial;
-    std::shared_ptr<board::PuzzleBoard> result;
-    int steps;
-
 
 private:
     std::shared_ptr< std::set<Position2D> > wasThere;

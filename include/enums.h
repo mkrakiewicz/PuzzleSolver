@@ -9,6 +9,10 @@ enum SLIDE_DIRECTIONS
     LEFT,
     RIGHT
 };
+
+SLIDE_DIRECTIONS operator-(const SLIDE_DIRECTIONS& d);
+
+
 }
 
 #endif // ENUMS_H
