@@ -50,7 +50,7 @@ public:
 
     virtual ~PuzzleSolver(){}
 protected:
-//    std::multimap <u_int, std:: > currentState;
+    std::multimap <u_int, std:: > currentState;
 
     std::shared_ptr< std::vector<SolveStep> > steps;
 
