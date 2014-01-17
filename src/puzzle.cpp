@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "puzzle.h"
 #include <string>
 #include <sstream>
@@ -5,6 +7,16 @@
 using namespace std;
 
 namespace puzzle {
+
+bool Puzzle::operator ==(Puzzle &toCompare) const
+{
+    return this->isEqual(&toCompare);
+}
+
+bool Puzzle::operator !=(Puzzle &toCompare)
+{
+    return !this->isEqual(&toCompare);
+}
 
 Puzzle::~Puzzle(){}
 
@@ -25,7 +37,7 @@ shared_ptr<Puzzle> EmptyPuzzle::clone() const
     return shared_ptr<Puzzle>(new EmptyPuzzle(*this));
 }
 
-bool EmptyPuzzle::isEqual(Puzzle *obj)
+bool EmptyPuzzle::isEqual(Puzzle *obj) const
 {
     if (obj->getType() != EMPTY)
         return false;
@@ -42,7 +54,7 @@ PUZZLE_TYPES PuzzleObject::getType()
 PuzzleObject::~PuzzleObject(){}
 
 
-bool PuzzleObject::isEqual(Puzzle *obj)
+bool PuzzleObject::isEqual(Puzzle *obj) const
 {
     if (obj->getType() != OBJECT)
         return false;
@@ -70,7 +82,7 @@ shared_ptr<Puzzle> IntPuzzle ::clone() const
 IntPuzzle ::~IntPuzzle(){}
 
 
-bool IntPuzzle ::isEqual(Puzzle *obj)
+bool IntPuzzle ::isEqual(Puzzle *obj) const
 {
     if (!PuzzleObject::isEqual(obj))
         return false;
