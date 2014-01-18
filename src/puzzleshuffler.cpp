@@ -17,7 +17,6 @@ using namespace std;
 using namespace board;
 using namespace puzzle;
 
-std::vector<board::SLIDE_DIRECTIONS> PuzzleShuffler::directions = {UP,DOWN,LEFT,RIGHT};
 
 
 PuzzleShuffler::PuzzleShuffler():
@@ -77,7 +76,7 @@ bool PuzzleShuffler::tryMoveInAllDirections()
 {
     Position2D p;
 
-    for (u_int i=0; i<(directions).size(); i++)
+    for (u_int i=0; i<(PuzzleBoard::directions).size(); i++)
     {
         SLIDE_DIRECTIONS dir = getRandomDirection();
         p = boardToShuffle->determineEmptyPosAfterSlide(dir);
@@ -88,6 +87,16 @@ bool PuzzleShuffler::tryMoveInAllDirections()
     }
 
     return false;
+}
+
+bool PuzzleShuffler::tryMoveInNewPos()
+{
+    Position2D lastPos = *boardToShuffle->getEmptyPuzzlePos();
+    do {
+        tryMoveInAllDirections();
+    }
+    while(*(this->boardToShuffle->getEmptyPuzzlePos()) == lastPos);
+    return true;
 }
 
 bool PuzzleShuffler::trySlide(SLIDE_DIRECTIONS &direction)
@@ -207,7 +216,7 @@ void PuzzleShuffler::resetForNewPass()
 
 SLIDE_DIRECTIONS PuzzleShuffler::getRandomDirection()
 {
-    return directions[rand()%4];
+    return PuzzleBoard::directions[rand()%4];
 }
 
 

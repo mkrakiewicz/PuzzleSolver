@@ -34,6 +34,16 @@ public:
         return s.getResult();
     }
 
+    template <typename T> static PuzzleBoardSharedPtr createShuffledBoard(const board::Dimension2D &dim, int steps = 10)
+    {
+        PuzzleShuffler s;
+        T board(dim);
+        s.setBoardToShuffle(board);
+        s.setShuffleMoves(steps);
+        s.shuffle();
+        return s.getResult();
+    }
+
     void setBoardToShuffle(board::PuzzleBoard &b);
     void setShuffleMoves(int);
     void setMinimumShuffledPuzzles(float);
@@ -53,6 +63,8 @@ protected:
     void shuffleByPercentage();
     void shuffleBySteps();
     bool tryMoveInAllDirections();
+    bool tryMoveInNewPos();
+
     bool wasEmptyThere(Position2D &pos);
     bool trySlide(board::SLIDE_DIRECTIONS &direction);
     void saveEmptyMovementHistory(Position2D &pos);
@@ -66,9 +78,6 @@ protected:
 private:
     std::shared_ptr< std::set<Position2D> > wasThere;
     std::shared_ptr< std::vector<Position2D> > positionHistory;
-
-    static std::vector<board::SLIDE_DIRECTIONS> directions;
-
 
 };
 

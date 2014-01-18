@@ -1,16 +1,20 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
-namespace board {
-enum SLIDE_DIRECTIONS
-{
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-};
+#include <string>
 
-SLIDE_DIRECTIONS operator-(const SLIDE_DIRECTIONS& d);
+namespace board
+{
+    enum SLIDE_DIRECTIONS
+    {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    };
+
+    SLIDE_DIRECTIONS operator-(const SLIDE_DIRECTIONS& d);
+    std::string dirToStr(board::SLIDE_DIRECTIONS direction);
 
 
 }
