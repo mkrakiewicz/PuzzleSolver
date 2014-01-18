@@ -18,12 +18,18 @@ class PuzzleBoardState
 {
 public:
     PuzzleBoardState(u_int movesMadeSoFar, std::shared_ptr<PuzzleBoardState> cameFrom,  board::PuzzleBoard & currentBoard);
-    const u_int movesMadeSoFar;
+
     const std::shared_ptr<PuzzleBoardState> cameFrom;
     const std::shared_ptr<board::PuzzleBoard> currentBoard;
 
+    const u_int movesMadeSoFar;
+    const u_int hammingPriority;
 
-    int calculateHammingPriorityFor(board::PuzzleBoard&);
+    virtual ~PuzzleBoardState();
+
+protected:
+    int calculateHammingPriority();
+
 };
 
 class SolveStep
@@ -31,6 +37,22 @@ class SolveStep
 public:
     SolveStep(board::SLIDE_DIRECTIONS slideDirection);
     const board::SLIDE_DIRECTIONS slideDirection;
+    virtual ~SolveStep();
+};
+
+
+class StateManager
+{
+public:
+    StateManager();
+    void addState(std::shared_ptr<PuzzleBoardState >);
+    std::shared_ptr<PuzzleBoardState> popStateWithLowestPriority();
+    void clear();
+
+    virtual ~StateManager();
+protected:
+    std::vector < std::shared_ptr<PuzzleBoardState > > stateList;
+
 };
 
 class PuzzleShuffler;
@@ -43,19 +65,17 @@ public:
     void newSearch();
     void solve();
     void setBoardToSolve(board::PuzzleBoard&) throw();
-    void setCurrentState(std::shared_ptr<PuzzleBoardState> state);
     std::vector<SolveStep> getSolveSteps();
 
-    std::shared_ptr<PuzzleBoardState> getStateWithHighestPriority();
 
     virtual ~PuzzleSolver(){}
 protected:
-    std::multimap <u_int, std:: > currentState;
+    std::shared_ptr<board::Dimension2D> dimensionOfBoards;
+    std::shared_ptr<board::PuzzleBoard> boardToSolve;
+    std::shared_ptr< StateManager > stateManager;
 
     std::shared_ptr< std::vector<SolveStep> > steps;
 
-    std::shared_ptr<board::PuzzleBoard> boardToSolve;
-    std::shared_ptr<board::Dimension2D> dimensionOfBoards;
 
 };
 

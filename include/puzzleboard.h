@@ -39,7 +39,7 @@ public:
     std::shared_ptr<Position2D> getPointerFor(const Position2D &pos);
     std::shared_ptr<puzzle::Puzzle> getPointerFor(const puzzle::Puzzle &pos);
 
-
+    virtual ~PuzzlePointerPool();
 protected:
     std::shared_ptr<Position2D> createNew(const Position2D &pos);
     std::shared_ptr<puzzle::Puzzle> createNew(const puzzle::Puzzle &puzzle);
@@ -59,7 +59,7 @@ public:
     std::shared_ptr<Position2D> getEmptyPuzzlePos();
     void swap(Position2D &pos1,Position2D &pos2);
 
-
+    virtual ~PuzzlePositionContainer();
 
 protected:
     static PuzzlePointerPool pool;

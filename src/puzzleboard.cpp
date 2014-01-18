@@ -101,6 +101,10 @@ void PuzzlePositionContainer::swap(Position2D &pos1, Position2D &pos2)
     insertPuzzle(*puz1,pos2);
 }
 
+PuzzlePositionContainer::~PuzzlePositionContainer()
+{
+}
+
 PuzzleBoard::PuzzleBoard(const Dimension2D &d):
     Dimension2D(d)
 {
@@ -404,6 +408,10 @@ std::shared_ptr<Puzzle> PuzzlePointerPool::getPointerFor(const Puzzle &puzzle)
     {
         return createNew(puzzle);
     }
+}
+
+PuzzlePointerPool::~PuzzlePointerPool()
+{
 }
 
 std::shared_ptr<Position2D> PuzzlePointerPool::createNew(const Position2D &pos)

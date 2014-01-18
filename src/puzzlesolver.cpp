@@ -9,15 +9,18 @@ using namespace std;
 using namespace board;
 
 PuzzleSolver::PuzzleSolver (const Dimension2D &dim) :
-    steps(new vector<SolveStep> ),
+    dimensionOfBoards(new Dimension2D(dim))   ,
     boardToSolve(0),
-    dimensionOfBoards(new Dimension2D(dim))
+    stateManager(new StateManager()),
+    steps(new vector<SolveStep> )
 {
 }
 
 void PuzzleSolver::newSearch()
 {
-
+    stateManager->clear();
+    shared_ptr<PuzzleBoardState> s(new PuzzleBoardState(0,0,*boardToSolve));
+    stateManager->addState(s);
 }
 
 void PuzzleSolver::solve()
@@ -39,15 +42,37 @@ std::vector<SolveStep> PuzzleSolver::getSolveSteps()
     return  a;
 }
 
-std::shared_ptr<PuzzleBoardState> PuzzleSolver::getStateWithHighestPriority()
+std::shared_ptr<PuzzleBoardState> StateManager::popStateWithLowestPriority()
 {
-    return std::shared_ptr<PuzzleBoardState>(0);
+
+    auto it = stateList.begin();
+    if (it == stateList.end())
+        return std::shared_ptr<PuzzleBoardState>(0);
+
+    auto min = it;
+    for (; it!=stateList.end(); it++)
+    {
+        if ((*it)->hammingPriority < (*min)->hammingPriority)
+            min = it;
+    }
+    auto result = *min;
+    stateList.erase(min);
+    return result;
 }
 
-int PuzzleBoardState::calculateHammingPriorityFor(board::PuzzleBoard& board)
+void StateManager::clear()
 {
-    int misaligned = board.getNumberOfPuzzlesInWrongPosition();
-    return misaligned + this->movesMadeSoFar;
+    stateList.clear();
+}
+
+int PuzzleBoardState::calculateHammingPriority()
+{
+    int misaligned = currentBoard->getNumberOfPuzzlesInWrongPosition();
+    return misaligned + movesMadeSoFar;
+}
+
+PuzzleBoardState::~PuzzleBoardState()
+{
 }
 
 
@@ -55,11 +80,32 @@ SolveStep::SolveStep(SLIDE_DIRECTIONS slideDirection):slideDirection(slideDirect
 {
 }
 
+SolveStep::~SolveStep()
+{
+}
 
-PuzzleBoardState::PuzzleBoardState(u_int movesMadeSoFar,  std::shared_ptr<PuzzleBoardState> cameFrom, board::PuzzleBoard & currentBoardState):
-    movesMadeSoFar(movesMadeSoFar),
+
+PuzzleBoardState::PuzzleBoardState(u_int movesMadeSoFar,  std::shared_ptr<PuzzleBoardState> cameFrom, board::PuzzleBoard & thisStateBoardAlignment):
     cameFrom(cameFrom),
-    currentBoard(currentBoardState.clone())
+    currentBoard(thisStateBoardAlignment.clone()),
+    movesMadeSoFar(movesMadeSoFar),
+    hammingPriority(calculateHammingPriority())
+
 {
 
+}
+
+
+StateManager::StateManager()
+
+{
+}
+
+void StateManager::addState(std::shared_ptr<PuzzleBoardState> s)
+{
+    this->stateList.push_back(s);
+}
+
+StateManager::~StateManager()
+{
 }
