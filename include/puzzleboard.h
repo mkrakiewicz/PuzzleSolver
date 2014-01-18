@@ -131,6 +131,9 @@ public:
     bool slidePuzzle(const board::SLIDE_DIRECTIONS &dir);
     std::shared_ptr<Position2D> getEmptyPuzzlePos();
 
+    static std::vector<board::SLIDE_DIRECTIONS> directions;
+
+
     virtual ~PuzzleBoard(){}
 
 protected:

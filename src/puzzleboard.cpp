@@ -14,6 +14,8 @@ using namespace std;
 
 namespace board {
 
+std::vector<board::SLIDE_DIRECTIONS> PuzzleBoard::directions = {UP,DOWN,LEFT,RIGHT};
+
 
 PuzzlePointerPool PuzzlePositionContainer::pool;
 
@@ -119,7 +121,14 @@ void PuzzleBoard::setPuzzle(Position2D pos, Puzzle &puz)
 
 std::shared_ptr<Puzzle> PuzzleBoard::getPuzzle(Position2D &pos)
 {
-    return puzzles.findPuzzle(pos)->clone();
+    auto p = puzzles.findPuzzle(pos);
+    if (p == 0) {
+        stringstream s;
+        s << "Puzzle Not found? Requested position:";
+        s << pos.toString() << endl;
+        throw Exception(s.str());
+    }
+    return p->clone();
 }
 
 void PuzzleBoard::fillWith(Puzzle &puzzle)

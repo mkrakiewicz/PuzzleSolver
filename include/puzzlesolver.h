@@ -17,13 +17,15 @@ namespace board {
 class PuzzleBoardState
 {
 public:
-    PuzzleBoardState(u_int movesMadeSoFar, std::shared_ptr<PuzzleBoardState> cameFrom,  board::PuzzleBoard & currentBoard);
+    PuzzleBoardState(u_int movesMadeSoFar, std::shared_ptr<PuzzleBoardState> cameFrom,  board::PuzzleBoard & currentBoard,  std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState);
 
     const std::shared_ptr<PuzzleBoardState> cameFrom;
     const std::shared_ptr<board::PuzzleBoard> currentBoard;
 
     const u_int movesMadeSoFar;
     const u_int hammingPriority;
+    const std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState;
+
 
     virtual ~PuzzleBoardState();
 
@@ -32,26 +34,25 @@ protected:
 
 };
 
-class SolveStep
-{
-public:
-    SolveStep(board::SLIDE_DIRECTIONS slideDirection);
-    const board::SLIDE_DIRECTIONS slideDirection;
-    virtual ~SolveStep();
-};
-
+typedef const std::vector < std::shared_ptr<PuzzleBoardState > >::iterator StateListIterator;
 
 class StateManager
 {
 public:
     StateManager();
     void addState(std::shared_ptr<PuzzleBoardState >);
-    std::shared_ptr<PuzzleBoardState> popStateWithLowestPriority();
+    StateListIterator getStateWithLowestPriority();
+//    void setNextState
+    void setNextCurrentState();
+    const std::shared_ptr<PuzzleBoardState > getCurrentState();
+    u_int getNumStates();
+
     void clear();
 
     virtual ~StateManager();
 protected:
     std::vector < std::shared_ptr<PuzzleBoardState > > stateList;
+    std::shared_ptr<PuzzleBoardState> currentState;
 
 };
 
@@ -65,18 +66,21 @@ public:
     void newSearch();
     void solve();
     void setBoardToSolve(board::PuzzleBoard&) throw();
-    std::vector<SolveStep> getSolveSteps();
+    const std::vector<board::SLIDE_DIRECTIONS> getResult();
+    const std::shared_ptr<PuzzleBoardState > getCurrentState();
+    const std::vector < std::shared_ptr<PuzzleBoardState > > getAvailableStates();
 
 
     virtual ~PuzzleSolver(){}
 protected:
+    void setGoalBoard();
+    bool isSolved();
+    void recursiveAddSteps(std::shared_ptr<PuzzleBoardState > parent);
     std::shared_ptr<board::Dimension2D> dimensionOfBoards;
     std::shared_ptr<board::PuzzleBoard> boardToSolve;
     std::shared_ptr< StateManager > stateManager;
-
-    std::shared_ptr< std::vector<SolveStep> > steps;
-
-
+    std::shared_ptr<board::PuzzleBoard> goalBoard;
+    std::shared_ptr< std::vector<board::SLIDE_DIRECTIONS> > steps;
 };
 
 #endif // PUZZLESOLVER_H
