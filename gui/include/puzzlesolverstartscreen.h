@@ -15,6 +15,11 @@ public:
     explicit PuzzleSolverStartScreen(QWidget *parent = 0);
     ~PuzzleSolverStartScreen();
     
+private slots:
+    void on_horizontalBoardSizeSlider_valueChanged(int value);
+
+    void on_verticalBoardSizeSlider_valueChanged(int value);
+
 private:
     Ui::PuzzleSolverStartScreen *ui;
 };
