@@ -23,6 +23,12 @@ shared_ptr<PuzzleBoard> EmptyBoard::correctlyAlignedBoard(0);
 shared_ptr<PuzzleBoard> IntPuzzleBoard::correctlyAlignedBoard(0);
 
 
+Dimension2D::Dimension2D():
+    horizontalSize(0),
+    verticalSize(0)
+{
+}
+
 Dimension2D::Dimension2D(int horizontalSize, int verticalSize):
     horizontalSize(horizontalSize), verticalSize(verticalSize)
 {

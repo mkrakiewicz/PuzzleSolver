@@ -22,6 +22,7 @@ namespace board {
 class Dimension2D
 {
 public:
+    Dimension2D();
     Dimension2D(int sizeX, int sizeY);
     virtual ~Dimension2D(){}
 
@@ -30,7 +31,7 @@ public:
 
     Dimension2D getDimensions() const;
 
-    const unsigned int horizontalSize, verticalSize;
+    unsigned int horizontalSize, verticalSize;
 };
 
 class PuzzlePointerPool
