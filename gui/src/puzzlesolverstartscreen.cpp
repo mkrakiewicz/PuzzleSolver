@@ -4,15 +4,12 @@
 #include <QPropertyAnimation>
 #include <QFrame>
 #include "puzzlesolverstartscreen.h"
+#include "config.h"
 #include "ui_puzzlesolverstartscreen.h"
 #include "puzzleboard.h"
 #include "position2d.h"
 #include "puzzleqobject.h"
-
-
-#define MAX_BOARD_PIXELS 324
-#define BOARD_MARGIN 5
-
+#include "puzzlecreator.h"
 
 using namespace board;
 
@@ -55,7 +52,10 @@ void PuzzleSolverStartScreen::createLabelPuzzles()
 
     const u_int puzzleSize = MAX_BOARD_PIXELS/biggerVal;
     const u_int moveBy = puzzleSize;
-
+    PuzzleCreator pC;
+    pC.moveBy = moveBy;
+    pC.parentObject = ui->framePuzzleContainer;
+    pC.puzzleSize = puzzleSize;
 
 //    const QPoint initialPosition(BOARD_MARGIN,BOARD_MARGIN);
     u_int count = 1;
@@ -65,19 +65,11 @@ void PuzzleSolverStartScreen::createLabelPuzzles()
         {
             if (count == (totalPuzzles + 1))
                 break;
-            std::shared_ptr <QLabelPuzzle> p ( new QLabelPuzzle(this));
-            p->ID = count;
-            p->setText(QString::number(p->ID));
-            QRect tmp = p->geometry();
-            tmp.setWidth(puzzleSize);
-            tmp.setHeight(puzzleSize);
-            p->setGeometry(tmp);
-//            p->setProperty()
-            p->move(5+x*moveBy,5+y*moveBy);
-            p->setFrameShape(QFrame::Shape::Panel);
-            p->show();
-            p->setParent(ui->framePuzzleContainer);
-            p->setAlignment(Qt::AlignCenter);
+
+            pC.xOffsetMultiplier = x;
+            pC.yOffsetMultiplier = y;
+
+            auto p = pC.createPuzzle(count);
             (*puzzles)[count] = p;
 
             count++;
@@ -85,6 +77,8 @@ void PuzzleSolverStartScreen::createLabelPuzzles()
     }
 
 }
+
+
 
 const std::shared_ptr<Dimension2D> PuzzleSolverStartScreen::getBoardDimensions()
 {
