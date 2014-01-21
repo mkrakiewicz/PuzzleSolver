@@ -8,7 +8,7 @@
 #include "ui_puzzlesolverstartscreen.h"
 #include "puzzleboard.h"
 #include "position2d.h"
-#include "puzzleqobject.h"
+#include "qpuzzle.h"
 #include "puzzlecreator.h"
 
 using namespace board;

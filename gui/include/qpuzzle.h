@@ -1,5 +1,5 @@
-#ifndef PUZZLEQOBJECT_H
-#define PUZZLEQOBJECT_H
+#ifndef QPUZZLE_H
+#define QPUZZLE_H
 #include <QLabel>
 #include <memory>
 
@@ -7,11 +7,11 @@ namespace puzzle {
     class IntPuzzle;
 }
 
-class PuzzleQObject : public QLabel
+class QPuzzle : public QLabel
 {
     Q_OBJECT
 public:
-    explicit PuzzleQObject(QWidget *parent = 0);
+    explicit QPuzzle(QWidget *parent = 0);
 
     void setPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle);
     const std::shared_ptr <puzzle::IntPuzzle> getPuzzle();
@@ -23,7 +23,7 @@ protected:
     
 };
 
-class QLabelPuzzle : public PuzzleQObject
+class QLabelPuzzle : public QPuzzle
 {
     Q_OBJECT
 public:
@@ -31,4 +31,4 @@ public:
 
 };
 
-#endif // PUZZLEQOBJECT_H
+#endif // QPUZZLE_H
