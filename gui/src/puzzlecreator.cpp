@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "puzzlecreator.h"
-#include "puzzleqobject.h"
+#include "qpuzzle.h"
 #include "config.h"
 #include "puzzle.h"
 #include <QWidget>
