@@ -34,12 +34,15 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="1" column="0">
-     <widget class="QTabWidget" name="startTab">
+     <widget class="QTabWidget" name="tabsMainWindow">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="currentIndex">
        <number>1</number>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
       </property>
       <property name="movable">
        <bool>false</bool>
@@ -197,7 +200,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_2">
+                 <widget class="QPushButton" name="buttonCreateNewBoard">
                   <property name="text">
                    <string>Create new board</string>
                   </property>

@@ -115,7 +115,8 @@ void PuzzleSolverStartScreen::on_pushButton_clicked()
 
 }
 
-void PuzzleSolverStartScreen::on_pushButton_2_clicked()
+void PuzzleSolverStartScreen::on_buttonCreateNewBoard_clicked()
 {
     createLabelPuzzles();
+    ui->tabsMainWindow->setCurrentIndex(1);
 }
