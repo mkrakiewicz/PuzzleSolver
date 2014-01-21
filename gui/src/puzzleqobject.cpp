@@ -25,7 +25,7 @@ const std::shared_ptr<IntPuzzle> PuzzleQObject::getPuzzle()
 }
 
 int PuzzleQObject::getID()
-{
+{ll
     if (puzzle)
         return puzzle->Value;
     return -1;
