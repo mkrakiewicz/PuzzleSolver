@@ -7,8 +7,17 @@
 
 using namespace board;
 
-QPuzzleBoard::QPuzzleBoard()
+QPuzzleBoard::QPuzzleBoard(const Dimension2D &dimensions):
+    dimensions(new Dimension2D(dimensions)),
+    puzzles(new std::map < u_int,std::shared_ptr <QLabelPuzzle> >)
 {
+}
+
+const Dimension2D &QPuzzleBoard::getDimensions()
+{
+    const Dimension2D& p = *dimensions;
+
+    return p;
 }
 
 
@@ -19,7 +28,7 @@ QPuzzleBoard::QPuzzleBoard()
 //}
 
 
-void QPuzzleBoardCreator::createBoard(/*const Dimension2D &boardSize*/)
+std::shared_ptr<QPuzzleBoard> QPuzzleBoardCreator::createBoard(/*const Dimension2D &boardSize*/)
 {
 
 //    puzzles->clear();
@@ -56,4 +65,24 @@ void QPuzzleBoardCreator::createBoard(/*const Dimension2D &boardSize*/)
 //            count++;
 //        }
 //    }
+    return std::shared_ptr<QPuzzleBoard>(0);
 }
+
+
+QPuzzleBoardCreator::QPuzzleBoardCreator():
+    dimensions(0),
+    parentForBoard(0)
+{
+}
+
+void QPuzzleBoardCreator::setParent(QWidget *parentForBoard)
+{
+    this->parentForBoard = parentForBoard;
+}
+
+void QPuzzleBoardCreator::setDimensions(const Dimension2D &dims)
+{
+    dimensions = std::shared_ptr<board::Dimension2D>(new Dimension2D(dims));
+}
+
+
