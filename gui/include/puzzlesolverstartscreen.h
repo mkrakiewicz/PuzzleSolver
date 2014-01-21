@@ -12,6 +12,9 @@ namespace board {
     class Dimension2D;
 }
 
+class QLabelPuzzle;
+class Position2D;
+
 class PuzzleSolverStartScreen : public QMainWindow
 {
     Q_OBJECT
@@ -22,7 +25,10 @@ public:
     
 
 protected:
-    std::shared_ptr<board::Dimension2D> boardSize;
+//    std::shared_ptr<QLabelPuzzle>
+    const Position2D& positionToPixelPosition(const Position2D& pos);
+    void createLabelPuzzles();
+    const std::shared_ptr<board::Dimension2D> getBoardDimensions();
 private slots:
     void on_horizontalBoardSizeSlider_valueChanged(int value);
 
@@ -30,8 +36,11 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::PuzzleSolverStartScreen *ui;
+    std::shared_ptr < std::map<u_int,std::shared_ptr <QLabelPuzzle> > > puzzles;
 };
 
 #endif // PUZZLESOLVERSTARTSCREEN_H
