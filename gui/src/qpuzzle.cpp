@@ -12,12 +12,12 @@ QPuzzle::QPuzzle(QWidget *parent) :
 {
 }
 
-void QPuzzle::setPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle)
+void QPuzzle::setInnerPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle)
 {
     this->puzzle = puzzle;
 }
 
-const std::shared_ptr<IntPuzzle> QPuzzle::getPuzzle()
+const std::shared_ptr<IntPuzzle> QPuzzle::getInnerPuzzle()
 {
     if (puzzle)
         return puzzle;

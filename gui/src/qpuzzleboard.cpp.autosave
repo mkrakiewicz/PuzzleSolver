@@ -39,6 +39,7 @@ const std::shared_ptr<QLabelPuzzle> QPuzzleBoard::getPuzzle(u_int Value)
 const Position2D & QPuzzleBoard::getPosInBoard(const std::shared_ptr<QLabelPuzzle> puzzle)
 {
     u_int p = PuzzleObjToIDPtr[puzzle];
+    
      Position2D &g = p;
     return g;
 }

@@ -53,6 +53,11 @@ Dimension2D Dimension2D::getDimensions() const
     return *this;
 }
 
+u_int Dimension2D::getMultipliedDimensions()
+{
+    return verticalSize * horizontalSize;
+}
+
 
 
 PuzzlePositionContainer::PuzzlePositionContainer() :
