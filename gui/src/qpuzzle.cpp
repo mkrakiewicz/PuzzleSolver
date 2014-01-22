@@ -2,6 +2,7 @@
 
 #include "qpuzzle.h"
 #include "puzzle.h"
+#include <QPropertyAnimation>
 
 using namespace puzzle;
 
@@ -10,6 +11,7 @@ QPuzzle::QPuzzle(QWidget *parent) :
     puzzle(0)
 
 {
+    connect( this, SIGNAL( clicked() ), this, SLOT( slotClicked() ) );
 }
 
 void QPuzzle::setInnerPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle)
@@ -29,6 +31,29 @@ int QPuzzle::getID()
     if (puzzle)
         return puzzle->Value;
     return -1;
+}
+
+void QPuzzle::slotClicked()
+{
+
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
+    animation->setDuration(1000);
+    auto g = geometry();
+    animation->setStartValue(g);
+    g.translate(0,150);
+
+    animation->setEndValue(g);
+    animation->setEasingCurve(QEasingCurve::OutExpo);
+    animation->start();
+
+}
+
+
+
+
+void QPuzzle::mousePressEvent(__attribute__((unused))QMouseEvent * event )
+{
+    emit clicked();
 }
 
 

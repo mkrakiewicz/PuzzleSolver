@@ -38,6 +38,8 @@ private slots:
 
     void on_buttonCreateNewBoard_clicked();
 
+    void on_actionExit_triggered();
+
 private:
     Ui::PuzzleSolverStartScreen *ui;
     std::shared_ptr < std::map<u_int,std::shared_ptr <QLabelPuzzle> > > puzzles;

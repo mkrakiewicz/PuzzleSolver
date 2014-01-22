@@ -17,10 +17,16 @@ public:
     const std::shared_ptr <puzzle::IntPuzzle> getInnerPuzzle();
     int getID();
 
+signals:
+    void clicked();
 
 protected:
     std::shared_ptr <puzzle::IntPuzzle> puzzle;
-    
+    void mousePressEvent (__attribute__((unused)) QMouseEvent * event ) ;
+
+private slots:
+    void slotClicked();
+
 };
 
 class QLabelPuzzle : public QPuzzle
