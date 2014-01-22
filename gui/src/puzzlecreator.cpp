@@ -22,10 +22,10 @@ std::shared_ptr<QLabelPuzzle> PuzzleCreator::createPuzzle(u_int ID)
 
     {
         std::shared_ptr <puzzle::IntPuzzle> tmp(new IntPuzzle(ID));
-        p->setPuzzle(tmp);
+        p->setInnerPuzzle(tmp);
     }
 
-    p->setText(QString::number(p->getPuzzle()->Value));
+    p->setText(QString::number(p->getInnerPuzzle()->Value));
     QRect tmp = p->geometry();
     tmp.setWidth(puzzleSize);
     tmp.setHeight(puzzleSize);

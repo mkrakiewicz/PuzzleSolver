@@ -30,6 +30,7 @@ public:
     bool operator!=(const Dimension2D &toCompare) const;
 
     Dimension2D getDimensions() const;
+    u_int getMultipliedDimensions();
 
     unsigned int horizontalSize, verticalSize;
 };

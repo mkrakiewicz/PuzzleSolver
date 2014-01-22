@@ -13,8 +13,8 @@ class QPuzzle : public QLabel
 public:
     explicit QPuzzle(QWidget *parent = 0);
 
-    void setPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle);
-    const std::shared_ptr <puzzle::IntPuzzle> getPuzzle();
+    void setInnerPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle);
+    const std::shared_ptr <puzzle::IntPuzzle> getInnerPuzzle();
     int getID();
 
 
