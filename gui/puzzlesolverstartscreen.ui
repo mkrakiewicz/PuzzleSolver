@@ -154,7 +154,7 @@
                          <number>2</number>
                         </property>
                         <property name="maximum">
-                         <number>4</number>
+                         <number>6</number>
                         </property>
                         <property name="pageStep">
                          <number>1</number>
@@ -180,7 +180,7 @@
                          <number>2</number>
                         </property>
                         <property name="maximum">
-                         <number>4</number>
+                         <number>6</number>
                         </property>
                         <property name="pageStep">
                          <number>1</number>
@@ -190,6 +190,12 @@
                         </property>
                         <property name="orientation">
                          <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="invertedAppearance">
+                         <bool>false</bool>
+                        </property>
+                        <property name="tickPosition">
+                         <enum>QSlider::NoTicks</enum>
                         </property>
                        </widget>
                       </item>
@@ -224,6 +230,9 @@
                  <enum>QFrame::Sunken</enum>
                 </property>
                 <layout class="QFormLayout" name="formLayout">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                 </property>
                  <item row="0" column="0" colspan="2">
                   <widget class="QGroupBox" name="groupBox_2">
                    <property name="title">
@@ -293,142 +302,6 @@
                <property name="frameShadow">
                 <enum>QFrame::Sunken</enum>
                </property>
-               <widget class="QLabel" name="bompom">
-                <property name="geometry">
-                 <rect>
-                  <x>11</x>
-                  <y>31</y>
-                  <width>16</width>
-                  <height>21</height>
-                 </rect>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="lineWidth">
-                 <number>5</number>
-                </property>
-                <property name="midLineWidth">
-                 <number>0</number>
-                </property>
-                <property name="text">
-                 <string>1</string>
-                </property>
-                <property name="scaledContents">
-                 <bool>false</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-                <property name="margin">
-                 <number>2</number>
-                </property>
-               </widget>
-               <widget class="QLabel" name="label_8">
-                <property name="geometry">
-                 <rect>
-                  <x>31</x>
-                  <y>31</y>
-                  <width>16</width>
-                  <height>21</height>
-                 </rect>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="lineWidth">
-                 <number>5</number>
-                </property>
-                <property name="midLineWidth">
-                 <number>0</number>
-                </property>
-                <property name="text">
-                 <string>1</string>
-                </property>
-                <property name="scaledContents">
-                 <bool>false</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-                <property name="margin">
-                 <number>2</number>
-                </property>
-               </widget>
-               <widget class="QLabel" name="label_9">
-                <property name="geometry">
-                 <rect>
-                  <x>31</x>
-                  <y>58</y>
-                  <width>16</width>
-                  <height>21</height>
-                 </rect>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="lineWidth">
-                 <number>5</number>
-                </property>
-                <property name="midLineWidth">
-                 <number>0</number>
-                </property>
-                <property name="text">
-                 <string>1</string>
-                </property>
-                <property name="scaledContents">
-                 <bool>false</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-                <property name="margin">
-                 <number>2</number>
-                </property>
-               </widget>
-               <widget class="QLabel" name="label_10">
-                <property name="geometry">
-                 <rect>
-                  <x>31</x>
-                  <y>85</y>
-                  <width>16</width>
-                  <height>21</height>
-                 </rect>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="lineWidth">
-                 <number>5</number>
-                </property>
-                <property name="midLineWidth">
-                 <number>0</number>
-                </property>
-                <property name="text">
-                 <string>1</string>
-                </property>
-                <property name="scaledContents">
-                 <bool>false</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-                <property name="margin">
-                 <number>2</number>
-                </property>
-               </widget>
               </widget>
              </item>
             </layout>
@@ -451,8 +324,18 @@
               <layout class="QGridLayout" name="gridLayout_5">
                <item row="0" column="0">
                 <widget class="QPushButton" name="pushButton">
+                 <property name="autoFillBackground">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>PushButton</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>../../../../../Obrazy/Screenshot from 2013-11-20 22:48:36.png</normaloff>../../../../../Obrazy/Screenshot from 2013-11-20 22:48:36.png</iconset>
+                 </property>
+                 <property name="flat">
+                  <bool>false</bool>
                  </property>
                 </widget>
                </item>

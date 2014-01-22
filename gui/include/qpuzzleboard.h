@@ -28,7 +28,7 @@ public:
 
     void setObjectForPuzzle(std::shared_ptr<QLabelPuzzle> puzzle);
     const std::shared_ptr<QLabelPuzzle> getPuzzle(u_int Value);
-    const Position2D &getPosInBoard(const std::shared_ptr<QLabelPuzzle> puzzle);
+    const Position2D &getPosInBoard();
 
 //    const std::shared_ptr<QLabelPuzzle> getPuzzle(const Position2D &pos);
 

@@ -120,3 +120,8 @@ void PuzzleSolverStartScreen::on_buttonCreateNewBoard_clicked()
     createLabelPuzzles();
     ui->tabsMainWindow->setCurrentIndex(1);
 }
+
+void PuzzleSolverStartScreen::on_actionExit_triggered()
+{
+    exit(0);
+}

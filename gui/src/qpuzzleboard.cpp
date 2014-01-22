@@ -36,11 +36,12 @@ const std::shared_ptr<QLabelPuzzle> QPuzzleBoard::getPuzzle(u_int Value)
     return (*puzzleObjects)[Value];
 }
 
-const Position2D & QPuzzleBoard::getPosInBoard(const std::shared_ptr<QLabelPuzzle> puzzle)
+const Position2D & QPuzzleBoard::getPosInBoard(/*const std::shared_ptr<QLabelPuzzle> puzzle*/)
 {
-    u_int p = PuzzleObjToIDPtr[puzzle];
-     Position2D &g = p;
-    return g;
+//    u_int p = (*PuzzleObjToIDPtr)[puzzle];
+    Position2D g(0,3);
+    Position2D &h =g;
+    return h;
 }
 
 /*const std::shared_ptr<QLabelPuzzle> QPuzzleBoard::getPuzzle(const Position2D &pos)
