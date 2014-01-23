@@ -1,7 +1,7 @@
 #ifndef QPUZZLEBOARD_H
 #define QPUZZLEBOARD_H
 
-#include <QObject>
+#include <QWidget>
 #include <memory>
 #include <map>
 #include "enums.h"
@@ -22,11 +22,11 @@ typedef std::shared_ptr < std::map < QLabelPuzzle* , u_int> > PuzzleObjToIDPtr;
 typedef std::shared_ptr < board::IntPuzzleBoard > IntPuzzleBoardPtr;
 
 
-class QPuzzleBoard : public QObject
+class QPuzzleBoard : public QWidget
 {
     Q_OBJECT
 public:
-    QPuzzleBoard(QObject *parent, const board::Dimension2D &dimensions);
+    QPuzzleBoard(QWidget *parent, const board::Dimension2D &dimensions);
     const std::shared_ptr <board::Dimension2D> dimensions;
     const board::Dimension2D & getDimensions();
 
@@ -41,6 +41,9 @@ public:
     void setAnimationFinished();
     bool hasAnimationFinished();
 
+    void recreateBoard();
+
+    virtual ~QPuzzleBoard();
 protected:
     IDtoPuzzleObjPtr  puzzleObjects;
     IntPuzzleBoardPtr innerBoard;
@@ -60,6 +63,7 @@ public:
     void setDimensions(const board::Dimension2D &dims);
     QPuzzleBoard *createBoard();
 
+     virtual ~QPuzzleBoardCreator();
 protected:
     std::shared_ptr<board::Dimension2D> dimensions;
     QWidget *parentForBoard;

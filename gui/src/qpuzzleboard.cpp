@@ -11,8 +11,8 @@
 
 using namespace board;
 
-QPuzzleBoard::QPuzzleBoard(QObject *parent, const board::Dimension2D &dimensions):
-    QObject(parent),
+QPuzzleBoard::QPuzzleBoard(QWidget *parent, const board::Dimension2D &dimensions):
+    QWidget(parent),
     dimensions(new Dimension2D(dimensions)),
     puzzleObjects(new std::map < u_int,QLabelPuzzle* >),
     innerBoard(new IntPuzzleBoard(dimensions)),
@@ -80,6 +80,21 @@ bool QPuzzleBoard::hasAnimationFinished()
     return !animationRunning;
 }
 
+void QPuzzleBoard::recreateBoard()
+{
+    innerBoard = std::shared_ptr<IntPuzzleBoard>(new IntPuzzleBoard(*dimensions));
+}
+
+QPuzzleBoard::~QPuzzleBoard()
+{
+    auto it = puzzleObjects->begin();
+    while (it != puzzleObjects->end())
+    {
+        auto obj = (*it).second;
+        delete obj;
+    }
+}
+
 void QPuzzleBoard::on_animationFinished()
 {
     setAnimationFinished();
@@ -144,6 +159,10 @@ QPuzzleBoard* QPuzzleBoardCreator::createBoard()
         qp = new QPuzzleBoard(0, *dimensions);
 
     return qp;
+}
+
+QPuzzleBoardCreator::~QPuzzleBoardCreator()
+{
 }
 
 

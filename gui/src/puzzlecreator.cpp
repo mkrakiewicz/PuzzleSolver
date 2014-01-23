@@ -22,7 +22,9 @@ QLabelPuzzle* PuzzleCreator::createPuzzle(u_int ID)
 {
     QLabelPuzzle* p = 0;
     if (parentObject)
-        p = new QLabelPuzzle();
+        p = new QLabelPuzzle(parentObject);
+    else
+         p = new QLabelPuzzle();
     {
         std::shared_ptr <puzzle::IntPuzzle> tmp(new IntPuzzle(ID));
         p->setInnerPuzzle(tmp);
