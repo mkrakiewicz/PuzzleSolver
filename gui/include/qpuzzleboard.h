@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <map>
+#include "enums.h"
 
 namespace board {
     class Dimension2D;
@@ -12,6 +13,7 @@ namespace board {
 class QLabelPuzzle;
 class QWidget;
 class Position2D;
+class QPuzzle;
 
 
 typedef std::shared_ptr < std::map < u_int,std::shared_ptr <QLabelPuzzle> > > IDtoPuzzleObjPtr;
@@ -29,6 +31,7 @@ public:
     void setObjectForPuzzle(std::shared_ptr<QLabelPuzzle> puzzle);
     const std::shared_ptr<QLabelPuzzle> getPuzzle(u_int Value);
     const Position2D &getPosInBoard();
+    bool trySlidePuzzle(QPuzzle &puzzle);
 
 //    const std::shared_ptr<QLabelPuzzle> getPuzzle(const Position2D &pos);
 

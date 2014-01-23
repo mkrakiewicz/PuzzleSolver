@@ -5,6 +5,7 @@
 #include "config.h"
 #include "puzzle.h"
 #include <QWidget>
+#include <qpuzzleboard.h>
 
 using namespace puzzle;
 using namespace std;
@@ -32,6 +33,7 @@ std::shared_ptr<QLabelPuzzle> PuzzleCreator::createPuzzle(u_int ID)
     p->setGeometry(tmp);
     p->move(5+xOffsetMultiplier*moveBy,5+yOffsetMultiplier*moveBy);
     p->setFrameShape(QFrame::Shape::Panel);
+    p->setParrentBoard(parentBoard);
 
     p->show();
     if (parentObject)
