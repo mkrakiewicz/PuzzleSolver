@@ -322,13 +322,13 @@
                <string>Puzzle options</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
-               <item row="0" column="0">
+               <item row="1" column="0" colspan="2">
                 <widget class="QPushButton" name="pushButton">
                  <property name="autoFillBackground">
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Solve</string>
                  </property>
                  <property name="icon">
                   <iconset>
@@ -336,6 +336,55 @@
                  </property>
                  <property name="flat">
                   <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QFrame" name="frame_5">
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Box</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Sunken</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_5">
+                  <item>
+                   <widget class="QLabel" name="label_6">
+                    <property name="text">
+                     <string>Priority functions</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="radioButton">
+                    <property name="text">
+                     <string>Hamming</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="radioButton_2">
+                    <property name="text">
+                     <string>Manhattan</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QFrame" name="frame_6">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
                  </property>
                 </widget>
                </item>
@@ -352,7 +401,7 @@
             <item>
              <widget class="QGroupBox" name="groupBox_4">
               <property name="title">
-               <string>Statis</string>
+               <string>Statistics</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_6">
                <item row="0" column="0">
@@ -806,6 +855,21 @@
     <property name="title">
      <string>Menu</string>
     </property>
+    <widget class="QMenu" name="menuOptions">
+     <property name="title">
+      <string>Options</string>
+     </property>
+     <widget class="QMenu" name="menuLanguage">
+      <property name="title">
+       <string>Language</string>
+      </property>
+      <addaction name="actionPolish"/>
+      <addaction name="actionEnglish"/>
+     </widget>
+     <addaction name="menuLanguage"/>
+    </widget>
+    <addaction name="menuOptions"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuMenu"/>
@@ -814,6 +878,16 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionPolish">
+   <property name="text">
+    <string>Polish</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>English</string>
    </property>
   </action>
  </widget>

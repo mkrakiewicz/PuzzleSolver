@@ -23,6 +23,8 @@ PuzzleSolverStartScreen::PuzzleSolverStartScreen(QWidget *parent) :
 {
     ui->setupUi(this);
     board = new QPuzzleBoard(this,*(this->getBoardDimensions()));
+    ui->tabsMainWindow->setCurrentIndex(0);
+
 }
 
 PuzzleSolverStartScreen::~PuzzleSolverStartScreen()
@@ -43,9 +45,12 @@ const Position2D &PuzzleSolverStartScreen::positionToPixelPosition(const Positio
 void PuzzleSolverStartScreen::createLabelPuzzles()
 {
     puzzles->clear();
-    u_int biggerVal = 0;
-
     auto boardSize = getBoardDimensions();
+    if (board != 0) {
+        delete board;
+    }
+    board = new QPuzzleBoard(this,*(boardSize));
+    u_int biggerVal = 0;
     const u_int totalPuzzles = (boardSize->verticalSize * boardSize->horizontalSize) - 1;
 
     if (boardSize->horizontalSize > boardSize->verticalSize)
