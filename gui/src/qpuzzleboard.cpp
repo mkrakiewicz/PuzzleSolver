@@ -80,19 +80,26 @@ bool QPuzzleBoard::hasAnimationFinished()
     return !animationRunning;
 }
 
-void QPuzzleBoard::recreateBoard()
+void QPuzzleBoard::deleteInnerObjects()
 {
-    innerBoard = std::shared_ptr<IntPuzzleBoard>(new IntPuzzleBoard(*dimensions));
+    std::vector<QPuzzle*> pointers;
+    for (std::map < u_int,QLabelPuzzle* >::iterator it=puzzleObjects->begin(); it!=puzzleObjects->end(); ++it)
+    {
+        QPuzzle* obj = it->second;
+        pointers.push_back(obj);
+    }
+
+    puzzleObjects->clear();
+    for (u_int i=0; i<pointers.size(); i++)
+    {
+        QPuzzle* obj = pointers[i];
+        delete obj;
+    }
 }
 
 QPuzzleBoard::~QPuzzleBoard()
 {
-    auto it = puzzleObjects->begin();
-    while (it != puzzleObjects->end())
-    {
-        auto obj = (*it).second;
-        delete obj;
-    }
+
 }
 
 void QPuzzleBoard::on_animationFinished()

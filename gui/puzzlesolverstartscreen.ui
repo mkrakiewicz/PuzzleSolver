@@ -386,6 +386,7 @@
                  <property name="frameShadow">
                   <enum>QFrame::Raised</enum>
                  </property>
+                 <zorder>groupBox_4</zorder>
                 </widget>
                </item>
               </layout>

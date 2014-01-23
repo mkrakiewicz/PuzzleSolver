@@ -41,7 +41,7 @@ public:
     void setAnimationFinished();
     bool hasAnimationFinished();
 
-    void recreateBoard();
+    void deleteInnerObjects();
 
     virtual ~QPuzzleBoard();
 protected:

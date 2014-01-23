@@ -46,6 +46,7 @@ void PuzzleSolverStartScreen::createLabelPuzzles()
 {
     puzzles->clear();
     auto boardSize = getBoardDimensions();
+    board->deleteInnerObjects();
     if (board != 0) {
         delete board;
     }
