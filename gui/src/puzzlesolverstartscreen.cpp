@@ -17,12 +17,12 @@ using namespace board;
 PuzzleSolverStartScreen::PuzzleSolverStartScreen(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PuzzleSolverStartScreen),
-    puzzles(new std::map<u_int,std::shared_ptr <QLabelPuzzle> >),
+    puzzles(new std::map<u_int,QLabelPuzzle* >),
     board(0)
 
 {
     ui->setupUi(this);
-    board = std::shared_ptr < QPuzzleBoard > (new QPuzzleBoard(*(this->getBoardDimensions())));
+    board = new QPuzzleBoard(this,*(this->getBoardDimensions()));
 }
 
 PuzzleSolverStartScreen::~PuzzleSolverStartScreen()

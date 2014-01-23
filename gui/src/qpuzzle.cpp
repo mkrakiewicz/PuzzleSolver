@@ -22,7 +22,7 @@ void QPuzzle::setInnerPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle)
     this->puzzle = puzzle;
 }
 
-void QPuzzle::setParrentBoard(std::shared_ptr<QPuzzleBoard> p)
+void QPuzzle::setParrentBoard(QPuzzleBoard* p)
 {
     parentBoard = p;
 }
@@ -58,7 +58,9 @@ void QPuzzle::applyPuzzleAnimation(SLIDE_DIRECTIONS dir)
 
     auto size = width();
     QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
-    animation->setDuration(1000);
+
+    QObject::connect(animation,SIGNAL(finished()),parentBoard,SLOT(on_animationFinished()));
+    animation->setDuration(500);
     auto g = geometry();
     animation->setStartValue(g);
     switch(dir)
@@ -81,21 +83,24 @@ void QPuzzle::applyPuzzleAnimation(SLIDE_DIRECTIONS dir)
         break;
     }
 
-
     animation->setEndValue(g);
-    animation->setEasingCurve(QEasingCurve::OutExpo);
+    animation->setEasingCurve(QEasingCurve::OutQuad);
+    parentBoard->setAnimationStarted();
     animation->start();
 
 
 }
 
-void QPuzzle::slotClicked()
+QPuzzle::~QPuzzle()
 {
-    parentBoard->trySlidePuzzle(*this);
-
 }
 
+void QPuzzle::slotClicked()
+{
+    if (parentBoard->hasAnimationFinished())
+        parentBoard->trySlidePuzzle(*this);
 
+}
 
 
 void QPuzzle::mousePressEvent(__attribute__((unused))QMouseEvent * event )
@@ -106,5 +111,9 @@ void QPuzzle::mousePressEvent(__attribute__((unused))QMouseEvent * event )
 
 QLabelPuzzle::QLabelPuzzle(QWidget *parent):
     QPuzzle(parent)
+{
+}
+
+QLabelPuzzle::~QLabelPuzzle()
 {
 }

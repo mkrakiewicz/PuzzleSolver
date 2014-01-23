@@ -11,10 +11,12 @@
 
 using namespace board;
 
-QPuzzleBoard::QPuzzleBoard(const Dimension2D &dimensions):
+QPuzzleBoard::QPuzzleBoard(QObject *parent, const board::Dimension2D &dimensions):
+    QObject(parent),
     dimensions(new Dimension2D(dimensions)),
-    puzzleObjects(new std::map < u_int,std::shared_ptr <QLabelPuzzle> >),
-    innerBoard(new IntPuzzleBoard(dimensions))
+    puzzleObjects(new std::map < u_int,QLabelPuzzle* >),
+    innerBoard(new IntPuzzleBoard(dimensions)),
+    animationRunning(false)
 {
 }
 
@@ -25,13 +27,13 @@ const Dimension2D &QPuzzleBoard::getDimensions()
     return p;
 }
 
-void QPuzzleBoard::setObjectForPuzzle(std::shared_ptr<QLabelPuzzle> puzzle)
+void QPuzzleBoard::setObjectForPuzzle(QLabelPuzzle* puzzle)
 {
     auto val = puzzle->getInnerPuzzle()->Value;
     (*puzzleObjects)[val] = puzzle;
 }
 
-const std::shared_ptr<QLabelPuzzle> QPuzzleBoard::getPuzzle(u_int Value)
+const QLabelPuzzle *QPuzzleBoard::getPuzzle(u_int Value)
 {
     return (*puzzleObjects)[Value];
 }
@@ -63,6 +65,26 @@ bool QPuzzleBoard::trySlidePuzzle(QPuzzle & puzzle)
     return false;
 }
 
+void QPuzzleBoard::setAnimationStarted()
+{
+    animationRunning = true;
+}
+
+void QPuzzleBoard::setAnimationFinished()
+{
+    animationRunning = false;
+}
+
+bool QPuzzleBoard::hasAnimationFinished()
+{
+    return !animationRunning;
+}
+
+void QPuzzleBoard::on_animationFinished()
+{
+    setAnimationFinished();
+}
+
 
 
 /*const std::shared_ptr<QLabelPuzzle> QPuzzleBoard::getPuzzle(const Position2D &pos)
@@ -78,7 +100,7 @@ bool QPuzzleBoard::trySlidePuzzle(QPuzzle & puzzle)
 //}
 
 
-std::shared_ptr<QPuzzleBoard> QPuzzleBoardCreator::createBoard()
+QPuzzleBoard* QPuzzleBoardCreator::createBoard()
 {
 
 //    puzzles->clear();
@@ -115,7 +137,12 @@ std::shared_ptr<QPuzzleBoard> QPuzzleBoardCreator::createBoard()
 //            count++;
 //        }
 //    }
-    std::shared_ptr<QPuzzleBoard> qp (new QPuzzleBoard(*dimensions));
+    QPuzzleBoard* qp = 0;
+    if (parentForBoard)
+        qp = new QPuzzleBoard(parentForBoard, *dimensions);
+    else
+        qp = new QPuzzleBoard(0, *dimensions);
+
     return qp;
 }
 

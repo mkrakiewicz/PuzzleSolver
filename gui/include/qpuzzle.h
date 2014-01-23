@@ -16,18 +16,19 @@ public:
     explicit QPuzzle(QWidget *parent = 0);
 
     void setInnerPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle);
-    void setParrentBoard(std::shared_ptr<QPuzzleBoard> p);
+    void setParrentBoard(QPuzzleBoard* p);
     const std::shared_ptr <puzzle::IntPuzzle> getInnerPuzzle();
     int getID();
     bool slideIfHasSpace();
     void applyPuzzleAnimation(board::SLIDE_DIRECTIONS dir);
+    virtual ~QPuzzle();
 signals:
     void clicked();
 
 protected:
     std::shared_ptr <puzzle::IntPuzzle> puzzle;
     void mousePressEvent (__attribute__((unused)) QMouseEvent * event ) ;
-    std::shared_ptr<QPuzzleBoard> parentBoard;
+    QPuzzleBoard* parentBoard;
 
 private slots:
     void slotClicked();
@@ -39,6 +40,8 @@ class QLabelPuzzle : public QPuzzle
     Q_OBJECT
 public:
     explicit QLabelPuzzle(QWidget *parent = 0);
+
+    virtual ~QLabelPuzzle();
 
 };
 
