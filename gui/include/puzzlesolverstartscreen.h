@@ -12,6 +12,7 @@ namespace board {
     class Dimension2D;
 }
 
+class QPuzzleBoard;
 class QLabelPuzzle;
 class Position2D;
 
@@ -43,6 +44,8 @@ private slots:
 private:
     Ui::PuzzleSolverStartScreen *ui;
     std::shared_ptr < std::map<u_int,std::shared_ptr <QLabelPuzzle> > > puzzles;
+    std::shared_ptr < QPuzzleBoard > board;
+
 };
 
 #endif // PUZZLESOLVERSTARTSCREEN_H

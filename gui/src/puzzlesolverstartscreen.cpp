@@ -10,16 +10,19 @@
 #include "position2d.h"
 #include "qpuzzle.h"
 #include "puzzlecreator.h"
+#include "qpuzzleboard.h"
 
 using namespace board;
 
 PuzzleSolverStartScreen::PuzzleSolverStartScreen(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PuzzleSolverStartScreen),
-    puzzles(new std::map<u_int,std::shared_ptr <QLabelPuzzle> >)
+    puzzles(new std::map<u_int,std::shared_ptr <QLabelPuzzle> >),
+    board(0)
 
 {
     ui->setupUi(this);
+    board = std::shared_ptr < QPuzzleBoard > (new QPuzzleBoard(*(this->getBoardDimensions())));
 }
 
 PuzzleSolverStartScreen::~PuzzleSolverStartScreen()
@@ -56,6 +59,7 @@ void PuzzleSolverStartScreen::createLabelPuzzles()
     pC.moveBy = moveBy;
     pC.parentObject = ui->framePuzzleContainer;
     pC.puzzleSize = puzzleSize;
+    pC.parentBoard = board;
 
 //    const QPoint initialPosition(BOARD_MARGIN,BOARD_MARGIN);
     u_int count = 1;
@@ -70,6 +74,7 @@ void PuzzleSolverStartScreen::createLabelPuzzles()
             pC.yOffsetMultiplier = y;
 
             auto p = pC.createPuzzle(count);
+            board->setObjectForPuzzle(p);
             (*puzzles)[count] = p;
 
             count++;

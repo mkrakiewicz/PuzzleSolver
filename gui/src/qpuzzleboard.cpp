@@ -44,6 +44,27 @@ const Position2D & QPuzzleBoard::getPosInBoard(/*const std::shared_ptr<QLabelPuz
     return h;
 }
 
+bool QPuzzleBoard::trySlidePuzzle(QPuzzle & puzzle)
+{
+
+    auto p = puzzle.getInnerPuzzle();
+
+    auto direction = innerBoard->getSlideDir(*p);
+
+    if (direction == 0)
+        return false;
+
+    if (innerBoard->slidePuzzle(*direction))
+    {
+        puzzle.applyPuzzleAnimation(*direction);
+        return true;
+    }
+
+    return false;
+}
+
+
+
 /*const std::shared_ptr<QLabelPuzzle> QPuzzleBoard::getPuzzle(const Position2D &pos)
 {
 

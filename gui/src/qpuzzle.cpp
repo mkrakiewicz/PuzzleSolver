@@ -3,12 +3,15 @@
 #include "qpuzzle.h"
 #include "puzzle.h"
 #include <QPropertyAnimation>
+#include "qpuzzleboard.h"
 
 using namespace puzzle;
+using namespace board;
 
 QPuzzle::QPuzzle(QWidget *parent) :
     QLabel(parent),
-    puzzle(0)
+    puzzle(0),
+    parentBoard(0)
 
 {
     connect( this, SIGNAL( clicked() ), this, SLOT( slotClicked() ) );
@@ -17,6 +20,11 @@ QPuzzle::QPuzzle(QWidget *parent) :
 void QPuzzle::setInnerPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle)
 {
     this->puzzle = puzzle;
+}
+
+void QPuzzle::setParrentBoard(std::shared_ptr<QPuzzleBoard> p)
+{
+    parentBoard = p;
 }
 
 const std::shared_ptr<IntPuzzle> QPuzzle::getInnerPuzzle()
@@ -33,18 +41,57 @@ int QPuzzle::getID()
     return -1;
 }
 
-void QPuzzle::slotClicked()
+bool QPuzzle::slideIfHasSpace()
+{
+    bool result = false;
+
+    if (parentBoard)
+    {
+        result = parentBoard->trySlidePuzzle(*this);
+    }
+
+    return result;
+}
+
+void QPuzzle::applyPuzzleAnimation(SLIDE_DIRECTIONS dir)
 {
 
+    auto size = width();
     QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
     animation->setDuration(1000);
     auto g = geometry();
     animation->setStartValue(g);
-    g.translate(0,150);
+    switch(dir)
+    {
+        case UP:
+        g.translate(0,-size);
+
+        break;
+        case DOWN:
+        g.translate(0,size);
+
+        break;
+        case RIGHT:
+        g.translate(size,0);
+
+        break;
+        case LEFT:
+        g.translate(-size,0);
+
+        break;
+    }
+
 
     animation->setEndValue(g);
     animation->setEasingCurve(QEasingCurve::OutExpo);
     animation->start();
+
+
+}
+
+void QPuzzle::slotClicked()
+{
+    parentBoard->trySlidePuzzle(*this);
 
 }
 

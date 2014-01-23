@@ -142,6 +142,7 @@ std::shared_ptr<Puzzle> PuzzleBoard::getPuzzle(Position2D &pos)
     return p->clone();
 }
 
+
 void PuzzleBoard::fillWith(Puzzle &puzzle)
 {
 
@@ -287,6 +288,30 @@ std::shared_ptr<Position2D> PuzzleBoard::getEmptyPuzzlePos()
 {
     std::shared_ptr<Position2D> p(new Position2D(*puzzles.getEmptyPuzzlePos()));
     return p;
+}
+
+std::shared_ptr<board::SLIDE_DIRECTIONS> PuzzleBoard::getSlideDir(Puzzle &puz)
+{
+    std::shared_ptr<board::SLIDE_DIRECTIONS>  result(0);
+
+    auto pos = puzzles.findPoint(puz);
+    auto empty = puzzles.getEmptyPuzzlePos();
+    Position2D p1 = Position2D(pos->X, pos->Y-1);
+    Position2D p2 = Position2D(pos->X, pos->Y+1);
+    Position2D p3 = Position2D(pos->X-1, pos->Y);
+    Position2D p4 = Position2D(pos->X+1, pos->Y);
+
+     if ((*empty) == p1)
+            return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(UP));
+     if ((*empty) == p2)
+            return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(DOWN));
+     if ((*empty) == p3)
+        return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(LEFT));
+     if ((*empty) == p4)
+            return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(RIGHT));
+
+
+    return result;
 }
 
 EmptyBoard::EmptyBoard(const Dimension2D &d):
