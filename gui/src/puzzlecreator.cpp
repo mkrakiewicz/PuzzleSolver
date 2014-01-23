@@ -12,15 +12,17 @@ using namespace std;
 
 
 PuzzleCreator::PuzzleCreator():
+    parentBoard(0),
     parentObject(0)
 {
 
 }
 
-std::shared_ptr<QLabelPuzzle> PuzzleCreator::createPuzzle(u_int ID)
+QLabelPuzzle* PuzzleCreator::createPuzzle(u_int ID)
 {
-    std::shared_ptr <QLabelPuzzle> p ( new QLabelPuzzle());
-
+    QLabelPuzzle* p = 0;
+    if (parentObject)
+        p = new QLabelPuzzle();
     {
         std::shared_ptr <puzzle::IntPuzzle> tmp(new IntPuzzle(ID));
         p->setInnerPuzzle(tmp);
@@ -33,7 +35,8 @@ std::shared_ptr<QLabelPuzzle> PuzzleCreator::createPuzzle(u_int ID)
     p->setGeometry(tmp);
     p->move(5+xOffsetMultiplier*moveBy,5+yOffsetMultiplier*moveBy);
     p->setFrameShape(QFrame::Shape::Panel);
-    p->setParrentBoard(parentBoard);
+    if (parentBoard)
+        p->setParrentBoard(parentBoard);
 
     p->show();
     if (parentObject)
