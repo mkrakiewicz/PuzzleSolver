@@ -6,6 +6,7 @@
 #include "qpuzzle.h"
 #include "puzzle.h"
 #include "position2d.h"
+#include "puzzlesolver.h"
 
 
 
@@ -13,10 +14,13 @@ using namespace board;
 
 QPuzzleBoard::QPuzzleBoard(QWidget *parent, const board::Dimension2D &dimensions):
     QWidget(parent),
+
     dimensions(new Dimension2D(dimensions)),
+     solver(0),
     puzzleObjects(new std::map < u_int,QLabelPuzzle* >),
     innerBoard(new IntPuzzleBoard(dimensions)),
     animationRunning(false)
+
 {
 }
 
@@ -95,6 +99,26 @@ void QPuzzleBoard::deleteInnerObjects()
         QPuzzle* obj = pointers[i];
         delete obj;
     }
+}
+
+bool QPuzzleBoard::solveBoard()
+{
+
+
+    IntPuzzleBoard toSolve = *innerBoard;
+    solver = std::shared_ptr  <PuzzleSolver>  (new PuzzleSolver(toSolve.getDimensions()));
+    solver->setBoardToSolve(toSolve);
+
+    try {
+     solver->solve();
+    } catch (...)
+    {
+        return false;
+    }
+
+//    auto r = solver->getResult();
+
+    return true;
 }
 
 QPuzzleBoard::~QPuzzleBoard()
