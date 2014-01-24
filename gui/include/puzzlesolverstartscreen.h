@@ -35,7 +35,7 @@ private slots:
 
     void on_verticalBoardSizeSlider_valueChanged(int value);
 
-    void on_pushButton_clicked();
+    void on_buttonSolvePuzzle_clicked();
 
     void on_buttonCreateNewBoard_clicked();
 

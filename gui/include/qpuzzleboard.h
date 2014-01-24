@@ -15,7 +15,7 @@ class QLabelPuzzle;
 class QWidget;
 class Position2D;
 class QPuzzle;
-
+class PuzzleSolver;
 
 typedef std::shared_ptr < std::map < u_int,QLabelPuzzle* > > IDtoPuzzleObjPtr;
 typedef std::shared_ptr < std::map < QLabelPuzzle* , u_int> > PuzzleObjToIDPtr;
@@ -43,11 +43,17 @@ public:
 
     void deleteInnerObjects();
 
+    bool solveBoard();
+
+
     virtual ~QPuzzleBoard();
+    std::shared_ptr<PuzzleSolver> solver;
+
 protected:
     IDtoPuzzleObjPtr  puzzleObjects;
     IntPuzzleBoardPtr innerBoard;
     bool animationRunning;
+
 public slots:
 
     void on_animationFinished();

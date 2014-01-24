@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <QThread>
+#include <QString>
 #include <QPropertyAnimation>
 #include <QFrame>
 #include "puzzlesolverstartscreen.h"
@@ -11,6 +12,7 @@
 #include "qpuzzle.h"
 #include "puzzlecreator.h"
 #include "qpuzzleboard.h"
+#include "puzzlesolver.h"
 
 using namespace board;
 
@@ -114,15 +116,16 @@ void PuzzleSolverStartScreen::on_verticalBoardSizeSlider_valueChanged(int value)
 
 }
 
-void PuzzleSolverStartScreen::on_pushButton_clicked()
+void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
 {
-
-//    QPropertyAnimation *animation = new QPropertyAnimation(ui->dial, "geometry");
-//    animation->setDuration(1000);
-//    animation->setStartValue(QRect(0, 0, 100, 30));
-//    animation->setEndValue(QRect(250, 250, 100, 30));
-
-//    animation->start();
+    ui->labelSteps->setText("");
+    if (board->solveBoard()){
+        ui->suck->setText("success");
+        auto result = board->solver->getResult();
+        ui->labelSteps->setText(QString::number(result.size()));
+    }
+    else
+        ui->suck->setText("fail");
 
 }
 
