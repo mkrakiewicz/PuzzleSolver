@@ -56,13 +56,24 @@ bool QPuzzle::slideIfHasSpace()
 void QPuzzle::applyPuzzleAnimation(SLIDE_DIRECTIONS dir)
 {
 
-    auto size = width();
+    QPropertyAnimation *animation = createSlideAnimation(dir);
+    QObject::connect(animation,SIGNAL(finished()),parentBoard,SLOT(on_animationFinished()));
+    parentBoard->setAnimationStarted();
+    animation->start();
+
+
+}
+
+QPropertyAnimation *QPuzzle::createSlideAnimation(SLIDE_DIRECTIONS dir)
+{
     QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
 
-    QObject::connect(animation,SIGNAL(finished()),parentBoard,SLOT(on_animationFinished()));
     animation->setDuration(500);
     auto g = geometry();
     animation->setStartValue(g);
+
+    auto size = width();
+
     switch(dir)
     {
         case UP:
@@ -85,10 +96,7 @@ void QPuzzle::applyPuzzleAnimation(SLIDE_DIRECTIONS dir)
 
     animation->setEndValue(g);
     animation->setEasingCurve(QEasingCurve::OutQuad);
-    parentBoard->setAnimationStarted();
-    animation->start();
-
-
+    return animation;
 }
 
 QPuzzle::~QPuzzle()

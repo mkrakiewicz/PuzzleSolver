@@ -31,11 +31,14 @@ public:
     const board::Dimension2D & getDimensions();
 
     void setObjectForPuzzle(QLabelPuzzle *puzzle);
-    const QLabelPuzzle*  getPuzzle(u_int Value);
+    QLabelPuzzle *getPuzzle(u_int Value);
     const Position2D &getPosInBoard();
     bool trySlidePuzzle(QPuzzle &puzzle);
+//    bool trySlidePuzzle(board::SLIDE_DIRECTIONS direction);
+    QLabelPuzzle *getSlidablePuzzle(board::SLIDE_DIRECTIONS direction);
 
-//    const std::shared_ptr<QLabelPuzzle> getPuzzle(const Position2D &pos);
+    bool slideInnerPuzzle(board::SLIDE_DIRECTIONS direction);
+
 
     void setAnimationStarted();
     void setAnimationFinished();

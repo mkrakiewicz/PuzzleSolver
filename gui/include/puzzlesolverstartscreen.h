@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <memory>
+#include "enums.h"
+
 
 namespace Ui {
     class PuzzleSolverStartScreen;
@@ -15,6 +17,8 @@ namespace board {
 class QPuzzleBoard;
 class QLabelPuzzle;
 class Position2D;
+class QSolutionAnimator;
+class AboutDialog;
 
 class PuzzleSolverStartScreen : public QMainWindow
 {
@@ -24,12 +28,14 @@ public:
     explicit PuzzleSolverStartScreen(QWidget *parent = 0);
     ~PuzzleSolverStartScreen();
     
-
 protected:
 //    std::shared_ptr<QLabelPuzzle>
     const Position2D& positionToPixelPosition(const Position2D& pos);
     void createLabelPuzzles();
     const std::shared_ptr<board::Dimension2D> getBoardDimensions();
+    void updateSolutionGUI();
+    void setSolutionStepsToGUI(const std::vector<board::SLIDE_DIRECTIONS> &r);
+    void setSolutionStatstoGUI(const std::vector<board::SLIDE_DIRECTIONS> &r);
 private slots:
     void on_horizontalBoardSizeSlider_valueChanged(int value);
 
@@ -41,10 +47,18 @@ private slots:
 
     void on_actionExit_triggered();
 
+    void on_buttonAnimateSteps_clicked();
+
+    void on_actionAuthor_triggered();
+
 private:
     Ui::PuzzleSolverStartScreen *ui;
     std::shared_ptr < std::map<u_int,QLabelPuzzle* > > puzzles;
     QPuzzleBoard* board;
+    std::shared_ptr <QSolutionAnimator> animator;
+
+    bool solutionViewed = false;
+    AboutDialog *aboutDialog;
 
 };
 
