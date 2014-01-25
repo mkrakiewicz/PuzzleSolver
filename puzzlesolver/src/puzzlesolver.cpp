@@ -43,8 +43,8 @@ void PuzzleSolver::solve()
         }
         stateManager->setNextCurrentState();
         count++;
-        if (stateManager->getNumStates() > 400)
-            throw Exception("over 400");
+        if (stateManager->getNumStates() > 5000)
+            throw Exception("over 5000");
     }
 
 }

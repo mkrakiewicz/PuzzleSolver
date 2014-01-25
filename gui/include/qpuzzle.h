@@ -8,6 +8,7 @@ namespace puzzle {
     class IntPuzzle;
 }
 class QPuzzleBoard;
+class QPropertyAnimation;
 
 class QPuzzle : public QLabel
 {
@@ -21,6 +22,9 @@ public:
     int getID();
     bool slideIfHasSpace();
     void applyPuzzleAnimation(board::SLIDE_DIRECTIONS dir);
+
+    QPropertyAnimation * createSlideAnimation(board::SLIDE_DIRECTIONS dir);
+
     virtual ~QPuzzle();
 signals:
     void clicked();

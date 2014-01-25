@@ -11,6 +11,7 @@
 
 
 using namespace board;
+using namespace puzzle;
 
 QPuzzleBoard::QPuzzleBoard(QWidget *parent, const board::Dimension2D &dimensions):
     QWidget(parent),
@@ -37,7 +38,7 @@ void QPuzzleBoard::setObjectForPuzzle(QLabelPuzzle* puzzle)
     (*puzzleObjects)[val] = puzzle;
 }
 
-const QLabelPuzzle *QPuzzleBoard::getPuzzle(u_int Value)
+QLabelPuzzle *QPuzzleBoard::getPuzzle(u_int Value)
 {
     return (*puzzleObjects)[Value];
 }
@@ -67,6 +68,57 @@ bool QPuzzleBoard::trySlidePuzzle(QPuzzle & puzzle)
     }
 
     return false;
+}
+
+//bool QPuzzleBoard::trySlidePuzzle(SLIDE_DIRECTIONS direction)
+//{
+//    auto p = puzzle.getInnerPuzzle();
+//    if (innerBoard->slidePuzzle(direction))
+//    {
+//        puzzle.applyPuzzleAnimation(direction);
+//        return true;
+//    }
+
+//    return false;
+//}
+
+QLabelPuzzle *QPuzzleBoard::getSlidablePuzzle(SLIDE_DIRECTIONS direction)
+{
+    auto p = innerBoard->getEmptyPuzzlePos();
+    Position2D desired;
+    switch (direction)
+    {
+        case UP:
+        desired = Position2D(p->X,p->Y+1);
+        break;
+        case DOWN:
+        desired = Position2D(p->X,p->Y-1);
+        break;
+        case LEFT:
+        desired = Position2D(p->X+1,p->Y);
+        break;
+        case RIGHT:
+        desired = Position2D(p->X-1,p->Y);
+        break;
+    }
+    if (innerBoard->isValidPos(desired))
+    {
+        auto puzzl = innerBoard->getPuzzle(desired);
+        if (puzzl->getType() == puzzle::PUZZLE_TYPES::OBJECT)
+        {
+            std::shared_ptr<IntPuzzle> p = std::dynamic_pointer_cast<IntPuzzle> (puzzl->clone());
+            int val = p->Value;
+            return  getPuzzle(val);
+        }
+        else return 0;
+    }else return 0;
+}
+
+bool QPuzzleBoard::slideInnerPuzzle(SLIDE_DIRECTIONS direction)
+{
+     if (innerBoard->slidePuzzle(direction))
+         return true;
+     return false;
 }
 
 void QPuzzleBoard::setAnimationStarted()
@@ -149,40 +201,6 @@ void QPuzzleBoard::on_animationFinished()
 QPuzzleBoard* QPuzzleBoardCreator::createBoard()
 {
 
-//    puzzles->clear();
-//    u_int biggerVal = 0;
-
-//    const u_int totalPuzzles = (boardSize->verticalSize * boardSize->horizontalSize) - 1;
-
-//    if (boardSize->horizontalSize > boardSize->verticalSize)
-//        biggerVal = boardSize->horizontalSize;
-//    else
-//        biggerVal = boardSize->verticalSize;
-
-//    const u_int puzzleSize = MAX_BOARD_PIXELS/biggerVal;
-//    const u_int moveBy = puzzleSize;
-//    PuzzleCreator pC;
-//    pC.moveBy = moveBy;
-//    pC.parentObject = ui->framePuzzleContainer;
-//    pC.puzzleSize = puzzleSize;
-
-//    u_int count = 1;
-//    for (u_int y=0; y<boardSize->verticalSize; y++)
-//    {
-//        for (u_int x=0; x<boardSize->horizontalSize; x++)
-//        {
-//            if (count == (totalPuzzles + 1))
-//                break;
-
-//            pC.xOffsetMultiplier = x;
-//            pC.yOffsetMultiplier = y;
-
-//            auto p = pC.createPuzzle(count);
-//            (*puzzles)[count] = p;
-
-//            count++;
-//        }
-//    }
     QPuzzleBoard* qp = 0;
     if (parentForBoard)
         qp = new QPuzzleBoard(parentForBoard, *dimensions);
