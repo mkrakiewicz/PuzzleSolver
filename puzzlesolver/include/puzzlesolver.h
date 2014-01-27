@@ -64,7 +64,7 @@ class PuzzleSolver
 public:
     PuzzleSolver(const board::Dimension2D&dim);
     void newSearch();
-    void solve();
+    void solve() throw();
     void setBoardToSolve(board::PuzzleBoard&) throw();
     const std::vector<board::SLIDE_DIRECTIONS> getResult();
     const std::shared_ptr<PuzzleBoardState > getCurrentState();

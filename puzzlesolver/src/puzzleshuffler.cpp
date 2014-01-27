@@ -22,7 +22,7 @@ using namespace puzzle;
 PuzzleShuffler::PuzzleShuffler():
     initialBoard(0),
     boardToShuffle(0),
-    slideHistory(new std::vector < std::map<board::SLIDE_DIRECTIONS, std::string> > ),
+    slideHistory(new VectorOfSlideDirToStringMaps ),
     wasThere(new set<Position2D>),
     positionHistory(new std::vector <Position2D>)
 {
@@ -95,7 +95,7 @@ bool PuzzleShuffler::tryMoveInNewPos()
     do {
         tryMoveInAllDirections();
     }
-    while(*(this->boardToShuffle->getEmptyPuzzlePos()) == lastPos);
+    while(*(this->boardToShuffle->getEmptyPuzzlePos()) != lastPos);
     return true;
 }
 
@@ -197,9 +197,21 @@ void PuzzleShuffler::verifyBoard() throw()
 
 }
 
-std::vector < std::map<board::SLIDE_DIRECTIONS, std::string> >  PuzzleShuffler::getStepHistory()
+VectorOfSlideDirToStringMaps PuzzleShuffler::getStepHistory()
 {
     return *(this->slideHistory);
+}
+
+//typedef std::vector < std::map<board::SLIDE_DIRECTIONS, std::string> > VectorOfSlideDirToStringMaps;
+std::shared_ptr<std::vector<board::SLIDE_DIRECTIONS> > PuzzleShuffler::getStepsOnly()
+{
+    std::shared_ptr<std::vector<board::SLIDE_DIRECTIONS> > steps(new std::vector<board::SLIDE_DIRECTIONS> );
+    for (u_int i=0; i<slideHistory->size(); i++)
+    {
+        std::map<board::SLIDE_DIRECTIONS, std::string> map = (*slideHistory)[i];
+        steps->push_back((*map.begin()).first);
+    }
+    return steps;
 }
 
 std::vector<Position2D> PuzzleShuffler::getEmptyMovementHistory()
