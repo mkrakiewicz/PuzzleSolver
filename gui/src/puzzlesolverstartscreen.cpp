@@ -18,6 +18,7 @@
 #include "exceptions.h"
 #include "aboutdialog.h"
 #include "errordialog.h"
+#include "puzzleshuffler.h"
 
 
 using namespace board;
@@ -158,18 +159,18 @@ void PuzzleSolverStartScreen::on_verticalBoardSizeSlider_valueChanged(int value)
 void PuzzleSolverStartScreen::solutionFoundAction()
 {
     solutionViewed = false;
-    ui->suck->setText("success");
+    ui->labelSuccess->setText("success");
     updateSolutionGUI();
 }
 
-void PuzzleSolverStartScreen::showErrorDialog(const Exception &e)
+void PuzzleSolverStartScreen::showErrorDialog(const QString &str)
 {
     if (errorDialog == 0)
     {
         errorDialog = new ErrorDialog(this);
         errorDialog->setFixedSize(errorDialog->size());
     }
-    errorDialog->setMessage(e.what());
+    errorDialog->setMessage(str);
     errorDialog->show();
 }
 
@@ -183,24 +184,33 @@ void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
         result = board->solveBoard();
     }catch(const Exception &e)
     {
-        showErrorDialog(e);
+        showErrorDialog(e.what());
+    }
+    catch(...)
+    {
+        showErrorDialog("Unknown error?");
     }
 
     if (result){
         solutionFoundAction();
     }
     else
-        ui->suck->setText("fail");
+        ui->labelSuccess->setText("fail");
 
 
+}
+
+void PuzzleSolverStartScreen::gotoPuzzleBoard()
+{
+    ui->tabsMainWindow->setCurrentIndex(1);
+    ui->buttonAnimateSteps->setDisabled(true);
+    ui->tabsMainWindow->setTabEnabled(1,true);
 }
 
 void PuzzleSolverStartScreen::on_buttonCreateNewBoard_clicked()
 {
     createNewBoard();
-    ui->tabsMainWindow->setCurrentIndex(1);
-    ui->buttonAnimateSteps->setDisabled(true);
-    ui->tabsMainWindow->setTabEnabled(1,true);
+    gotoPuzzleBoard();
 
 }
 
@@ -209,26 +219,103 @@ void PuzzleSolverStartScreen::on_actionExit_triggered()
     exit(0);
 }
 
+void PuzzleSolverStartScreen::createAndStartSlideSequence(const std::vector<board::SLIDE_DIRECTIONS> directions)
+{
+    animator = std::shared_ptr<QSlideAnimator>(new QSlideAnimator(this));
+    animator->setSteps(directions);
+    animator->setBoardToAnimate(board);
+    animator->start();
+}
+
 void PuzzleSolverStartScreen::on_buttonAnimateSteps_clicked()
 {
     if (solutionViewed)
         return;
     solutionViewed = true;
     ui->buttonAnimateSteps->setDisabled(true);
-    animator = std::shared_ptr<QSolutionAnimator>(new QSolutionAnimator(this));
-    auto solution = board->solver->getResult();
-    animator->setSteps(solution);
-    animator->setBoardToAnimate(board);
-    animator->start();
-    //       g.start();1
+    auto moves = board->solver->getResult();
+    createAndStartSlideSequence(moves);
 }
 
-void PuzzleSolverStartScreen::on_actionAuthor_triggered()
+void PuzzleSolverStartScreen::createAboutDialog()
 {
     if (aboutDialog == 0) {
         aboutDialog = new AboutDialog(this);
         aboutDialog->setFixedSize(aboutDialog->size());
 
     }
+}
+
+void PuzzleSolverStartScreen::on_actionAuthor_triggered()
+{
+    createAboutDialog();
     aboutDialog->show();
+}
+
+
+void PuzzleSolverStartScreen::on_radioShuffleSteps_clicked()
+{
+    ui->editShuffleStepNum->setEnabled(true);
+    ui->editShufflePercentage->setDisabled(true);
+}
+
+void PuzzleSolverStartScreen::disablePercentageInput()
+{
+    ui->editShuffleStepNum->setDisabled(true);
+    ui->editShufflePercentage->setEnabled(true);
+}
+
+void PuzzleSolverStartScreen::disableStepsInput()
+{
+    disablePercentageInput();
+}
+
+void PuzzleSolverStartScreen::on_radioShufflePercentage_clicked()
+{
+    disableStepsInput();
+}
+
+bool PuzzleSolverStartScreen::isShufflingBySteps()
+{
+    if (ui->radioShuffleSteps->isChecked()) {
+        return true;
+    }  return false;
+}
+
+int PuzzleSolverStartScreen::getShuffleStepNum()
+{
+    return ui->editShuffleStepNum->value();
+}
+
+double PuzzleSolverStartScreen::getShufflePercentage()
+{
+    return ui->editShufflePercentage->value();
+}
+
+void PuzzleSolverStartScreen::on_buttonShuffle_clicked()
+{
+    PuzzleShuffler s;
+    s.setBoardToShuffle(*(board->getInnerBoard()));
+
+    if (isShufflingBySteps()) {
+        s.setShuffleMoves(getShuffleStepNum());
+    } else {
+        getShufflePercentage();
+        s.setMinimumShuffledPuzzles(getShufflePercentage());
+    }
+
+    try{
+        s.shuffle();
+    }catch(const Exception &e)
+    {
+        showErrorDialog(e.what());
+    }
+    catch(...)
+    {
+        showErrorDialog("Unknown error w");
+    }
+
+    auto moves = s.getStepsOnly();
+    createAndStartSlideSequence(*moves);
+
 }

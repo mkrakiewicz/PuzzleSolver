@@ -26,7 +26,7 @@ void PuzzleSolver::newSearch()
     steps->clear();
 }
 
-void PuzzleSolver::solve()
+void PuzzleSolver::solve() throw()
 {
     if (!boardToSolve)
         return;

@@ -17,7 +17,7 @@ class Position2D;
 class string;
 
 typedef std::shared_ptr<board::PuzzleBoard>  PuzzleBoardSharedPtr; // because it is too long
-
+typedef std::vector < std::map<board::SLIDE_DIRECTIONS, std::string> > VectorOfSlideDirToStringMaps;
 
 class PuzzleShuffler
 {
@@ -51,7 +51,8 @@ public:
     void shuffle() throw();
     std::shared_ptr<board::PuzzleBoard> getResult();
     void verifyBoard() throw();
-    std::vector < std::map<board::SLIDE_DIRECTIONS, std::string> > getStepHistory();
+    VectorOfSlideDirToStringMaps getStepHistory();
+    std::shared_ptr < std::vector < board::SLIDE_DIRECTIONS> > getStepsOnly();
     std::vector<Position2D> getEmptyMovementHistory();
     void staticInit();
 
@@ -73,7 +74,7 @@ protected:
 
     std::shared_ptr<board::PuzzleBoard> initialBoard;
     std::shared_ptr<board::PuzzleBoard> boardToShuffle;
-    std::shared_ptr < std::vector<std::map<board::SLIDE_DIRECTIONS, std::string>>  > slideHistory;
+    std::shared_ptr < VectorOfSlideDirToStringMaps  > slideHistory;
 
 private:
     std::shared_ptr< std::set<Position2D> > wasThere;

@@ -166,7 +166,12 @@ bool QPuzzleBoard::solveBoard() throw()
     IntPuzzleBoard toSolve = *innerBoard;
     solver = std::shared_ptr  <PuzzleSolver>  (new PuzzleSolver(toSolve.getDimensions()));
     solver->setBoardToSolve(toSolve);
-    solver->solve();
+    try {
+        solver->solve();
+    }catch(const Exception &e)
+    {
+        throw e;
+    }
     return solver->isSolved();
 }
 
