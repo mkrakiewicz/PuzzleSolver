@@ -1,33 +1,44 @@
 #include "stdafx.h"
 
-#include "puzzlecreator.h"
+#include "qpuzzlecreator.h"
 #include "qpuzzle.h"
 #include "config.h"
 #include "puzzle.h"
+#include "puzzleboard.h"
+#include "exceptions.h"
 #include <QWidget>
 #include <qpuzzleboard.h>
 
+using namespace board;
 using namespace puzzle;
 using namespace std;
 
 
-PuzzleCreator::PuzzleCreator():
+QPuzzleCreator::QPuzzleCreator():
+    realBoard(0),
     parentBoard(0),
     parentObject(0)
 {
 
 }
 
-QLabelPuzzle* PuzzleCreator::createPuzzle(u_int ID)
+QLabelPuzzle* QPuzzleCreator::createPuzzle(u_int ID)
 {
+
+    if (realBoard == 0)
+        throw Exception("Real board not set!");
+
     QLabelPuzzle* p = 0;
     if (parentObject)
         p = new QLabelPuzzle(parentObject);
     else
          p = new QLabelPuzzle();
+
+
     {
-        std::shared_ptr <puzzle::IntPuzzle> tmp(new IntPuzzle(ID));
-        p->setInnerPuzzle(tmp);
+        auto puzzle = realBoard->getPuzzle(ID);
+
+        p->setInnerPuzzle(std::dynamic_pointer_cast<IntPuzzle> (puzzle));
     }
 
     p->setText(QString::number(p->getInnerPuzzle()->Value));

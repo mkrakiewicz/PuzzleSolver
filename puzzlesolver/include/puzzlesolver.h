@@ -69,12 +69,12 @@ public:
     const std::vector<board::SLIDE_DIRECTIONS> getResult();
     const std::shared_ptr<PuzzleBoardState > getCurrentState();
     const std::vector < std::shared_ptr<PuzzleBoardState > > getAvailableStates();
+    bool isSolved();
 
 
     virtual ~PuzzleSolver(){}
 protected:
     void setGoalBoard();
-    bool isSolved();
     void recursiveAddSteps(std::shared_ptr<PuzzleBoardState > parent);
     std::shared_ptr<board::Dimension2D> dimensionOfBoards;
     std::shared_ptr<board::PuzzleBoard> boardToSolve;

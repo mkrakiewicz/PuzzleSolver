@@ -12,7 +12,7 @@ public:
 
     bool operator==(const Position2D &toCompare) const;
     bool operator!=(const Position2D &toCompare) const;
-    bool operator <(const Position2D &toCompare) const;
+    bool operator<(const Position2D &toCompare) const;
 
 
     std::shared_ptr<Position2D> clone() const;

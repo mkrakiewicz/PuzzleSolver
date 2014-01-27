@@ -11,11 +11,14 @@
 #include "puzzleboard.h"
 #include "position2d.h"
 #include "qpuzzle.h"
-#include "puzzlecreator.h"
+#include "qpuzzlecreator.h"
 #include "qpuzzleboard.h"
 #include "puzzlesolver.h"
 #include "qsolutionanimator.h"
+#include "exceptions.h"
 #include "aboutdialog.h"
+#include "errordialog.h"
+
 
 using namespace board;
 
@@ -25,7 +28,8 @@ PuzzleSolverStartScreen::PuzzleSolverStartScreen(QWidget *parent) :
     puzzles(new std::map<u_int,QLabelPuzzle* >),
     board(0),
     animator(0),
-    aboutDialog(0)
+    aboutDialog(0),
+    errorDialog(0)
 
 {
     ui->setupUi(this);
@@ -51,7 +55,7 @@ const Position2D &PuzzleSolverStartScreen::positionToPixelPosition(const Positio
     return result;
 }
 
-void PuzzleSolverStartScreen::createLabelPuzzles()
+void PuzzleSolverStartScreen::createNewBoard()
 {
     puzzles->clear();
     auto boardSize = getBoardDimensions();
@@ -70,11 +74,12 @@ void PuzzleSolverStartScreen::createLabelPuzzles()
 
     const u_int puzzleSize = MAX_BOARD_PIXELS/biggerVal;
     const u_int moveBy = puzzleSize;
-    PuzzleCreator pC;
+    QPuzzleCreator pC;
     pC.moveBy = moveBy;
     pC.parentObject = ui->framePuzzleContainer;
     pC.puzzleSize = puzzleSize;
     pC.parentBoard = board;
+    pC.realBoard = board->getInnerBoard();
 
     //    const QPoint initialPosition(BOARD_MARGIN,BOARD_MARGIN);
     u_int count = 1;
@@ -96,6 +101,7 @@ void PuzzleSolverStartScreen::createLabelPuzzles()
         }
     }
 
+
 }
 
 
@@ -111,6 +117,7 @@ void PuzzleSolverStartScreen::updateSolutionGUI()
     auto r = board->solver->getResult();
     if (r.size() > 0)
     {
+        ui->buttonAnimateSteps->setEnabled(true);
         setSolutionStepsToGUI(r);
         setSolutionStatstoGUI(r);
     }
@@ -148,24 +155,49 @@ void PuzzleSolverStartScreen::on_verticalBoardSizeSlider_valueChanged(int value)
 
 }
 
+void PuzzleSolverStartScreen::solutionFoundAction()
+{
+    solutionViewed = false;
+    ui->suck->setText("success");
+    updateSolutionGUI();
+}
+
+void PuzzleSolverStartScreen::showErrorDialog(const Exception &e)
+{
+    if (errorDialog == 0)
+    {
+        errorDialog = new ErrorDialog(this);
+        errorDialog->setFixedSize(errorDialog->size());
+    }
+    errorDialog->setMessage(e.what());
+    errorDialog->show();
+}
+
 void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
 {
     ui->labelSteps->setText("");
     ui->listSolutionSteps->clear();
-    if (board->solveBoard()){
-        solutionViewed = false;
-        ui->buttonAnimateSteps->setEnabled(true);
-        ui->suck->setText("success");
-        updateSolutionGUI();
+    bool result = false;
+
+    try{
+        result = board->solveBoard();
+    }catch(const Exception &e)
+    {
+        showErrorDialog(e);
+    }
+
+    if (result){
+        solutionFoundAction();
     }
     else
         ui->suck->setText("fail");
+
 
 }
 
 void PuzzleSolverStartScreen::on_buttonCreateNewBoard_clicked()
 {
-    createLabelPuzzles();
+    createNewBoard();
     ui->tabsMainWindow->setCurrentIndex(1);
     ui->buttonAnimateSteps->setDisabled(true);
     ui->tabsMainWindow->setTabEnabled(1,true);
