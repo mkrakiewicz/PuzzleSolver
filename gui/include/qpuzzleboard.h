@@ -35,7 +35,7 @@ public:
     const Position2D &getPosInBoard();
     bool trySlidePuzzle(QPuzzle &puzzle);
 //    bool trySlidePuzzle(board::SLIDE_DIRECTIONS direction);
-    QLabelPuzzle *getSlidablePuzzle(board::SLIDE_DIRECTIONS direction);
+    QLabelPuzzle *getSlidablePuzzle(const board::SLIDE_DIRECTIONS &direction);
 
     bool slideInnerPuzzle(board::SLIDE_DIRECTIONS direction);
 
@@ -45,13 +45,13 @@ public:
     bool hasAnimationFinished();
 
     void deleteInnerObjects();
-
-    bool solveBoard();
-
+    bool solveBoard() throw();
+    IntPuzzleBoardPtr getInnerBoard();
 
     virtual ~QPuzzleBoard();
     std::shared_ptr<PuzzleSolver> solver;
 
+//    Position2D directionToPosition(const Position2D &initialPos, const board::SLIDE_DIRECTIONS &direction);
 protected:
     IDtoPuzzleObjPtr  puzzleObjects;
     IntPuzzleBoardPtr innerBoard;

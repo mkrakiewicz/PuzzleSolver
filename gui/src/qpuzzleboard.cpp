@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "puzzleboard.h"
 #include "config.h"
-#include "puzzlecreator.h"
+#include "qpuzzlecreator.h"
 #include "qpuzzleboard.h"
 #include "qpuzzle.h"
 #include "puzzle.h"
 #include "position2d.h"
 #include "puzzlesolver.h"
+#include "exceptions.h"
 
 
 
@@ -19,10 +20,10 @@ QPuzzleBoard::QPuzzleBoard(QWidget *parent, const board::Dimension2D &dimensions
     dimensions(new Dimension2D(dimensions)),
      solver(0),
     puzzleObjects(new std::map < u_int,QLabelPuzzle* >),
-    innerBoard(new IntPuzzleBoard(dimensions)),
-    animationRunning(false)
+    innerBoard(new IntPuzzleBoard(dimensions))
 
 {
+    animationRunning = false;
 }
 
 const Dimension2D &QPuzzleBoard::getDimensions()
@@ -82,25 +83,32 @@ bool QPuzzleBoard::trySlidePuzzle(QPuzzle & puzzle)
 //    return false;
 //}
 
-QLabelPuzzle *QPuzzleBoard::getSlidablePuzzle(SLIDE_DIRECTIONS direction)
+//Position2D QPuzzleBoard::directionToPosition(const Position2D &initialPos, const SLIDE_DIRECTIONS &direction)
+//{
+//    Position2D posAfterSlide;
+//    switch (direction)
+//    {
+//        case UP:
+//        posAfterSlide = Position2D(initialPos->X,initialPos->Y+1);
+//        break;
+//        case DOWN:
+//        posAfterSlide = Position2D(initialPos->X,initialPos->Y-1);
+//        break;
+//        case LEFT:
+//        posAfterSlide = Position2D(initialPos->X+1,initialPos->Y);
+//        break;
+//        case RIGHT:
+//        posAfterSlide = Position2D(initialPos->X-1,initialPos->Y);
+//        break;
+//    }
+//    return posAfterSlide;
+//}
+
+QLabelPuzzle *QPuzzleBoard::getSlidablePuzzle(const SLIDE_DIRECTIONS &direction)
 {
     auto p = innerBoard->getEmptyPuzzlePos();
-    Position2D desired;
-    switch (direction)
-    {
-        case UP:
-        desired = Position2D(p->X,p->Y+1);
-        break;
-        case DOWN:
-        desired = Position2D(p->X,p->Y-1);
-        break;
-        case LEFT:
-        desired = Position2D(p->X+1,p->Y);
-        break;
-        case RIGHT:
-        desired = Position2D(p->X-1,p->Y);
-        break;
-    }
+    Position2D desired = innerBoard->determineEmptyPosAfterSlide(direction);
+
     if (innerBoard->isValidPos(desired))
     {
         auto puzzl = innerBoard->getPuzzle(desired);
@@ -153,24 +161,18 @@ void QPuzzleBoard::deleteInnerObjects()
     }
 }
 
-bool QPuzzleBoard::solveBoard()
+bool QPuzzleBoard::solveBoard() throw()
 {
-
-
     IntPuzzleBoard toSolve = *innerBoard;
     solver = std::shared_ptr  <PuzzleSolver>  (new PuzzleSolver(toSolve.getDimensions()));
     solver->setBoardToSolve(toSolve);
+    solver->solve();
+    return solver->isSolved();
+}
 
-    try {
-     solver->solve();
-    } catch (...)
-    {
-        return false;
-    }
-
-//    auto r = solver->getResult();
-
-    return true;
+IntPuzzleBoardPtr QPuzzleBoard::getInnerBoard()
+{
+    return innerBoard;
 }
 
 QPuzzleBoard::~QPuzzleBoard()
@@ -178,24 +180,11 @@ QPuzzleBoard::~QPuzzleBoard()
 
 }
 
+
 void QPuzzleBoard::on_animationFinished()
 {
     setAnimationFinished();
 }
-
-
-
-/*const std::shared_ptr<QLabelPuzzle> QPuzzleBoard::getPuzzle(const Position2D &pos)
-{
-
-}*/
-
-
-//void QPuzzleBoard::createLabelPuzzles()
-//{
-
-
-//}
 
 
 QPuzzleBoard* QPuzzleBoardCreator::createBoard()

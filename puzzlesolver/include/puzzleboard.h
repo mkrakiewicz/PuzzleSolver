@@ -19,6 +19,9 @@ class Position2D;
 
 namespace board {
 
+class EmptyBoard;
+class IntPuzzleBoard;
+
 class Dimension2D
 {
 public:
@@ -28,6 +31,8 @@ public:
 
     bool operator==(const Dimension2D &toCompare) const;
     bool operator!=(const Dimension2D &toCompare) const;
+    bool operator <(const Dimension2D &toCompare) const;
+
 
     Dimension2D getDimensions() const;
     u_int getMultipliedDimensions();
@@ -38,8 +43,8 @@ public:
 class PuzzlePointerPool
 {
 public:
-    std::shared_ptr<Position2D> getPointerFor(const Position2D &pos);
-    std::shared_ptr<puzzle::Puzzle> getPointerFor(const puzzle::Puzzle &pos);
+    std::shared_ptr<Position2D> getPointerForObject(const Position2D &pos);
+    std::shared_ptr<puzzle::Puzzle> getPointerForObject(const puzzle::Puzzle &pos);
 
     virtual ~PuzzlePointerPool();
 protected:
@@ -56,7 +61,8 @@ public:
     PuzzlePositionContainer();
 
     void insertPuzzle(puzzle::Puzzle&puzzle, Position2D& point);
-    std::shared_ptr<puzzle::Puzzle> findPuzzle(const Position2D &point);
+    std::shared_ptr<puzzle::Puzzle> findPuzzle(const Position2D &point) throw();
+    std::shared_ptr<puzzle::Puzzle> findPuzzle(u_int val);
     std::shared_ptr<Position2D> findPoint(puzzle::Puzzle &puzzle);
     std::shared_ptr<Position2D> getEmptyPuzzlePos();
     void swap(Position2D &pos1,Position2D &pos2);
@@ -95,7 +101,9 @@ public:
 
 
     void setPuzzle(Position2D pos, puzzle::Puzzle &puz);
-    std::shared_ptr<puzzle::Puzzle> getPuzzle(Position2D &pos);
+    std::shared_ptr<puzzle::Puzzle> getPuzzle(Position2D &pos) throw();
+    std::shared_ptr<puzzle::Puzzle> getPuzzle(u_int value);
+
     void fillWith(puzzle::Puzzle &puzzle);
     virtual void setCorrectAlignment()  = 0;
     virtual std::shared_ptr<PuzzleBoard> clone() const = 0;
@@ -128,7 +136,7 @@ public:
     bool isValidPos(Position2D &pos);
 
 
-    board::SLIDE_DIRECTIONS slideDirToEmptyMovement(const board::SLIDE_DIRECTIONS &dir);
+    board::SLIDE_DIRECTIONS emptyPuzzleSlideDirection(const board::SLIDE_DIRECTIONS &puzzleSlideDirection);
     Position2D determineEmptyPosAfterSlide(const board::SLIDE_DIRECTIONS &dir);
     bool slidePuzzle(const board::SLIDE_DIRECTIONS &dir);
     std::shared_ptr<Position2D> getEmptyPuzzlePos();
@@ -145,6 +153,9 @@ protected:
     PointToPuzzleMap puzzles;
 };
 
+typedef std::shared_ptr< std::map <Dimension2D,std::shared_ptr<EmptyBoard> > >
+Dimension2DToEmptyBoardMapPtr;
+
 class EmptyBoard : public PuzzleBoard
 {
 public:
@@ -157,7 +168,7 @@ public:
 
     virtual ~EmptyBoard();
 protected:
-     static std::shared_ptr<PuzzleBoard> correctlyAlignedBoard;
+     static Dimension2DToEmptyBoardMapPtr correctlyAlignedBoards;
      virtual std::shared_ptr<PuzzleBoard> getBoardToCompare();
 };
 
@@ -171,6 +182,9 @@ public:
     virtual ~OrderedBoard();
 };
 
+typedef std::shared_ptr< std::map <Dimension2D,std::shared_ptr<IntPuzzleBoard> > >
+Dimension2DToIntPuzzleBoardMapPtr;
+
 class IntPuzzleBoard : public OrderedBoard
 {
 public:
@@ -183,7 +197,7 @@ public:
 
     virtual ~IntPuzzleBoard();
 protected:
-     static std::shared_ptr<PuzzleBoard> correctlyAlignedBoard;
+     static Dimension2DToIntPuzzleBoardMapPtr correctlyAlignedBoards;
      virtual std::shared_ptr<PuzzleBoard> getBoardToCompare();
 };
 }

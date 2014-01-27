@@ -1,15 +1,22 @@
 #ifndef PUZZLECREATOR_H
 #define PUZZLECREATOR_H
 
+#include <memory>
+
 class QLabelPuzzle;
 class QWidget;
 class QPuzzleBoard;
 
-class PuzzleCreator
+namespace board {
+    class IntPuzzleBoard;
+}
+
+class QPuzzleCreator
 {
 public:
-    PuzzleCreator();
+    QPuzzleCreator();
     u_int moveBy, puzzleSize, xOffsetMultiplier, yOffsetMultiplier;
+    std::shared_ptr<board::IntPuzzleBoard> realBoard;
     QPuzzleBoard* parentBoard;
     QWidget *parentObject;
 

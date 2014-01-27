@@ -19,6 +19,8 @@ class QLabelPuzzle;
 class Position2D;
 class QSolutionAnimator;
 class AboutDialog;
+class ErrorDialog;
+class Exception;
 
 class PuzzleSolverStartScreen : public QMainWindow
 {
@@ -31,11 +33,14 @@ public:
 protected:
 //    std::shared_ptr<QLabelPuzzle>
     const Position2D& positionToPixelPosition(const Position2D& pos);
-    void createLabelPuzzles();
+    void createNewBoard();
     const std::shared_ptr<board::Dimension2D> getBoardDimensions();
     void updateSolutionGUI();
     void setSolutionStepsToGUI(const std::vector<board::SLIDE_DIRECTIONS> &r);
     void setSolutionStatstoGUI(const std::vector<board::SLIDE_DIRECTIONS> &r);
+    void solutionFoundAction();
+    void showErrorDialog(const Exception &e);
+
 private slots:
     void on_horizontalBoardSizeSlider_valueChanged(int value);
 
@@ -59,6 +64,7 @@ private:
 
     bool solutionViewed = false;
     AboutDialog *aboutDialog;
+    ErrorDialog *errorDialog;
 
 };
 
