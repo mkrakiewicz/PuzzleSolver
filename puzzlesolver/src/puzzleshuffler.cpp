@@ -232,7 +232,7 @@ SLIDE_DIRECTIONS PuzzleShuffler::getRandomDirection()
 }
 
 
-void PuzzleShuffler::shuffleByPercentage()
+void PuzzleShuffler::shuffleByPercentage() throw()
 {
     auto count = 0;
 

@@ -61,7 +61,7 @@ protected:
     int shuffleSteps;
     float shufflePercentage;
 
-    void shuffleByPercentage();
+    void shuffleByPercentage() throw();
     void shuffleBySteps();
     bool tryMoveInAllDirections();
     bool tryMoveInNewPos();
