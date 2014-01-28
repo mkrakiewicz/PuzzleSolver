@@ -297,9 +297,13 @@ void PuzzleSolverStartScreen::on_buttonShuffle_clicked()
     PuzzleShuffler s;
     s.setBoardToShuffle(*(board->getInnerBoard()));
 
-    if (isShufflingBySteps()) {
+    bool shuffleBySteps = isShufflingBySteps();
+    bool shuffleByPercentage = !shuffleBySteps;
+
+    if (shuffleBySteps) {
         s.setShuffleMoves(getShuffleStepNum());
-    } else {
+    } else if (shuffleByPercentage)
+    {
         getShufflePercentage();
         s.setMinimumShuffledPuzzles(getShufflePercentage());
     }
