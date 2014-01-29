@@ -61,7 +61,7 @@ public:
     PuzzlePositionContainer();
 
     void insertPuzzle(puzzle::Puzzle&puzzle, Position2D& point);
-    std::shared_ptr<puzzle::Puzzle> findPuzzle(const Position2D &point) throw();
+    std::shared_ptr<puzzle::Puzzle> findPuzzle(const Position2D &point) ;
     std::shared_ptr<puzzle::Puzzle> findPuzzle(u_int val);
     std::shared_ptr<Position2D> findPoint(puzzle::Puzzle &puzzle);
     std::shared_ptr<Position2D> getEmptyPuzzlePos();
@@ -101,7 +101,7 @@ public:
 
 
     void setPuzzle(Position2D pos, puzzle::Puzzle &puz);
-    std::shared_ptr<puzzle::Puzzle> getPuzzle(Position2D &pos) throw();
+    std::shared_ptr<puzzle::Puzzle> getPuzzle(Position2D &pos) ;
     std::shared_ptr<puzzle::Puzzle> getPuzzle(u_int value);
 
     void fillWith(puzzle::Puzzle &puzzle);

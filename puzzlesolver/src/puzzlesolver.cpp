@@ -26,7 +26,7 @@ void PuzzleSolver::newSearch()
     steps->clear();
 }
 
-void PuzzleSolver::solve() throw()
+void PuzzleSolver::solve()
 {
     if (!boardToSolve)
         return;
@@ -49,7 +49,7 @@ void PuzzleSolver::solve() throw()
 
 }
 
-void PuzzleSolver::setBoardToSolve(PuzzleBoard &b) throw()
+void PuzzleSolver::setBoardToSolve(PuzzleBoard &b)
 {
     boardToSolve = b.clone();
     setGoalBoard();

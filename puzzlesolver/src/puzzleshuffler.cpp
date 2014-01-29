@@ -23,7 +23,7 @@ PuzzleShuffler::PuzzleShuffler():
     initialBoard(0),
     boardToShuffle(0),
     slideHistory(new VectorOfSlideDirToStringMaps ),
-    wasThere(new set<Position2D>),
+    wasThere(new vector<Position2D>),
     positionHistory(new std::vector <Position2D>)
 {
     srand (time(NULL));
@@ -54,19 +54,8 @@ void PuzzleShuffler::setMinimumShuffledPuzzles(float percentage)
 
 float PuzzleShuffler::getPercentageShuffled()
 {
-    int different = 0;
-    for (u_int y=0; y<initialBoard->verticalSize; y++)
-    {
-        for (u_int x=0; x<initialBoard->horizontalSize; x++)
-        {
-            Position2D pos(x,y);
-            auto puz1 = boardToShuffle->getPuzzle(pos);
-            auto puz2 = initialBoard->getPuzzle(pos);
-            if (*puz1 != *puz2)
-                different++;
-        }
-    }
-    int total = initialBoard->horizontalSize*initialBoard->verticalSize;
+    u_int different =  boardToShuffle->getNumberOfPuzzlesInWrongPosition();
+    int total = boardToShuffle->getMultipliedDimensions() - 1;
     float result = (float)different/total;
     return result;
 }
@@ -89,14 +78,20 @@ bool PuzzleShuffler::tryMoveInAllDirections()
     return false;
 }
 
-bool PuzzleShuffler::tryMoveInNewPos()
+bool PuzzleShuffler::tryMoveInNewRandomPos()
 {
-    Position2D lastPos = *boardToShuffle->getEmptyPuzzlePos();
-    do {
-        tryMoveInAllDirections();
+    for (int i=0; i<10; i++)
+    {
+        auto dir = getRandomDirection();
+        Position2D after = boardToShuffle->determineEmptyPosAfterSlide(dir);
+        if (boardToShuffle->isValidPos(after) && (!wasEmptyThere(after)))
+        {
+            if (trySlide(dir))
+                return true;
+            else continue;
+        }
     }
-    while(*(this->boardToShuffle->getEmptyPuzzlePos()) != lastPos);
-    return true;
+    return false;
 }
 
 bool PuzzleShuffler::trySlide(SLIDE_DIRECTIONS &direction)
@@ -123,10 +118,6 @@ bool PuzzleShuffler::trySlide(SLIDE_DIRECTIONS &direction)
         }
         tmp[direction] = s;
         slideHistory->push_back(tmp);
-
-//        cout << "After move:" << endl;
-        (boardToShuffle)->getEmptyPuzzlePos()->toString();
-
         return true;
     }
     return false;
@@ -134,18 +125,20 @@ bool PuzzleShuffler::trySlide(SLIDE_DIRECTIONS &direction)
 
 void PuzzleShuffler::saveEmptyMovementHistory(Position2D &pos)
 {
-    wasThere->insert(pos);
+    wasThere->push_back(pos);
     positionHistory->push_back(pos);
 }
 
 bool PuzzleShuffler::wasEmptyThere(Position2D &pos)
 {
-    if (wasThere->find(pos) == wasThere->end())
-        return false;
-    return true;
+    if(std::find(wasThere->begin(), wasThere->end(), pos)!=wasThere->end()){
+          return true;
+    }
+    return false;
+
 }
 
-void PuzzleShuffler::shuffle() throw()
+void PuzzleShuffler::shuffle()
 {
     verifyBoard();
     resetForNewPass();
@@ -167,7 +160,7 @@ std::shared_ptr<PuzzleBoard> PuzzleShuffler::getResult()
     return boardToShuffle;
 }
 
-void PuzzleShuffler::verifyBoard() throw()
+void PuzzleShuffler::verifyBoard()
 {
     Dimension2D dims = boardToShuffle->getDimensions();
 
@@ -232,27 +225,45 @@ SLIDE_DIRECTIONS PuzzleShuffler::getRandomDirection()
 }
 
 
-void PuzzleShuffler::shuffleByPercentage() throw()
+void PuzzleShuffler::shuffleByPercentage()
 {
     auto count = 0;
+    int strikes = 0;
 
-    float shuffled = 0;
+    float shuffled = getPercentageShuffled();
     while(shuffled <= shufflePercentage)
     {
-        if ( count > 10000)
-            throw Exception("Iterated over 10000 times, exiting .");
+        if ( count > 50)
+            throw Exception("More than 50 moves, exiting .");
 
-       tryMoveInAllDirections();
-       shuffled = getPercentageShuffled();
-       count++;
+        if (tryMoveInNewRandomPos())
+        {
+            shuffled = getPercentageShuffled();
+            count++;
+        } else strikes++;
+        if (strikes == 3)
+        {
+            wasThere->clear();
+            strikes = 0;
+        }
+
+
     }
 }
 
 void PuzzleShuffler::shuffleBySteps()
 {
+    int strikes = 0;
     for (int i=0; i<shuffleSteps; i++)
     {
-       tryMoveInAllDirections();
+       if (!tryMoveInNewRandomPos())
+       {    strikes++;
+       }
+       if (strikes == 3)
+       {
+           wasThere->clear();
+           strikes = 0;
+       }
     }
 }
 

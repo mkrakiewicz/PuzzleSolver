@@ -161,7 +161,7 @@ void QPuzzleBoard::deleteInnerObjects()
     }
 }
 
-bool QPuzzleBoard::solveBoard() throw()
+bool QPuzzleBoard::solveBoard()
 {
     IntPuzzleBoard toSolve = *innerBoard;
     solver = std::shared_ptr  <PuzzleSolver>  (new PuzzleSolver(toSolve.getDimensions()));

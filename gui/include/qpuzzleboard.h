@@ -45,7 +45,7 @@ public:
     bool hasAnimationFinished();
 
     void deleteInnerObjects();
-    bool solveBoard() throw();
+    bool solveBoard();
     IntPuzzleBoardPtr getInnerBoard();
 
     virtual ~QPuzzleBoard();
