@@ -93,7 +93,7 @@ void PuzzlePositionContainer::insertPuzzle(Puzzle &puzzle, Position2D &point)
 
 }
 
-std::shared_ptr<Puzzle> PuzzlePositionContainer::findPuzzle(const Position2D &point) throw()
+std::shared_ptr<Puzzle> PuzzlePositionContainer::findPuzzle(const Position2D &point)
 {
     std::shared_ptr<Position2D> pos = pool.getPointerForObject(point);
     auto result = positionToPuzzle.find(pos);
@@ -152,7 +152,7 @@ void PuzzleBoard::setPuzzle(Position2D pos, Puzzle &puz)
     puzzles.insertPuzzle(puz,pos);
 }
 
-std::shared_ptr<Puzzle> PuzzleBoard::getPuzzle(Position2D &pos) throw()
+std::shared_ptr<Puzzle> PuzzleBoard::getPuzzle(Position2D &pos)
 {
     auto p = puzzles.findPuzzle(pos);
     if (p == 0) {

@@ -33,14 +33,10 @@ bool Position2D::operator !=(const Position2D &toCompare) const
 
 bool Position2D::operator <(const Position2D &toCompare) const
 {
-    if ((X < toCompare.X) && (Y < toCompare.Y))
-        return true;
-
-    int thisSum = X+Y , otherSum = toCompare.X+toCompare.Y;
-
-    if (thisSum < otherSum)
-        return true;
-
+    if (X < toCompare.X) return true;
+    if (toCompare.X < X) return false;
+    if (Y < toCompare.Y) return true;
+    if (toCompare.Y < Y) return false;
     return false;
 }
 

@@ -2,6 +2,7 @@
 #define PUZZLESOLVERSTARTSCREEN_H
 
 #include <QMainWindow>
+#include <map>
 #include <memory>
 #include "enums.h"
 

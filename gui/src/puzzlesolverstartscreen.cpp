@@ -304,8 +304,8 @@ void PuzzleSolverStartScreen::on_buttonShuffle_clicked()
         s.setShuffleMoves(getShuffleStepNum());
     } else if (shuffleByPercentage)
     {
-        getShufflePercentage();
-        s.setMinimumShuffledPuzzles(getShufflePercentage());
+        double val = getShufflePercentage()/100.f;
+        s.setMinimumShuffledPuzzles(val);
     }
 
     try{

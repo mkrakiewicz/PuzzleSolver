@@ -2,7 +2,6 @@
 #define PUZZLESHUFFLER_H
 
 #include <memory>
-#include <set>
 #include <map>
 #include <vector>
 #include "stdafx.h"
@@ -48,9 +47,9 @@ public:
     void setShuffleMoves(int);
     void setMinimumShuffledPuzzles(float);
     float getPercentageShuffled();
-    void shuffle() throw();
+    void shuffle();
     std::shared_ptr<board::PuzzleBoard> getResult();
-    void verifyBoard() throw();
+    void verifyBoard();
     VectorOfSlideDirToStringMaps getStepHistory();
     std::shared_ptr < std::vector < board::SLIDE_DIRECTIONS> > getStepsOnly();
     std::vector<Position2D> getEmptyMovementHistory();
@@ -61,10 +60,10 @@ protected:
     int shuffleSteps;
     float shufflePercentage;
 
-    void shuffleByPercentage() throw();
+    void shuffleByPercentage();
     void shuffleBySteps();
     bool tryMoveInAllDirections();
-    bool tryMoveInNewPos();
+    bool tryMoveInNewRandomPos();
 
     bool wasEmptyThere(Position2D &pos);
     bool trySlide(board::SLIDE_DIRECTIONS &direction);
@@ -77,7 +76,7 @@ protected:
     std::shared_ptr < VectorOfSlideDirToStringMaps  > slideHistory;
 
 private:
-    std::shared_ptr< std::set<Position2D> > wasThere;
+    std::shared_ptr< std::vector<Position2D> > wasThere;
     std::shared_ptr< std::vector<Position2D> > positionHistory;
 
 };
