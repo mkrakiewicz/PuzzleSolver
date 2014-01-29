@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>840</width>
-    <height>541</height>
+    <height>549</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -39,7 +39,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -302,7 +302,6 @@
                <property name="frameShadow">
                 <enum>QFrame::Sunken</enum>
                </property>
-               <zorder>buttonShuffle</zorder>
               </widget>
              </item>
              <item>
