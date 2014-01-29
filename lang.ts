@@ -11,7 +11,7 @@
     <message>
         <location filename="../../source/gui/aboutdialog.ui" line="20"/>
         <source>About</source>
-        <translation type="unfinished">O programie...</translation>
+        <translation>O programie...</translation>
     </message>
     <message>
         <location filename="../../source/gui/aboutdialog.ui" line="44"/>
@@ -49,18 +49,17 @@
     <message>
         <location filename="../../source/gui/errordialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Okno</translation>
     </message>
     <message>
         <location filename="../../source/gui/errordialog.ui" line="20"/>
         <source>Information</source>
-        <translation type="unfinished">Informacja</translation>
+        <translation>Informacja</translation>
     </message>
     <message>
         <location filename="../../source/gui/errordialog.ui" line="26"/>
         <source>Message</source>
-        <translation type="unfinished">Wiadomość
-</translation>
+        <translation>Wiadomość</translation>
     </message>
 </context>
 <context>
@@ -68,12 +67,12 @@
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="23"/>
         <source>Puzzle Solver</source>
-        <translation type="unfinished"></translation>
+        <translation>Program Rozwiązywanie Puzzli</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="52"/>
         <source>Set up Board</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustawianie planszy</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="76"/>
@@ -83,112 +82,113 @@
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="114"/>
         <source>Please choose board size first:</source>
-        <translation type="unfinished"></translation>
+        <translation>Prosze wybrać rozmiar planszy:</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="135"/>
         <source>3 x 3</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="147"/>
         <source>Horizontal size(X)</source>
-        <translation type="unfinished"></translation>
+        <translation>Szerokość(X)</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="173"/>
         <source>Vertical size(Y)</source>
-        <translation type="unfinished"></translation>
+        <translation>Wysokość(Y)</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="211"/>
         <source>Create new board</source>
-        <translation type="unfinished"></translation>
+        <translation>Utwórz nową planszę</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="239"/>
         <source>Preview</source>
-        <translation type="unfinished"></translation>
+        <translation>Podgląd</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="256"/>
         <source>Solve Puzzle</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment> </translatorcomment>
+        <translation>Szukanie rozwiązania</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="264"/>
         <source>Puzzle view</source>
-        <translation type="unfinished"></translation>
+        <translation>Widok Puzzli</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="322"/>
         <source>By steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Kroki</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="351"/>
         <source>By percentage</source>
-        <translation type="unfinished"></translation>
+        <translation>% ułożonych</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="366"/>
         <source>Shuffle</source>
-        <translation type="unfinished"></translation>
+        <translation>Tasuj</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="387"/>
         <source>Puzzle options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opcje puzzli</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="405"/>
         <source>Priority functions</source>
-        <translation type="unfinished"></translation>
+        <translation>Funkcje priorytetu</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="412"/>
         <source>Hamming</source>
-        <translation type="unfinished"></translation>
+        <translation>Hamminga</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="422"/>
         <source>Manhattan</source>
-        <translation type="unfinished"></translation>
+        <translation>Manhattan</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="447"/>
         <source>CheckBox</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="458"/>
         <source>Show solution animation</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż animację rozwiązania</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="471"/>
         <source>Solve</source>
-        <translation type="unfinished"></translation>
+        <translation>Znajdź rozwiązanie</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="491"/>
         <source>Solution</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozwiązanie</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="497"/>
         <source>Solution steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Kroki do rozwiązania</translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="535"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="543"/>
         <source>Solution statistics</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/gui/puzzlesolverstartscreen.ui" line="550"/>
