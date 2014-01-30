@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <memory>
+#include <set>
 #include "enums.h"
 
 #define DEBUG_PUZZLESOLVER
@@ -19,10 +20,23 @@ enum PriorityFunction{
     MANHATTAN
 };
 
+class PuzzleBoardState;
+
+struct PuzzleBoardStateParams
+{
+    PuzzleBoardStateParams();
+    std::shared_ptr<PuzzleBoardState> cameFrom;
+    std::shared_ptr<board::PuzzleBoard> currentBoard;
+
+    u_int movesMadeSoFar;
+    u_int priority;
+    std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState;
+};
+
 class PuzzleBoardState
 {
 public:
-    PuzzleBoardState(u_int movesMadeSoFar, std::shared_ptr<PuzzleBoardState> cameFrom,  board::PuzzleBoard & currentBoard,  std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState, PriorityFunction p);
+    PuzzleBoardState(const PuzzleBoardStateParams &params);
 
     const std::shared_ptr<PuzzleBoardState> cameFrom;
     const std::shared_ptr<board::PuzzleBoard> currentBoard;
@@ -33,15 +47,9 @@ public:
 
 
     virtual ~PuzzleBoardState();
-
-protected:
-    int calculateHammingPriority();
-    int calculateManhattanPriority();
-    int calculatePriority();
-
 };
 
-typedef const std::vector < std::shared_ptr<PuzzleBoardState > >::iterator StateListIterator;
+typedef const std::map < u_int, std::shared_ptr<PuzzleBoardState > >::iterator StateListIterator;
 
 class StateManager
 {
@@ -49,19 +57,19 @@ public:
     StateManager();
     void addState(std::shared_ptr<PuzzleBoardState >);
     StateListIterator getStateWithLowestPriority();
-//    void setNextState
     void setNextCurrentState();
     const std::shared_ptr<PuzzleBoardState > getCurrentState();
     u_int getNumStates();
-    bool hasThisStateBeenChecked(const PuzzleBoardState &state);
-    void setThisStateAsChecked();
+    bool hasThisStateBeenChecked(std::shared_ptr<PuzzleBoardState> state);
+    void transferToClosedList(std::shared_ptr<PuzzleBoardState> state);
+
     void clear();
 
     virtual ~StateManager();
 protected:
-    std::vector < std::shared_ptr<PuzzleBoardState > > stateList;
-    std::shared_ptr<PuzzleBoardState> currentState;
-    std::vector < std::shared_ptr<PuzzleBoardState > > alreadyChecked;
+    std::map < u_int, std::shared_ptr<PuzzleBoardState > > openStateList;
+    std::set < std::shared_ptr<PuzzleBoardState > > closedList;
+    std::shared_ptr<PuzzleBoardState > currentState;
 
 
 };
@@ -87,7 +95,10 @@ public:
 
     void setStateCheckLimit(const u_int &value);
 
+    void setPriorityFunction(const PriorityFunction &value);
 protected:
+    PriorityFunction priorityFunction;
+    int calculatePriority(board::PuzzleBoard &, int moveCount);
     void setGoalBoard();
     void recursiveAddSteps(std::shared_ptr<PuzzleBoardState > parent);
     std::shared_ptr<board::PuzzleBoard> boardToSolve;

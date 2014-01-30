@@ -103,6 +103,8 @@ public:
     void setPuzzle(Position2D pos, puzzle::Puzzle &puz);
     std::shared_ptr<puzzle::Puzzle> getPuzzle(Position2D &pos) ;
     std::shared_ptr<puzzle::Puzzle> getPuzzle(u_int value);
+    std::shared_ptr<Position2D> getPuzzlePos(puzzle::Puzzle &puzzle);
+
 
     void fillWith(puzzle::Puzzle &puzzle);
     virtual void setCorrectAlignment()  = 0;
@@ -148,6 +150,8 @@ public:
 
     virtual ~PuzzleBoard(){}
 
+    int calculateHammingPriority(int movesMadeSoFar);
+    int calculateManhattanPriority(int movesMadeSoFar);
 protected:
     virtual std::shared_ptr<PuzzleBoard> getBoardToCompare() = 0;
 

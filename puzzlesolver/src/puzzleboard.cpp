@@ -3,6 +3,8 @@
 #include "puzzleboard.h"
 #include <sstream>
 #include <map>
+#include <cmath>
+
 #include "puzzle.h"
 #include "exceptions.h"
 #include "position2d.h"
@@ -169,6 +171,11 @@ std::shared_ptr<Puzzle> PuzzleBoard::getPuzzle(u_int value)
     return puzzles.findPuzzle(value);
 }
 
+std::shared_ptr<Position2D> PuzzleBoard::getPuzzlePos(Puzzle &puzzle)
+{
+    return puzzles.findPoint(puzzle);
+}
+
 
 void PuzzleBoard::fillWith(Puzzle &puzzle)
 {
@@ -221,15 +228,31 @@ u_int PuzzleBoard::getSumOfDistances()
         for (u_int y=0; y<verticalSize; y++)
         {
             Position2D pos(x,y);
-            auto p1 = std::dynamic_pointer_cast<IntPuzzle> (getPuzzle(pos));
-            if (*p1 == e)
+            auto thisPuzzle = (getPuzzle(pos));
+            if ((*thisPuzzle) == e)
                 continue;
-            auto p2 = reference->getPuzzle(p1->);
-            if ((*p1) != (*p2))
-                wrong++;
+            auto goalPuzzlePos = reference->getPuzzlePos(*(std::dynamic_pointer_cast<IntPuzzle> (thisPuzzle)));
+            if (pos != (*goalPuzzlePos))
+            {
+                sum += (abs(pos.X - goalPuzzlePos->X));
+                sum += (abs(pos.Y - goalPuzzlePos->Y));
+            }
+
         }
     }
-    return wrong;
+    return sum;
+}
+
+int PuzzleBoard::calculateHammingPriority(int movesMadeSoFar)
+{
+    int misaligned = getNumberOfPuzzlesInWrongPosition();
+    return misaligned + movesMadeSoFar;
+}
+
+int PuzzleBoard::calculateManhattanPriority(int movesMadeSoFar)
+{
+    int distance = getSumOfDistances();
+    return distance + movesMadeSoFar;
 }
 
 bool PuzzleBoard::isEqual(PuzzleBoard &toCompare)
