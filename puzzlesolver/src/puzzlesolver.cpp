@@ -6,7 +6,6 @@
 #include "puzzleshuffler.h"
 #include <iostream>
 #include <sstream>
-#include <cmath>
 
 using namespace std;
 using namespace board;
@@ -17,12 +16,16 @@ PuzzleSolver::PuzzleSolver () :
     steps(new vector<board::SLIDE_DIRECTIONS> ),
     statesChecked(0)
 {
+    priorityFunction = MANHATTAN;
 }
 
 void PuzzleSolver::newSearch()
 {
     stateManager->clear();
-    shared_ptr<PuzzleBoardState> s(new PuzzleBoardState(0,0,*boardToSolve,0));
+    PuzzleBoardStateParams p;
+    p.currentBoard = boardToSolve;
+    p.priority = calculatePriority(*boardToSolve,0);
+    shared_ptr<PuzzleBoardState> s(new PuzzleBoardState(p));
     stateManager->addState(s);
     stateManager->setNextCurrentState();
     steps->clear();
@@ -34,19 +37,18 @@ void PuzzleSolver::solve()
         return;
 
     newSearch();
-    statesChecked = 0;
+    this->statesChecked = 0;
     while (!isSolved())
     {
-        statesChecked++;
-        stateManager->setThisStateAsChecked();
+        this->statesChecked++;
+        stateManager->transferToClosedList(getCurrentState());
         auto states = getAvailableStates();
         for (u_int i = 0; i<states.size(); i++)
         {
-            if (*(states[i]->currentBoard) != *getCurrentState()->currentBoard)
                 stateManager->addState(states[i]);
         }
         stateManager->setNextCurrentState();
-        if (stateManager->getNumStates() > stateCheckLimit) {
+        if (statesChecked > stateCheckLimit) {
             stringstream s;
             s << "Over " << stateCheckLimit << " states checked.";
             throw Exception(s.str().c_str());
@@ -88,16 +90,23 @@ const std::vector<std::shared_ptr<PuzzleBoardState> > PuzzleSolver::getAvailable
 
     vector < std::shared_ptr<PuzzleBoardState> > states;
     const auto currentBoard = this->getCurrentState()->currentBoard;
-    const u_int nextMoveCount = this->getCurrentState()->movesMadeSoFar + 1;
+    const u_int moveCount = this->getCurrentState()->movesMadeSoFar +1;
 
     for (u_int i=0; i<PuzzleBoard::directions.size(); i++)
     {
         auto tmpBoard = currentBoard->clone();
         if (tmpBoard->slidePuzzle(PuzzleBoard::directions[i]))
         {
+            statesChecked++;
             std::shared_ptr<board::SLIDE_DIRECTIONS> dptr(new board::SLIDE_DIRECTIONS(PuzzleBoard::directions[i]));
-            std::shared_ptr<PuzzleBoardState> tmp(new PuzzleBoardState(nextMoveCount,this->getCurrentState(),*tmpBoard,dptr));
-            if (stateManager->hasThisStateBeenChecked(*tmp))
+            PuzzleBoardStateParams p;
+            p.movesMadeSoFar = moveCount;
+            p.currentBoard = tmpBoard;
+            p.directionToThisState = dptr;
+            p.cameFrom = getCurrentState();
+            p.priority = calculatePriority(*tmpBoard,moveCount);
+            std::shared_ptr<PuzzleBoardState> tmp(new PuzzleBoardState(p));
+            if (stateManager->hasThisStateBeenChecked(tmp))
                 continue;
             states.push_back(tmp);
         }
@@ -137,8 +146,8 @@ void PuzzleSolver::recursiveAddSteps(std::shared_ptr<PuzzleBoardState> parent)
 void StateManager::setNextCurrentState()
 {
     auto s = getStateWithLowestPriority();
-    currentState = *s;
-    stateList.erase(s);
+    currentState = s->second;
+//    openStateList.erase(s);
 
 }
 const std::shared_ptr<PuzzleBoardState > StateManager::getCurrentState()
@@ -148,62 +157,55 @@ const std::shared_ptr<PuzzleBoardState > StateManager::getCurrentState()
 
 u_int StateManager::getNumStates()
 {
-    return stateList.size();
+    return openStateList.size();
 }
 
-bool StateManager::hasThisStateBeenChecked(const PuzzleBoardState &state)
+bool StateManager::hasThisStateBeenChecked(shared_ptr<PuzzleBoardState> state)
 {
-    for(u_int i=0; i<alreadyChecked.size(); i++)
-        if ((alreadyChecked[i])->currentBoard == state.currentBoard)
+    if(closedList.find(state) != closedList.end())
             return true;
     return false;
 }
 
+void StateManager::transferToClosedList(std::shared_ptr<PuzzleBoardState> state)
+{
+    auto s = openStateList.end();
+    for(auto it = openStateList.begin(); it!= openStateList.end(); ++it)
+    {
+        if (it->second == state)
+            s = it;
+    }
+    closedList.insert(s->second);
+    if (s != openStateList.end())
+        openStateList.erase(s);
+}
+
 StateListIterator StateManager::getStateWithLowestPriority()
 {
-
-    auto it = stateList.begin();
-
-    auto min = it;
-    for (; it!=stateList.end(); it++)
-    {
-        if ((*it)->hammingPriority < (*min)->hammingPriority)
-            min = it;
-    }
-    return min;
+    auto it = openStateList.begin();
+//    --it;
+    return it;
 }
 
 void StateManager::clear()
 {
-    stateList.clear();
+    openStateList.clear();
+    closedList.clear();
+    currentState = 0;
 }
 
-int PuzzleBoardState::calculateHammingPriority()
-{
-    int misaligned = currentBoard->getNumberOfPuzzlesInWrongPosition();
-    return misaligned + movesMadeSoFar;
-}
-
-int PuzzleBoardState::calculateManhattanPriority()
-{
-    int distance = abs(x1-x0) + abs(y1-y0);
-}
-
-int PuzzleBoardState::calculatePriority()
-{
-}
 
 PuzzleBoardState::~PuzzleBoardState()
 {
 }
 
 
-PuzzleBoardState::PuzzleBoardState(u_int movesMadeSoFar,  std::shared_ptr<PuzzleBoardState> cameFrom, board::PuzzleBoard & thisStateBoardAlignment, std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState):
-    cameFrom(cameFrom),
-    currentBoard(thisStateBoardAlignment.clone()),
-    movesMadeSoFar(movesMadeSoFar),
-    priority(calculateHammingPriority()),
-    directionToThisState(directionToThisState)
+PuzzleBoardState::PuzzleBoardState(const PuzzleBoardStateParams &params):
+    cameFrom(params.cameFrom),
+    currentBoard(params.currentBoard->clone()),
+    movesMadeSoFar(params.movesMadeSoFar),
+    priority(params.priority),
+    directionToThisState(params.directionToThisState)
 
 {
 
@@ -217,7 +219,7 @@ StateManager::StateManager():
 
 void StateManager::addState(std::shared_ptr<PuzzleBoardState> s)
 {
-    this->stateList.push_back(s);
+    openStateList[s->priority] = s;
 }
 
 StateManager::~StateManager()
@@ -230,13 +232,38 @@ u_int PuzzleSolver::getStatesChecked() const
 }
 
 
-void StateManager::setThisStateAsChecked()
-{
-    alreadyChecked.push_back(currentState);
-}
+
 
 
 void PuzzleSolver::setStateCheckLimit(const u_int &value)
 {
     stateCheckLimit = value;
+}
+
+int PuzzleSolver::calculatePriority(PuzzleBoard &b, int moveCount)
+{
+    switch(priorityFunction)
+    {
+        case HAMMING:
+            return b.calculateHammingPriority(moveCount);
+        case MANHATTAN:
+            return b.calculateManhattanPriority(moveCount);
+    }
+    return 0;
+}
+
+
+PuzzleBoardStateParams::PuzzleBoardStateParams():
+    cameFrom(0),
+    currentBoard(0),
+    movesMadeSoFar(0),
+    priority(0),
+    directionToThisState(0)
+{
+}
+
+
+void PuzzleSolver::setPriorityFunction(const PriorityFunction &value)
+{
+    priorityFunction = value;
 }

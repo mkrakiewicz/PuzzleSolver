@@ -137,7 +137,6 @@ void PuzzleSolverStartScreen::updateSolutionGUI()
     auto r = board->solver->getResult();
     if (r.size() > 0)
     {
-        ui->buttonAnimateSteps->setEnabled(true);
         setSolutionStepsToGUI(r);
         setSolutionStatstoGUI(r);
     }
@@ -179,8 +178,8 @@ void PuzzleSolverStartScreen::on_verticalBoardSizeSlider_valueChanged(int value)
 void PuzzleSolverStartScreen::solutionFoundAction()
 {
     solutionViewed = false;
+    ui->buttonAnimateSteps->setEnabled(true);
     ui->labelSuccess->setText(tr("Success"));
-    updateSolutionGUI();
 }
 
 void PuzzleSolverStartScreen::showErrorDialog(const QString &str)
@@ -225,6 +224,8 @@ void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
     }
     else
         ui->labelSuccess->setText(tr("Solution not found"));
+
+    updateSolutionGUI();
 
 
 }
