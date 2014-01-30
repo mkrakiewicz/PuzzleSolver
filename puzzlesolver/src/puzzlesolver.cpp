@@ -97,7 +97,6 @@ const std::vector<std::shared_ptr<PuzzleBoardState> > PuzzleSolver::getAvailable
         auto tmpBoard = currentBoard->clone();
         if (tmpBoard->slidePuzzle(PuzzleBoard::directions[i]))
         {
-            statesChecked++;
             std::shared_ptr<board::SLIDE_DIRECTIONS> dptr(new board::SLIDE_DIRECTIONS(PuzzleBoard::directions[i]));
             PuzzleBoardStateParams p;
             p.movesMadeSoFar = moveCount;
@@ -146,7 +145,7 @@ void PuzzleSolver::recursiveAddSteps(std::shared_ptr<PuzzleBoardState> parent)
 void StateManager::setNextCurrentState()
 {
     auto s = getStateWithLowestPriority();
-    currentState = s->second;
+    currentState = *s;
 //    openStateList.erase(s);
 
 }
@@ -162,8 +161,15 @@ u_int StateManager::getNumStates()
 
 bool StateManager::hasThisStateBeenChecked(shared_ptr<PuzzleBoardState> state)
 {
-    if(closedList.find(state) != closedList.end())
-            return true;
+    auto board = state->currentBoard;
+
+    for(auto it = closedList.begin(); it!= closedList.end(); ++it)
+    {
+        auto tmpBoard = (*it)->currentBoard;
+        if (*tmpBoard == *board)
+           return true;
+    }
+
     return false;
 }
 
@@ -172,19 +178,25 @@ void StateManager::transferToClosedList(std::shared_ptr<PuzzleBoardState> state)
     auto s = openStateList.end();
     for(auto it = openStateList.begin(); it!= openStateList.end(); ++it)
     {
-        if (it->second == state)
+        if (*it == state)
             s = it;
     }
-    closedList.insert(s->second);
+    closedList.insert(*s);
     if (s != openStateList.end())
         openStateList.erase(s);
 }
 
 StateListIterator StateManager::getStateWithLowestPriority()
 {
-    auto it = openStateList.begin();
-//    --it;
-    return it;
+       auto it = openStateList.begin();
+
+       auto min = it;
+       for (; it!=openStateList.end(); it++)
+       {
+           if ((*it)->priority < (*min)->priority)
+               min = it;
+       }
+       return min;
 }
 
 void StateManager::clear()
@@ -219,7 +231,7 @@ StateManager::StateManager():
 
 void StateManager::addState(std::shared_ptr<PuzzleBoardState> s)
 {
-    openStateList[s->priority] = s;
+    openStateList.push_back(s);
 }
 
 StateManager::~StateManager()

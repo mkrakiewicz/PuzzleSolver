@@ -207,6 +207,7 @@ void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
     ui->listSolutionSteps->clear();
     bool result = false;
 
+    ui->labelSuccess->setText(tr("Searching..."));
     try{
         board->solver->setStateCheckLimit(ui->checkMaxStates->value());
         result = board->solveBoard();
