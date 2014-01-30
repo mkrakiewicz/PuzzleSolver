@@ -221,10 +221,9 @@ u_int PuzzleBoard::getSumOfDistances()
         for (u_int y=0; y<verticalSize; y++)
         {
             Position2D pos(x,y);
-            auto p1 = std::dynamic_pointer_cast<IntPuzzle> (getPuzzle(pos));
-            if (*p1 == e)
-                continue;
-            auto p2 = reference->getPuzzle(p1->);
+            shared_ptr<IntPuzzle> p1 = std::dynamic_pointer_cast<IntPuzzle> (getPuzzle(pos));
+            auto p2 = reference->getPuzzle(p1->Value);
+            Position2D po2 = reference->getPuzzle()
             if ((*p1) != (*p2))
                 wrong++;
         }

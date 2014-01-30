@@ -22,6 +22,7 @@ class QSlideAnimator;
 class AboutDialog;
 class ErrorDialog;
 class Exception;
+class QTranslator;
 
 class PuzzleSolverStartScreen : public QMainWindow
 {
@@ -32,6 +33,7 @@ public:
     ~PuzzleSolverStartScreen();
 
 protected:
+    void retranslateEverything();
     int getShuffleStepNum();
     double getShufflePercentage();
     bool isShufflingBySteps();
@@ -46,6 +48,7 @@ protected:
     void setSolutionStatstoGUI(const std::vector<board::SLIDE_DIRECTIONS> &r);
     void solutionFoundAction();
     void showErrorDialog(const QString &str);
+    void clearSolutionList();
     const Position2D& positionToPixelPosition(const Position2D& pos);
     const std::shared_ptr<board::Dimension2D> getBoardDimensions();
 
@@ -61,6 +64,10 @@ private slots:
     void on_radioShufflePercentage_clicked();
     void on_buttonShuffle_clicked();
 
+    void on_actionEnglish_triggered();
+
+    void on_actionPolish_triggered();
+
 private:
     Ui::PuzzleSolverStartScreen *ui;
     std::shared_ptr < std::map<u_int,QLabelPuzzle* > > puzzles;
@@ -70,6 +77,7 @@ private:
     bool solutionViewed = false;
     AboutDialog *aboutDialog;
     ErrorDialog *errorDialog;
+    std::shared_ptr<QTranslator> polishTranslator;
 
 };
 

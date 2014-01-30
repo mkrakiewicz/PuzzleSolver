@@ -5,6 +5,7 @@
 #include <QPropertyAnimation>
 #include <QFrame>
 #include <QSequentialAnimationGroup>
+#include <QTranslator>
 #include "puzzlesolverstartscreen.h"
 #include "config.h"
 #include "ui_puzzlesolverstartscreen.h"
@@ -30,7 +31,8 @@ PuzzleSolverStartScreen::PuzzleSolverStartScreen(QWidget *parent) :
     board(0),
     animator(0),
     aboutDialog(0),
-    errorDialog(0)
+    errorDialog(0),
+    polishTranslator(std::shared_ptr<QTranslator> (new QTranslator))
 
 {
     ui->setupUi(this);
@@ -39,11 +41,22 @@ PuzzleSolverStartScreen::PuzzleSolverStartScreen(QWidget *parent) :
     ui->buttonAnimateSteps->setDisabled(true);
     ui->tabsMainWindow->setTabEnabled(1,false);
 
+    polishTranslator->load("lang");
+    qApp->installTranslator(&(*polishTranslator));
+//    clearSolutionList();
+    retranslateEverything();
+
 }
 
 PuzzleSolverStartScreen::~PuzzleSolverStartScreen()
 {
     delete ui;
+}
+
+void PuzzleSolverStartScreen::retranslateEverything()
+{
+    ui->retranslateUi(this);
+    updateSolutionGUI();
 }
 
 const Position2D &PuzzleSolverStartScreen::positionToPixelPosition(const Position2D &pos)
@@ -115,6 +128,12 @@ const std::shared_ptr<Dimension2D> PuzzleSolverStartScreen::getBoardDimensions()
 
 void PuzzleSolverStartScreen::updateSolutionGUI()
 {
+    if (board == 0)
+        return;
+
+    if (board->solver == 0)
+        return;
+
     auto r = board->solver->getResult();
     if (r.size() > 0)
     {
@@ -128,7 +147,7 @@ void PuzzleSolverStartScreen::setSolutionStepsToGUI(const std::vector<board::SLI
 {
     for (u_int i=0; i<r.size(); i++)
     {
-        QListWidgetItem* l = new QListWidgetItem(QString::fromStdString(dirToStr(r[i])));
+        QListWidgetItem* l = new QListWidgetItem(PuzzleSolverStartScreen::tr(dirToStr(r[i]).c_str()));
         ui->listSolutionSteps->addItem(l);
     }
 }
@@ -136,6 +155,7 @@ void PuzzleSolverStartScreen::setSolutionStepsToGUI(const std::vector<board::SLI
 void PuzzleSolverStartScreen::setSolutionStatstoGUI(const std::vector<board::SLIDE_DIRECTIONS> &r)
 {
     ui->labelSteps->setText(QString::number(r.size()));
+    ui->labelStatesChecked->setText(QString::number(board->solver->getStatesChecked()));
 
 }
 
@@ -159,7 +179,7 @@ void PuzzleSolverStartScreen::on_verticalBoardSizeSlider_valueChanged(int value)
 void PuzzleSolverStartScreen::solutionFoundAction()
 {
     solutionViewed = false;
-    ui->labelSuccess->setText("success");
+    ui->labelSuccess->setText(tr("Success"));
     updateSolutionGUI();
 }
 
@@ -174,6 +194,14 @@ void PuzzleSolverStartScreen::showErrorDialog(const QString &str)
     errorDialog->show();
 }
 
+void PuzzleSolverStartScreen::clearSolutionList()
+{
+    QListWidgetItem* l = new QListWidgetItem(tr("None"));
+
+    ui->listSolutionSteps->clear();
+    ui->listSolutionSteps->addItem(l);
+}
+
 void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
 {
     ui->labelSteps->setText("");
@@ -181,6 +209,7 @@ void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
     bool result = false;
 
     try{
+        board->solver->setStateCheckLimit(ui->checkMaxStates->value());
         result = board->solveBoard();
     }catch(const Exception &e)
     {
@@ -195,7 +224,7 @@ void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
         solutionFoundAction();
     }
     else
-        ui->labelSuccess->setText("fail");
+        ui->labelSuccess->setText(tr("Solution not found"));
 
 
 }
@@ -316,10 +345,22 @@ void PuzzleSolverStartScreen::on_buttonShuffle_clicked()
     }
     catch(...)
     {
-        showErrorDialog("Unknown error w");
+        showErrorDialog("Unknown error ");
     }
 
     auto moves = s.getStepsOnly();
     createAndStartSlideSequence(*moves);
 
+}
+
+void PuzzleSolverStartScreen::on_actionEnglish_triggered()
+{
+    qApp->removeTranslator(&(*polishTranslator));
+    retranslateEverything();
+}
+
+void PuzzleSolverStartScreen::on_actionPolish_triggered()
+{
+    qApp->installTranslator(&(*polishTranslator));
+    retranslateEverything();
 }
