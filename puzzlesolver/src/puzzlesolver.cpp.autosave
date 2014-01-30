@@ -186,7 +186,7 @@ int PuzzleBoardState::calculateHammingPriority()
 
 int PuzzleBoardState::calculateManhattanPriority()
 {
-    int distance = abs(x1-x0) + abs(y1-y0);
+    int distance = abs(currentBoard--x0) + abs(y1-y0);
 }
 
 int PuzzleBoardState::calculatePriority()
@@ -198,12 +198,13 @@ PuzzleBoardState::~PuzzleBoardState()
 }
 
 
-PuzzleBoardState::PuzzleBoardState(u_int movesMadeSoFar,  std::shared_ptr<PuzzleBoardState> cameFrom, board::PuzzleBoard & thisStateBoardAlignment, std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState):
+PuzzleBoardState::PuzzleBoardState( u_int priority, u_int movesMadeSoFar,  std::shared_ptr<PuzzleBoardState> cameFrom, board::PuzzleBoard & thisStateBoardAlignment, std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState):
     cameFrom(cameFrom),
     currentBoard(thisStateBoardAlignment.clone()),
     movesMadeSoFar(movesMadeSoFar),
     priority(calculateHammingPriority()),
-    directionToThisState(directionToThisState)
+    directionToThisState(directionToThisState),
+    priority(priority)
 
 {
 

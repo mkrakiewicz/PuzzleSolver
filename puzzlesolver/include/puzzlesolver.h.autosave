@@ -22,7 +22,7 @@ enum PriorityFunction{
 class PuzzleBoardState
 {
 public:
-    PuzzleBoardState(u_int movesMadeSoFar, std::shared_ptr<PuzzleBoardState> cameFrom,  board::PuzzleBoard & currentBoard,  std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState, PriorityFunction p);
+    PuzzleBoardState(u_int priority, u_int movesMadeSoFar, std::shared_ptr<PuzzleBoardState> cameFrom,  board::PuzzleBoard & currentBoard,  std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState);
 
     const std::shared_ptr<PuzzleBoardState> cameFrom;
     const std::shared_ptr<board::PuzzleBoard> currentBoard;

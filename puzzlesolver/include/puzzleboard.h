@@ -112,6 +112,7 @@ public:
 
 
     u_int getNumberOfPuzzlesInWrongPosition();
+    u_int getSumOfDistances();
 
     virtual BoardType getBoardType() = 0;
     bool isEqual(PuzzleBoard &toCompare);
