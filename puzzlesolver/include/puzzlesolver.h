@@ -49,7 +49,7 @@ public:
     virtual ~PuzzleBoardState();
 };
 
-typedef const std::map < u_int, std::shared_ptr<PuzzleBoardState > >::iterator StateListIterator;
+typedef const std::vector < std::shared_ptr<PuzzleBoardState > >::iterator StateListIterator;
 
 class StateManager
 {
@@ -67,7 +67,7 @@ public:
 
     virtual ~StateManager();
 protected:
-    std::map < u_int, std::shared_ptr<PuzzleBoardState > > openStateList;
+    std::vector < std::shared_ptr<PuzzleBoardState > > openStateList;
     std::set < std::shared_ptr<PuzzleBoardState > > closedList;
     std::shared_ptr<PuzzleBoardState > currentState;
 

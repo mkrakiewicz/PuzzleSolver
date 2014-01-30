@@ -68,7 +68,7 @@ QPropertyAnimation *QPuzzle::createSlideAnimation(SLIDE_DIRECTIONS dir)
 {
     QPropertyAnimation *animation = new QPropertyAnimation(this, "geometry");
 
-    animation->setDuration(500);
+    animation->setDuration(150);
     auto g = geometry();
     animation->setStartValue(g);
 
