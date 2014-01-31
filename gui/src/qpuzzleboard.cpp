@@ -18,7 +18,6 @@ QPuzzleBoard::QPuzzleBoard(QWidget *parent, const board::Dimension2D &dimensions
     QWidget(parent),
 
     dimensions(new Dimension2D(dimensions)),
-    solver(new PuzzleSolver()),
     puzzleObjects(new std::map < u_int,QLabelPuzzle* >),
     innerBoard(new IntPuzzleBoard(dimensions))
 
@@ -115,9 +114,8 @@ QLabelPuzzle *QPuzzleBoard::getSlidablePuzzle(const SLIDE_DIRECTIONS &direction)
         auto puzzl = innerBoard->getPuzzle(desired);
         if (puzzl->getType() == puzzle::PUZZLE_TYPES::OBJECT)
         {
-            IntPuzzle* p = (IntPuzzle*) (puzzl->clone());
+            auto p = std::dynamic_pointer_cast<IntPuzzle> (puzzl->clone());
             int val = p->Value;
-            delete p;
             return  getPuzzle(val);
         }
         else return 0;
@@ -163,13 +161,13 @@ void QPuzzleBoard::deleteInnerObjects()
     }
 }
 
-bool QPuzzleBoard::solveBoard()
-{
-    IntPuzzleBoard toSolve = *innerBoard;
-    solver->setBoardToSolve(toSolve);
-    solver->solve();
-    return solver->isSolved();
-}
+//bool QPuzzleBoard::solveBoard()
+//{
+//    IntPuzzleBoard toSolve = *innerBoard;
+//    solver->setBoardToSolve(toSolve);
+//    solver->solve();
+//    return solver->isSolved();
+//}
 
 IntPuzzleBoardPtr QPuzzleBoard::getInnerBoard()
 {

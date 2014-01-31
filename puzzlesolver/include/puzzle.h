@@ -22,7 +22,7 @@ public:
     bool operator==(Puzzle &toCompare);
     bool operator!=( Puzzle &toCompare);
 
-    virtual Puzzle* clone()  = 0; // DELETE BY RECEIVER
+    virtual std::shared_ptr<Puzzle> clone()  = 0;
     virtual ~Puzzle();
 
 protected:
@@ -34,7 +34,7 @@ class EmptyPuzzle : public Puzzle
 public:
     virtual PUZZLE_TYPES getType();
     virtual std::string toString();
-    virtual Puzzle* clone() ; // DELETE BY RECEIVER
+    virtual std::shared_ptr<Puzzle> clone() ; // DELETE BY RECEIVER
     virtual ~EmptyPuzzle();
 protected:
     virtual bool isEqual( Puzzle &obj);
@@ -64,7 +64,7 @@ public:
     {
         return Value;
     }
-    virtual Puzzle* clone()  ;  // DELETE BY RECEIVER
+    virtual std::shared_ptr<Puzzle> clone()  ;  // DELETE BY RECEIVER
 
     virtual ~IntPuzzle();
 

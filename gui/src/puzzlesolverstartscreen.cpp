@@ -20,6 +20,7 @@
 #include "aboutdialog.h"
 #include "errordialog.h"
 #include "puzzleshuffler.h"
+#include "qsolverthread.h"
 
 
 using namespace board;
@@ -32,7 +33,8 @@ PuzzleSolverStartScreen::PuzzleSolverStartScreen(QWidget *parent) :
     animator(0),
     aboutDialog(0),
     errorDialog(0),
-    polishTranslator(std::shared_ptr<QTranslator> (new QTranslator))
+    polishTranslator(std::shared_ptr<QTranslator> (new QTranslator)),
+    solver(0)
 
 {
     ui->setupUi(this);
@@ -128,13 +130,10 @@ const std::shared_ptr<Dimension2D> PuzzleSolverStartScreen::getBoardDimensions()
 
 void PuzzleSolverStartScreen::updateSolutionGUI()
 {
-    if (board == 0)
+    if (solver == 0)
         return;
 
-    if (board->solver == 0)
-        return;
-
-    auto r = board->solver->getResult();
+    auto r = solver->getResult();
     if (r.size() > 0)
     {
         setSolutionStepsToGUI(r);
@@ -154,7 +153,7 @@ void PuzzleSolverStartScreen::setSolutionStepsToGUI(const std::vector<board::SLI
 void PuzzleSolverStartScreen::setSolutionStatstoGUI(const std::vector<board::SLIDE_DIRECTIONS> &r)
 {
     ui->labelSteps->setText(QString::number(r.size()));
-    ui->labelStatesChecked->setText(QString::number(board->solver->getStatesChecked()));
+    ui->labelStatesChecked->setText(QString::number(solver->getStatesChecked()));
 
 }
 
@@ -209,8 +208,11 @@ void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
 
     ui->labelSuccess->setText(tr("Searching..."));
     try{
-        board->solver->setStateCheckLimit(ui->checkMaxStates->value());
-        result = board->solveBoard();
+        solver = new QSolverThread(this);
+        solver->setBoardToSolve(*board->getInnerBoard());
+        solver->setStateCheckLimit(ui->checkMaxStates->value());
+        solver->solve();
+        result = solver->isSolved();
     }catch(const Exception &e)
     {
         showErrorDialog(e.what());
@@ -264,7 +266,11 @@ void PuzzleSolverStartScreen::on_buttonAnimateSteps_clicked()
         return;
     solutionViewed = true;
     ui->buttonAnimateSteps->setDisabled(true);
-    auto moves = board->solver->getResult();
+
+    if (solver==0)
+        return;
+
+    auto moves = solver->getResult();
     createAndStartSlideSequence(moves);
 }
 

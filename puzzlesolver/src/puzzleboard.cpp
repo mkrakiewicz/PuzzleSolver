@@ -396,9 +396,9 @@ void EmptyBoard::setCorrectAlignment()
     fillWith(p);
 }
 
-PuzzleBoard *EmptyBoard::clone() const
+std::shared_ptr<PuzzleBoard> EmptyBoard::clone() const
 {
-    return (new EmptyBoard(*this));
+    return std::make_shared<EmptyBoard>(*this);
 }
 
 BoardType EmptyBoard::getBoardType()
@@ -467,9 +467,9 @@ void IntPuzzleBoard::setCorrectAlignment()
     }
 }
 
-PuzzleBoard* IntPuzzleBoard::clone() const
+std::shared_ptr<PuzzleBoard> IntPuzzleBoard::clone() const
 {
-    return new IntPuzzleBoard(*this);
+    return std::make_shared<IntPuzzleBoard>(*this);
 }
 
 IntPuzzleBoard::~IntPuzzleBoard()

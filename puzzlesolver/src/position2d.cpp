@@ -40,9 +40,9 @@ bool Position2D::operator <(const Position2D &toCompare) const
     return false;
 }
 
-Position2D *Position2D::clone() const
+std::shared_ptr<Position2D> Position2D::clone() const
 {
-    return new Position2D(*this);
+    return std::shared_ptr<Position2D>(new Position2D(*this));
 }
 
 string Position2D::toString()
