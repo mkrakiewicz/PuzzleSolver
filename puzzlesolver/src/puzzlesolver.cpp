@@ -41,11 +41,11 @@ void PuzzleSolver::solve()
     while (!isSolved())
     {
         this->statesChecked++;
+        auto states = getAvailableStates(getCurrentState());
         stateManager->transferToClosedList(getCurrentState());
-        auto states = getAvailableStates();
-        for (u_int i = 0; i<states.size(); i++)
+        for (u_int i = 0; i<states->size(); i++)
         {
-                stateManager->addState(states[i]);
+            stateManager->addState((*states)[i]);
         }
         stateManager->setNextCurrentState();
         if (statesChecked > stateCheckLimit) {
@@ -85,12 +85,13 @@ const std::shared_ptr<PuzzleBoardState> PuzzleSolver::getCurrentState()
     return stateManager->getCurrentState();
 }
 
-const std::vector<std::shared_ptr<PuzzleBoardState> > PuzzleSolver::getAvailableStates()
+const StateVectorPtr PuzzleSolver::getAvailableStates(const shared_ptr<PuzzleBoardState> currentState)
 {
 
-    vector < std::shared_ptr<PuzzleBoardState> > states;
-    const auto currentBoard = this->getCurrentState()->currentBoard;
-    const u_int moveCount = this->getCurrentState()->movesMadeSoFar +1;
+    StateVectorPtr states(new vector< shared_ptr<PuzzleBoardState> >);
+    auto currentBoard = currentState->currentBoard;
+
+    const u_int moveCount = currentState->movesMadeSoFar +1;
 
     for (u_int i=0; i<PuzzleBoard::directions.size(); i++)
     {
@@ -107,7 +108,7 @@ const std::vector<std::shared_ptr<PuzzleBoardState> > PuzzleSolver::getAvailable
             std::shared_ptr<PuzzleBoardState> tmp(new PuzzleBoardState(p));
             if (stateManager->hasThisStateBeenChecked(tmp))
                 continue;
-            states.push_back(tmp);
+            states->push_back(tmp);
         }
     }
 
@@ -123,7 +124,14 @@ void PuzzleSolver::setGoalBoard()
 
 bool PuzzleSolver::isSolved()
 {
-    if (*(getCurrentState()->currentBoard) == *goalBoard)
+    if (isSolved(*(getCurrentState())))
+        return true;
+    return false;
+}
+
+bool PuzzleSolver::isSolved(const PuzzleBoardState &p)
+{
+    if (*(p.currentBoard) == *goalBoard)
         return true;
     return false;
 }
@@ -238,6 +246,16 @@ StateManager::~StateManager()
 {
 }
 
+u_int StateManager::getOpenStateSize() const
+{
+    return openStateList.size();
+}
+
+u_int StateManager::getClosedStateSize() const
+{
+    return closedList.size();
+}
+
 u_int PuzzleSolver::getStatesChecked() const
 {
     return statesChecked;
@@ -265,6 +283,7 @@ int PuzzleSolver::calculatePriority(PuzzleBoard &b, int moveCount)
 }
 
 
+
 PuzzleBoardStateParams::PuzzleBoardStateParams():
     cameFrom(0),
     currentBoard(0),
@@ -279,3 +298,4 @@ void PuzzleSolver::setPriorityFunction(const PriorityFunction &value)
 {
     priorityFunction = value;
 }
+

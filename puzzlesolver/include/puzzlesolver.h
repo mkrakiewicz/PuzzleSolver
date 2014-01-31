@@ -66,6 +66,10 @@ public:
     void clear();
 
     virtual ~StateManager();
+    u_int getOpenStateSize() const;
+    u_int getClosedStateSize() const;
+
+
 protected:
     std::vector < std::shared_ptr<PuzzleBoardState > > openStateList;
     std::set < std::shared_ptr<PuzzleBoardState > > closedList;
@@ -76,7 +80,7 @@ protected:
 
 class PuzzleShuffler;
 
-
+typedef std::shared_ptr< std::vector < std::shared_ptr<PuzzleBoardState > > > StateVectorPtr;
 class PuzzleSolver
 {
 public:
@@ -86,9 +90,9 @@ public:
     void setBoardToSolve(board::PuzzleBoard&) ;
     const std::vector<board::SLIDE_DIRECTIONS> getResult();
     const std::shared_ptr<PuzzleBoardState > getCurrentState();
-    const std::vector < std::shared_ptr<PuzzleBoardState > > getAvailableStates();
+    const StateVectorPtr getAvailableStates(const std::shared_ptr<PuzzleBoardState> currentState);
     bool isSolved();
-
+    bool isSolved(const PuzzleBoardState &p);
 
     virtual ~PuzzleSolver(){}
     u_int getStatesChecked() const;
@@ -96,9 +100,10 @@ public:
     void setStateCheckLimit(const u_int &value);
 
     void setPriorityFunction(const PriorityFunction &value);
+    int calculatePriority(board::PuzzleBoard &, int moveCount);
+
 protected:
     PriorityFunction priorityFunction;
-    int calculatePriority(board::PuzzleBoard &, int moveCount);
     void setGoalBoard();
     void recursiveAddSteps(std::shared_ptr<PuzzleBoardState > parent);
     std::shared_ptr<board::PuzzleBoard> boardToSolve;

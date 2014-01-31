@@ -45,11 +45,11 @@ public:
     bool hasAnimationFinished();
 
     void deleteInnerObjects();
-    bool solveBoard();
+//    bool solveBoard();
     IntPuzzleBoardPtr getInnerBoard();
 
     virtual ~QPuzzleBoard();
-    std::shared_ptr<PuzzleSolver> solver;
+//    std::shared_ptr<PuzzleSolver> solver;
 
 //    Position2D directionToPosition(const Position2D &initialPos, const board::SLIDE_DIRECTIONS &direction);
 protected:

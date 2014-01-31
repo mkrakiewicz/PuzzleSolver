@@ -4,187 +4,139 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="gui/aboutdialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation>Okno</translation>
+        <translation type="obsolete">Okno</translation>
     </message>
     <message>
-        <location filename="gui/aboutdialog.ui" line="20"/>
         <source>About</source>
-        <translation>O programie...</translation>
+        <translation type="obsolete">O programie...</translation>
     </message>
     <message>
-        <location filename="gui/aboutdialog.ui" line="44"/>
         <source>Author:</source>
-        <translation>Autor:</translation>
-    </message>
-    <message utf8="true">
-        <location filename="gui/aboutdialog.ui" line="51"/>
-        <source>Michał Krakiewicz</source>
-        <translation></translation>
+        <translation type="obsolete">Autor:</translation>
     </message>
     <message>
-        <location filename="gui/aboutdialog.ui" line="58"/>
         <source>Group</source>
-        <translation>Grupa</translation>
+        <translation type="obsolete">Grupa</translation>
     </message>
     <message>
-        <location filename="gui/aboutdialog.ui" line="65"/>
-        <source>331 IZZ</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="gui/aboutdialog.ui" line="72"/>
         <source>Academic Year</source>
-        <translation>Rok akademicki</translation>
-    </message>
-    <message>
-        <location filename="gui/aboutdialog.ui" line="79"/>
-        <source>2013/2014</source>
-        <translation></translation>
+        <translation type="obsolete">Rok akademicki</translation>
     </message>
 </context>
 <context>
     <name>ErrorDialog</name>
     <message>
-        <location filename="gui/errordialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation>Okno</translation>
+        <translation type="obsolete">Okno</translation>
     </message>
     <message>
-        <location filename="gui/errordialog.ui" line="20"/>
         <source>Information</source>
-        <translation>Informacja</translation>
+        <translation type="obsolete">Informacja</translation>
     </message>
     <message>
-        <location filename="gui/errordialog.ui" line="26"/>
         <source>Message</source>
-        <translation>Wiadomość</translation>
+        <translation type="obsolete">Wiadomość</translation>
     </message>
 </context>
 <context>
     <name>PuzzleSolverStartScreen</name>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="23"/>
         <source>Puzzle Solver</source>
-        <translation>Program Rozwiązywanie Puzzli</translation>
+        <translation type="obsolete">Program Rozwiązywanie Puzzli</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="52"/>
         <source>Set up Board</source>
-        <translation>Ustawianie planszy</translation>
+        <translation type="obsolete">Ustawianie planszy</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="76"/>
         <source>Welcome in PuzzleSolver</source>
-        <translation>Program Układanie Puzzli</translation>
+        <translation type="obsolete">Program Układanie Puzzli</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="114"/>
         <source>Please choose board size first:</source>
-        <translation>Prosze wybrać rozmiar planszy:</translation>
+        <translation type="obsolete">Prosze wybrać rozmiar planszy:</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="135"/>
-        <source>3 x 3</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="147"/>
         <source>Horizontal size(X)</source>
-        <translation>Szerokość(X)</translation>
+        <translation type="obsolete">Szerokość(X)</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="173"/>
         <source>Vertical size(Y)</source>
-        <translation>Wysokość(Y)</translation>
+        <translation type="obsolete">Wysokość(Y)</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="211"/>
         <source>Create new board</source>
-        <translation>Utwórz nową planszę</translation>
+        <translation type="obsolete">Utwórz nową planszę</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="239"/>
         <source>Preview</source>
-        <translation>Podgląd</translation>
+        <translation type="obsolete">Podgląd</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="256"/>
         <source>Solve Puzzle</source>
         <translatorcomment> </translatorcomment>
-        <translation>Szukanie rozwiązania</translation>
+        <translation type="obsolete">Szukanie rozwiązania</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="264"/>
         <source>Puzzle view</source>
-        <translation>Widok Puzzli</translation>
+        <translation type="obsolete">Widok Puzzli</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="321"/>
         <source>By steps</source>
-        <translation>Kroki</translation>
+        <translation type="obsolete">Kroki</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="350"/>
         <source>By percentage</source>
-        <translation>% ułożonych</translation>
+        <translation type="obsolete">% nieułożonych</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="365"/>
         <source>Shuffle</source>
-        <translation>Tasuj</translation>
+        <translation type="obsolete">Tasuj</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="386"/>
         <source>Puzzle options</source>
-        <translation>Opcje puzzli</translation>
+        <translation type="obsolete">Opcje puzzli</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="404"/>
         <source>Priority functions</source>
-        <translation>Funkcje priorytetu</translation>
+        <translation type="obsolete">Funkcje priorytetu</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="411"/>
         <source>Hamming</source>
-        <translation>Hamminga</translation>
+        <translation type="obsolete">Hamminga</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="421"/>
         <source>Manhattan</source>
-        <translation>Manhattan</translation>
+        <translation type="obsolete">Manhattan</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="446"/>
-        <source>CheckBox</source>
-        <translation></translation>
+        <source>Break search after checking</source>
+        <translation type="obsolete">Przerwij po przeszukaniu</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="457"/>
+        <source>states.</source>
+        <translation type="obsolete">stanów.</translation>
+    </message>
+    <message>
         <source>Show solution animation</source>
-        <translation>Pokaż animację rozwiązania</translation>
+        <translation type="obsolete">Pokaż animację rozwiązania</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="470"/>
         <source>Solve</source>
-        <translation>Znajdź rozwiązanie</translation>
+        <translation type="obsolete">Znajdź rozwiązanie</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="490"/>
         <source>Solution</source>
-        <translation>Rozwiązanie</translation>
+        <translation type="obsolete">Rozwiązanie</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="496"/>
         <source>Solution steps</source>
-        <translation>Kroki do rozwiązania</translation>
+        <translation type="obsolete">Kroki do rozwiązania</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="534"/>
-        <location filename="gui/src/puzzlesolverstartscreen.cpp" line="198"/>
         <source>None</source>
-        <translation>Brak</translation>
+        <translation type="obsolete">Brak</translation>
     </message>
     <message>
         <source>UP</source>
@@ -203,75 +155,52 @@
         <translation type="obsolete">LEWO</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="542"/>
         <source>Solution statistics</source>
-        <translation>Statystyki rozwiązania</translation>
+        <translation type="obsolete">Statystyki rozwiązania</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="549"/>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="570"/>
         <source>Not solved</source>
-        <translation>Nie rozwiązane</translation>
+        <translation type="obsolete">Nie rozwiązane</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="556"/>
         <source>Steps:</source>
-        <translation>Kroki</translation>
+        <translation type="obsolete">Kroki</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="563"/>
         <source>States checked:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Przeszukane stany:</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="1016"/>
         <source>Menu</source>
-        <translation>Menu</translation>
+        <translation type="obsolete">Menu</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="1020"/>
         <source>Options</source>
-        <translation>Opcje</translation>
+        <translation type="obsolete">Opcje</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="1024"/>
         <source>Language</source>
-        <translation>Język</translation>
+        <translation type="obsolete">Język</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="1037"/>
         <source>Info</source>
-        <translation>Info</translation>
+        <translation type="obsolete">Info</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="1047"/>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation type="obsolete">Wyjście</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="1052"/>
         <source>Polish</source>
-        <translation>Polski</translation>
+        <translation type="obsolete">Polski</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="1057"/>
         <source>English</source>
-        <translation>Angielski</translation>
+        <translation type="obsolete">Angielski</translation>
     </message>
     <message>
-        <location filename="gui/puzzlesolverstartscreen.ui" line="1062"/>
         <source>Author</source>
-        <translation>Autor</translation>
-    </message>
-    <message>
-        <location filename="gui/src/puzzlesolverstartscreen.cpp" line="181"/>
-        <source>Success</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="gui/src/puzzlesolverstartscreen.cpp" line="225"/>
-        <source>Solution not found</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Autor</translation>
     </message>
 </context>
 <context>

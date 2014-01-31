@@ -32,9 +32,9 @@ string EmptyPuzzle::toString()
     return string("[X]");
 }
 
-Puzzle* EmptyPuzzle::clone()
+std::shared_ptr<Puzzle> EmptyPuzzle::clone()
 {
-    return new EmptyPuzzle(*this);
+    return std::make_shared<EmptyPuzzle>(*this);
 }
 
 bool EmptyPuzzle::isEqual( Puzzle &obj)
@@ -74,9 +74,9 @@ string IntPuzzle ::toString()
 }
 
 
-Puzzle* IntPuzzle ::clone()
+std::shared_ptr<Puzzle> IntPuzzle::clone()
 {
-    return new IntPuzzle(*this);
+    return std::make_shared<IntPuzzle>(*this);
 }
 
 IntPuzzle ::~IntPuzzle(){}

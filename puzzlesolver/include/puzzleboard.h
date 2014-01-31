@@ -108,7 +108,7 @@ public:
 
     void fillWith(puzzle::Puzzle &puzzle);
     virtual void setCorrectAlignment()  = 0;
-    virtual PuzzleBoard* clone() const = 0;
+    virtual std::shared_ptr<PuzzleBoard> clone() const = 0;
 
     std::shared_ptr<PuzzleBoard> getBoardWithCorrectAlignment();
 
@@ -167,7 +167,7 @@ public:
 
     EmptyBoard(const Dimension2D &d);
     virtual void setCorrectAlignment();
-    virtual PuzzleBoard* clone() const;
+    virtual std::shared_ptr<PuzzleBoard> clone() const;
     virtual BoardType getBoardType();
 
 
@@ -197,7 +197,7 @@ public:
 
 
     void setCorrectAlignment();
-    virtual PuzzleBoard* clone() const;
+    virtual std::shared_ptr<PuzzleBoard> clone() const;
 
 
     virtual ~IntPuzzleBoard();

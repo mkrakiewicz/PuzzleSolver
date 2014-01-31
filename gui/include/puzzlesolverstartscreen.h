@@ -23,6 +23,7 @@ class AboutDialog;
 class ErrorDialog;
 class Exception;
 class QTranslator;
+class QSolverThread;
 
 class PuzzleSolverStartScreen : public QMainWindow
 {
@@ -78,6 +79,8 @@ private:
     AboutDialog *aboutDialog;
     ErrorDialog *errorDialog;
     std::shared_ptr<QTranslator> polishTranslator;
+
+    QSolverThread *solver;
 
 };
 
