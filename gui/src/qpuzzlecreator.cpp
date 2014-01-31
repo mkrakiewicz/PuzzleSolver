@@ -38,7 +38,7 @@ QLabelPuzzle* QPuzzleCreator::createPuzzle(u_int ID)
     {
         auto puzzle = realBoard->getPuzzle(ID);
 
-        p->setInnerPuzzle(std::dynamic_pointer_cast<IntPuzzle> (puzzle));
+        p->setInnerPuzzle(((IntPuzzle*) (puzzle)));
     }
 
     p->setText(QString::number(p->getInnerPuzzle()->Value));

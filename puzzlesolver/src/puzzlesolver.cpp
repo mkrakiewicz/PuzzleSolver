@@ -59,7 +59,7 @@ void PuzzleSolver::solve()
 
 void PuzzleSolver::setBoardToSolve(PuzzleBoard &b)
 {
-    boardToSolve = b.clone();
+    boardToSolve = std::shared_ptr<board::PuzzleBoard>(b.clone());
     setGoalBoard();
 }
 
@@ -100,7 +100,7 @@ const std::vector<std::shared_ptr<PuzzleBoardState> > PuzzleSolver::getAvailable
             std::shared_ptr<board::SLIDE_DIRECTIONS> dptr(new board::SLIDE_DIRECTIONS(PuzzleBoard::directions[i]));
             PuzzleBoardStateParams p;
             p.movesMadeSoFar = moveCount;
-            p.currentBoard = tmpBoard;
+            p.currentBoard = std::shared_ptr<board::PuzzleBoard>(tmpBoard);
             p.directionToThisState = dptr;
             p.cameFrom = getCurrentState();
             p.priority = calculatePriority(*tmpBoard,moveCount);
@@ -118,7 +118,7 @@ void PuzzleSolver::setGoalBoard()
 {
     auto b = boardToSolve->clone();
     b->setCorrectAlignment();
-    goalBoard = b;
+    goalBoard = std::shared_ptr<board::PuzzleBoard>(b);
 }
 
 bool PuzzleSolver::isSolved()

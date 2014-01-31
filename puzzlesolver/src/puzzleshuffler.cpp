@@ -32,8 +32,8 @@ PuzzleShuffler::PuzzleShuffler():
 
 void PuzzleShuffler::setBoardToShuffle(PuzzleBoard &b)
 {
-    initialBoard = b.clone();
-    boardToShuffle = b.clone();
+    initialBoard = std::shared_ptr<board::PuzzleBoard>(b.clone());
+    boardToShuffle = std::shared_ptr<board::PuzzleBoard>(b.clone());
 }
 
 void PuzzleShuffler::setShuffleMoves(int movementSteps)

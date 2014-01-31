@@ -15,7 +15,7 @@ public:
     bool operator<(const Position2D &toCompare) const;
 
 
-    std::shared_ptr<Position2D> clone() const;
+    Position2D* clone() const;
     std::string toString();
 };
 

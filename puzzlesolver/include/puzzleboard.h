@@ -43,13 +43,13 @@ public:
 class PuzzlePointerPool
 {
 public:
-    std::shared_ptr<Position2D> getPointerForObject(const Position2D &pos);
-    std::shared_ptr<puzzle::Puzzle> getPointerForObject(const puzzle::Puzzle &pos);
+    Position2D* getPointerForObject(Position2D &pos);
+    puzzle::Puzzle* getPointerForObject(puzzle::Puzzle &pos);
 
     virtual ~PuzzlePointerPool();
 protected:
-    std::shared_ptr<Position2D> createNew(const Position2D &pos);
-    std::shared_ptr<puzzle::Puzzle> createNew(const puzzle::Puzzle &puzzle);
+    Position2D* createNew(Position2D &pos);
+    puzzle::Puzzle* createNew(puzzle::Puzzle &puzzle);
 
     std::vector< std::shared_ptr<puzzle::Puzzle> > puzzles;
     std::vector< std::shared_ptr<Position2D> > points;
@@ -61,10 +61,10 @@ public:
     PuzzlePositionContainer();
 
     void insertPuzzle(puzzle::Puzzle&puzzle, Position2D& point);
-    std::shared_ptr<puzzle::Puzzle> findPuzzle(const Position2D &point) ;
-    std::shared_ptr<puzzle::Puzzle> findPuzzle(u_int val);
-    std::shared_ptr<Position2D> findPoint(puzzle::Puzzle &puzzle);
-    std::shared_ptr<Position2D> getEmptyPuzzlePos();
+    puzzle::Puzzle* findPuzzle(Position2D &point) ;
+    puzzle::Puzzle* findPuzzle(u_int val);
+    Position2D* findPoint(puzzle::Puzzle &puzzle);
+    Position2D* getEmptyPuzzlePos();
     void swap(Position2D &pos1,Position2D &pos2);
 
     virtual ~PuzzlePositionContainer();
@@ -72,11 +72,11 @@ public:
 protected:
     static PuzzlePointerPool pool;
 
-    std::map< std::shared_ptr<Position2D>, std::shared_ptr<puzzle::Puzzle> > positionToPuzzle;
-    std::map< std::shared_ptr<puzzle::Puzzle>, std::shared_ptr<Position2D> > puzzleToPosition;
+    std::map< Position2D*, puzzle::Puzzle* > positionToPuzzle;
+    std::map< puzzle::Puzzle*, Position2D* > puzzleToPosition;
 
 
-    std::shared_ptr<Position2D> emptyPuzzlePos;
+    Position2D* emptyPuzzlePos;
 private:
     int counter;
 
@@ -101,14 +101,14 @@ public:
 
 
     void setPuzzle(Position2D pos, puzzle::Puzzle &puz);
-    std::shared_ptr<puzzle::Puzzle> getPuzzle(Position2D &pos) ;
-    std::shared_ptr<puzzle::Puzzle> getPuzzle(u_int value);
-    std::shared_ptr<Position2D> getPuzzlePos(puzzle::Puzzle &puzzle);
+    puzzle::Puzzle *getPuzzle(Position2D &pos) ;
+    puzzle::Puzzle *getPuzzle(u_int value);
+    Position2D *getPuzzlePos(puzzle::Puzzle &puzzle);
 
 
     void fillWith(puzzle::Puzzle &puzzle);
     virtual void setCorrectAlignment()  = 0;
-    virtual std::shared_ptr<PuzzleBoard> clone() const = 0;
+    virtual PuzzleBoard* clone() const = 0;
 
     std::shared_ptr<PuzzleBoard> getBoardWithCorrectAlignment();
 
@@ -167,7 +167,7 @@ public:
 
     EmptyBoard(const Dimension2D &d);
     virtual void setCorrectAlignment();
-    virtual std::shared_ptr<PuzzleBoard> clone() const;
+    virtual PuzzleBoard* clone() const;
     virtual BoardType getBoardType();
 
 
@@ -197,7 +197,7 @@ public:
 
 
     void setCorrectAlignment();
-    virtual std::shared_ptr<PuzzleBoard> clone() const;
+    virtual PuzzleBoard* clone() const;
 
 
     virtual ~IntPuzzleBoard();
