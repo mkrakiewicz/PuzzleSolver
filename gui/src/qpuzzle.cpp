@@ -17,7 +17,7 @@ QPuzzle::QPuzzle(QWidget *parent) :
     connect( this, SIGNAL( clicked() ), this, SLOT( slotClicked() ) );
 }
 
-void QPuzzle::setInnerPuzzle(std::shared_ptr<puzzle::IntPuzzle> puzzle)
+void QPuzzle::setInnerPuzzle(puzzle::IntPuzzle* puzzle)
 {
     this->puzzle = puzzle;
 }
@@ -27,11 +27,11 @@ void QPuzzle::setParrentBoard(QPuzzleBoard* p)
     parentBoard = p;
 }
 
-const std::shared_ptr<IntPuzzle> QPuzzle::getInnerPuzzle()
+const IntPuzzle* QPuzzle::getInnerPuzzle()
 {
     if (puzzle)
         return puzzle;
-    return std::shared_ptr<IntPuzzle>(0);
+    return 0;
 }
 
 int QPuzzle::getID()

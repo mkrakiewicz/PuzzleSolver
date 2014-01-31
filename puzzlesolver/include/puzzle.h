@@ -19,14 +19,14 @@ public:
     virtual PUZZLE_TYPES getType() = 0;
     virtual std::string toString() = 0;
 
-    bool operator==(Puzzle &toCompare) const;
-    bool operator!=(Puzzle &toCompare);
+    bool operator==(Puzzle &toCompare);
+    bool operator!=( Puzzle &toCompare);
 
-    virtual std::shared_ptr<Puzzle> clone() const = 0;
+    virtual Puzzle* clone()  = 0; // DELETE BY RECEIVER
     virtual ~Puzzle();
 
 protected:
-    virtual bool isEqual(Puzzle *obj) const = 0;
+    virtual bool isEqual( Puzzle &obj)  = 0;
 };
 
 class EmptyPuzzle : public Puzzle
@@ -34,10 +34,10 @@ class EmptyPuzzle : public Puzzle
 public:
     virtual PUZZLE_TYPES getType();
     virtual std::string toString();
-    virtual std::shared_ptr<Puzzle> clone() const;
+    virtual Puzzle* clone() ; // DELETE BY RECEIVER
     virtual ~EmptyPuzzle();
 protected:
-    virtual bool isEqual(Puzzle *obj) const;
+    virtual bool isEqual( Puzzle &obj);
 
 };
 
@@ -49,14 +49,14 @@ public:
     virtual ~PuzzleObject();
 
 protected:
-    virtual bool isEqual(Puzzle *obj) const;
+    virtual bool isEqual( Puzzle &obj);
 
 };
 
 class IntPuzzle : public PuzzleObject
 {
 public:
-    const int Value;
+     int Value;
 
     IntPuzzle(int value);
     virtual std::string toString();
@@ -64,12 +64,12 @@ public:
     {
         return Value;
     }
-    virtual std::shared_ptr<Puzzle> clone() const ;
+    virtual Puzzle* clone()  ;  // DELETE BY RECEIVER
 
     virtual ~IntPuzzle();
 
 protected:
-    virtual bool isEqual(Puzzle *obj) const;
+    virtual bool isEqual( Puzzle &obj);
 
 
 };

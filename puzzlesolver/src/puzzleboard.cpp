@@ -95,9 +95,9 @@ void PuzzlePositionContainer::insertPuzzle(Puzzle &puzzle, Position2D &point)
 
 }
 
-std::shared_ptr<Puzzle> PuzzlePositionContainer::findPuzzle(const Position2D &point)
+Puzzle *PuzzlePositionContainer::findPuzzle(Position2D &point)
 {
-    std::shared_ptr<Position2D> pos = pool.getPointerForObject(point);
+    Position2D* pos = pool.getPointerForObject(point);
     auto result = positionToPuzzle.find(pos);
     if ( result == positionToPuzzle.end() ) {
         throw Exception("Position not found? object should have been created!");
@@ -106,31 +106,31 @@ std::shared_ptr<Puzzle> PuzzlePositionContainer::findPuzzle(const Position2D &po
 
 }
 
-std::shared_ptr<Puzzle> PuzzlePositionContainer::findPuzzle(u_int val)
+Puzzle* PuzzlePositionContainer::findPuzzle(u_int val)
 {
     IntPuzzle a(val);
-    std::shared_ptr<Puzzle> puz = pool.getPointerForObject(a);
+    Puzzle* puz = pool.getPointerForObject(a);
     return puz;
 
 }
 
-std::shared_ptr<Position2D> PuzzlePositionContainer::findPoint(Puzzle &puzzle)
+Position2D* PuzzlePositionContainer::findPoint(Puzzle &puzzle)
 {
     auto result = puzzleToPosition.find(pool.getPointerForObject(puzzle));
     if ( result == puzzleToPosition.end() ) {
-        return std::shared_ptr<Position2D>(0);
+        return 0;
     } else return result->second;
 }
 
-std::shared_ptr<Position2D> PuzzlePositionContainer::getEmptyPuzzlePos()
+Position2D *PuzzlePositionContainer::getEmptyPuzzlePos()
 {
     return emptyPuzzlePos;
 }
 
 void PuzzlePositionContainer::swap(Position2D &pos1, Position2D &pos2)
 {
-    std::shared_ptr<puzzle::Puzzle> puz1 = findPuzzle(pos1);
-    std::shared_ptr<puzzle::Puzzle> puz2 = findPuzzle(pos2);
+    puzzle::Puzzle* puz1 = findPuzzle(pos1);
+    puzzle::Puzzle* puz2 = findPuzzle(pos2);
     if ((puz1 == 0) || (puz2 == 0))
         return;
 
@@ -154,7 +154,7 @@ void PuzzleBoard::setPuzzle(Position2D pos, Puzzle &puz)
     puzzles.insertPuzzle(puz,pos);
 }
 
-std::shared_ptr<Puzzle> PuzzleBoard::getPuzzle(Position2D &pos)
+Puzzle* PuzzleBoard::getPuzzle(Position2D &pos)
 {
     auto p = puzzles.findPuzzle(pos);
     if (p == 0) {
@@ -163,15 +163,15 @@ std::shared_ptr<Puzzle> PuzzleBoard::getPuzzle(Position2D &pos)
         s << pos.toString() << endl;
         throw Exception(s.str());
     }
-    return p->clone();
+    return p;
 }
 
-std::shared_ptr<Puzzle> PuzzleBoard::getPuzzle(u_int value)
+Puzzle* PuzzleBoard::getPuzzle(u_int value)
 {
     return puzzles.findPuzzle(value);
 }
 
-std::shared_ptr<Position2D> PuzzleBoard::getPuzzlePos(Puzzle &puzzle)
+Position2D* PuzzleBoard::getPuzzlePos(Puzzle &puzzle)
 {
     return puzzles.findPoint(puzzle);
 }
@@ -207,11 +207,11 @@ u_int PuzzleBoard::getNumberOfPuzzlesInWrongPosition()
         for (u_int y=0; y<verticalSize; y++)
         {
             Position2D pos(x,y);
-            auto p1 = getPuzzle(pos);
-            if (*p1 == e)
+            Puzzle* p1 = getPuzzle(pos);
+            if (e.operator ==(*p1))
                 continue;
-            auto p2 = reference->getPuzzle(pos);
-            if ((*p1) != (*p2))
+            Puzzle* p2 = reference->getPuzzle(pos);
+            if (p1->operator !=(*p2))
                 wrong++;
         }
     }
@@ -231,7 +231,7 @@ u_int PuzzleBoard::getSumOfDistances()
             auto thisPuzzle = (getPuzzle(pos));
             if ((*thisPuzzle) == e)
                 continue;
-            auto goalPuzzlePos = reference->getPuzzlePos(*(std::dynamic_pointer_cast<IntPuzzle> (thisPuzzle)));
+            auto goalPuzzlePos = reference->getPuzzlePos(*thisPuzzle);
             if (pos != (*goalPuzzlePos))
             {
                 sum += (abs(pos.X - goalPuzzlePos->X));
@@ -343,7 +343,7 @@ Position2D PuzzleBoard::determineEmptyPosAfterSlide(const SLIDE_DIRECTIONS &dir)
 
 bool PuzzleBoard::slidePuzzle(const SLIDE_DIRECTIONS &dir)
 {
-    std::shared_ptr<Position2D> emptyPos = puzzles.getEmptyPuzzlePos();
+    Position2D* emptyPos = puzzles.getEmptyPuzzlePos();
     Position2D newPos = determineEmptyPosAfterSlide(dir);
 
     if (!isValidPos(newPos))
@@ -396,9 +396,9 @@ void EmptyBoard::setCorrectAlignment()
     fillWith(p);
 }
 
-std::shared_ptr<PuzzleBoard> EmptyBoard::clone() const
+PuzzleBoard *EmptyBoard::clone() const
 {
-    return std::shared_ptr<PuzzleBoard>(new EmptyBoard(*this));
+    return (new EmptyBoard(*this));
 }
 
 BoardType EmptyBoard::getBoardType()
@@ -467,9 +467,9 @@ void IntPuzzleBoard::setCorrectAlignment()
     }
 }
 
-std::shared_ptr<PuzzleBoard> IntPuzzleBoard::clone() const
+PuzzleBoard* IntPuzzleBoard::clone() const
 {
-    return std::shared_ptr<PuzzleBoard>(new IntPuzzleBoard(*this));
+    return new IntPuzzleBoard(*this);
 }
 
 IntPuzzleBoard::~IntPuzzleBoard()
@@ -491,7 +491,7 @@ std::shared_ptr<PuzzleBoard> IntPuzzleBoard::getBoardToCompare()
     return (*correctlyAlignedBoards)[dims];
 }
 
-std::shared_ptr<Position2D> PuzzlePointerPool::getPointerForObject(const Position2D &pos)
+Position2D* PuzzlePointerPool::getPointerForObject(Position2D &pos)
 {
     u_int i;
     bool found = false;
@@ -506,7 +506,7 @@ std::shared_ptr<Position2D> PuzzlePointerPool::getPointerForObject(const Positio
     }
     if (found)
     {
-        return points[i];
+        return points[i].get();
 
     } else
     {
@@ -514,7 +514,7 @@ std::shared_ptr<Position2D> PuzzlePointerPool::getPointerForObject(const Positio
     }
 }
 
-std::shared_ptr<Puzzle> PuzzlePointerPool::getPointerForObject(const Puzzle &puzzle)
+Puzzle *PuzzlePointerPool::getPointerForObject(Puzzle &puzzle)
 {
     u_int i;
     bool found = false;
@@ -529,7 +529,7 @@ std::shared_ptr<Puzzle> PuzzlePointerPool::getPointerForObject(const Puzzle &puz
     }
     if (found)
     {
-        return puzzles[i];
+        return puzzles[i].get();
 
     } else
     {
@@ -541,18 +541,18 @@ PuzzlePointerPool::~PuzzlePointerPool()
 {
 }
 
-std::shared_ptr<Position2D> PuzzlePointerPool::createNew(const Position2D &pos)
+ Position2D* PuzzlePointerPool::createNew(Position2D &pos)
 {
     std::shared_ptr<Position2D> p(pos.clone());
     points.push_back(p);
-    return p;
+    return p.get();
 }
 
-std::shared_ptr<Puzzle> PuzzlePointerPool::createNew(const Puzzle &puz)
+Puzzle* PuzzlePointerPool::createNew(Puzzle &puz)
 {
     std::shared_ptr<Puzzle> p(puz.clone());
     puzzles.push_back(p);
-    return p;
+    return p.get();
 }
 
 

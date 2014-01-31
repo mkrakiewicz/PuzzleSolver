@@ -58,7 +58,7 @@ bool QPuzzleBoard::trySlidePuzzle(QPuzzle & puzzle)
 
     auto p = puzzle.getInnerPuzzle();
 
-    auto direction = innerBoard->getSlideDir(*p);
+    auto direction = innerBoard->getSlideDir(*(IntPuzzle*)p);
 
     if (direction == 0)
         return false;
@@ -115,8 +115,9 @@ QLabelPuzzle *QPuzzleBoard::getSlidablePuzzle(const SLIDE_DIRECTIONS &direction)
         auto puzzl = innerBoard->getPuzzle(desired);
         if (puzzl->getType() == puzzle::PUZZLE_TYPES::OBJECT)
         {
-            std::shared_ptr<IntPuzzle> p = std::dynamic_pointer_cast<IntPuzzle> (puzzl->clone());
+            IntPuzzle* p = (IntPuzzle*) (puzzl->clone());
             int val = p->Value;
+            delete p;
             return  getPuzzle(val);
         }
         else return 0;

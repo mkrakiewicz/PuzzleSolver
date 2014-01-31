@@ -8,14 +8,14 @@ using namespace std;
 
 namespace puzzle {
 
-bool Puzzle::operator ==(Puzzle &toCompare) const
+bool Puzzle::operator ==(Puzzle &toCompare)
 {
-    return this->isEqual(&toCompare);
+    return this->isEqual(toCompare);
 }
 
-bool Puzzle::operator !=(Puzzle &toCompare)
+bool Puzzle::operator !=( Puzzle &toCompare)
 {
-    return !this->isEqual(&toCompare);
+    return !this->isEqual(toCompare);
 }
 
 Puzzle::~Puzzle(){}
@@ -32,14 +32,14 @@ string EmptyPuzzle::toString()
     return string("[X]");
 }
 
-shared_ptr<Puzzle> EmptyPuzzle::clone() const
+Puzzle* EmptyPuzzle::clone()
 {
-    return shared_ptr<Puzzle>(new EmptyPuzzle(*this));
+    return new EmptyPuzzle(*this);
 }
 
-bool EmptyPuzzle::isEqual(Puzzle *obj) const
+bool EmptyPuzzle::isEqual( Puzzle &obj)
 {
-    if (obj->getType() != EMPTY)
+    if (obj.getType() != EMPTY)
         return false;
     return true;
 }
@@ -54,9 +54,9 @@ PUZZLE_TYPES PuzzleObject::getType()
 PuzzleObject::~PuzzleObject(){}
 
 
-bool PuzzleObject::isEqual(Puzzle *obj) const
+bool PuzzleObject::isEqual( Puzzle &obj)
 {
-    if (obj->getType() != OBJECT)
+    if (obj.getType() != OBJECT)
         return false;
     return true;
 }
@@ -74,20 +74,20 @@ string IntPuzzle ::toString()
 }
 
 
-shared_ptr<Puzzle> IntPuzzle ::clone() const
+Puzzle* IntPuzzle ::clone()
 {
-    return shared_ptr<Puzzle>(new IntPuzzle(*this));
+    return new IntPuzzle(*this);
 }
 
 IntPuzzle ::~IntPuzzle(){}
 
 
-bool IntPuzzle ::isEqual(Puzzle *obj) const
+bool IntPuzzle ::isEqual( Puzzle &obj)
 {
     if (!PuzzleObject::isEqual(obj))
         return false;
 
-    if (Value == ( (IntPuzzle*)obj )->Value)
+    if (Value == ( (IntPuzzle&)obj ).Value)
         return true;
 
     return false;
