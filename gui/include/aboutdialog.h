@@ -15,6 +15,7 @@ public:
     explicit AboutDialog(QWidget *parent = 0);
     ~AboutDialog();
     
+    void retranslateEverything();
 private:
     Ui::AboutDialog *ui;
 };

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>840</width>
-    <height>549</height>
+    <height>562</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -406,7 +406,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QRadioButton" name="radioButton">
+                   <widget class="QRadioButton" name="radioHamming">
                     <property name="text">
                      <string>Hamming</string>
                     </property>
@@ -416,7 +416,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QRadioButton" name="radioButton_2">
+                   <widget class="QRadioButton" name="radioManhattan">
                     <property name="text">
                      <string>Manhattan</string>
                     </property>
@@ -525,6 +525,20 @@
                <string>Solution</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_6">
+               <item row="4" column="1">
+                <widget class="QLabel" name="label_7">
+                 <property name="text">
+                  <string>States checked:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QLabel" name="labelStatesChecked">
+                 <property name="text">
+                  <string>Not solved</string>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="3">
                 <widget class="QLabel" name="labelSolSteps">
                  <property name="text">
@@ -592,15 +606,29 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QLabel" name="label_7">
+               <item row="5" column="1">
+                <widget class="QLabel" name="label_10">
                  <property name="text">
-                  <string>States checked:</string>
+                  <string>Open states:</string>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="2">
-                <widget class="QLabel" name="labelStatesChecked">
+               <item row="5" column="2">
+                <widget class="QLabel" name="labelOpenStates">
+                 <property name="text">
+                  <string>Not solved</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QLabel" name="label_12">
+                 <property name="text">
+                  <string>Closed states:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="2">
+                <widget class="QLabel" name="labelClosedStates">
                  <property name="text">
                   <string>Not solved</string>
                  </property>

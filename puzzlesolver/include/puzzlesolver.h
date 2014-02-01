@@ -49,7 +49,7 @@ public:
     virtual ~PuzzleBoardState();
 };
 
-typedef const std::vector < std::shared_ptr<PuzzleBoardState > >::iterator StateListIterator;
+typedef std::multimap <u_int, std::shared_ptr<PuzzleBoardState > >::iterator StateListIterator;
 
 class StateManager
 {
@@ -58,10 +58,10 @@ public:
     void addState(std::shared_ptr<PuzzleBoardState >);
     StateListIterator getStateWithLowestPriority();
     void setNextCurrentState();
-    const std::shared_ptr<PuzzleBoardState > getCurrentState();
+    const StateListIterator getCurrentStateIterator();
     u_int getNumStates();
-    bool hasThisStateBeenChecked(std::shared_ptr<PuzzleBoardState> state);
-    void transferToClosedList(std::shared_ptr<PuzzleBoardState> state);
+    bool hasThisStateBeenChecked(std::shared_ptr<PuzzleBoardState> &state);
+    void transferToClosedList(StateListIterator state);
 
     void clear();
 
@@ -69,11 +69,12 @@ public:
     u_int getOpenStateSize() const;
     u_int getClosedStateSize() const;
 
+    std::multimap <u_int, std::shared_ptr<PuzzleBoardState > > openStateList;
 
+    bool isEmptyCurrent();
 protected:
-    std::vector < std::shared_ptr<PuzzleBoardState > > openStateList;
     std::set < std::shared_ptr<PuzzleBoardState > > closedList;
-    std::shared_ptr<PuzzleBoardState > currentState;
+    StateListIterator currentStateIt;
 
 
 };
@@ -90,7 +91,7 @@ public:
     void setBoardToSolve(board::PuzzleBoard&) ;
     const std::vector<board::SLIDE_DIRECTIONS> getResult();
     const std::shared_ptr<PuzzleBoardState > getCurrentState();
-    const StateVectorPtr getAvailableStates(const std::shared_ptr<PuzzleBoardState> currentState);
+    const StateVectorPtr getAvailableStates(const std::shared_ptr<PuzzleBoardState> &currentState);
     bool isSolved();
     bool isSolved(const PuzzleBoardState &p);
 

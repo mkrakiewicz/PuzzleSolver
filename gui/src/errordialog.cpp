@@ -6,6 +6,11 @@ void ErrorDialog::setMessage(const QString &a)
     ui->labelMessage->setText(a);
 }
 
+void ErrorDialog::retranslateEverything()
+{
+    ui->retranslateUi(this);
+}
+
 ErrorDialog::ErrorDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ErrorDialog)
