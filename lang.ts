@@ -5,138 +5,150 @@
     <name>AboutDialog</name>
     <message>
         <source>Dialog</source>
-        <translation type="obsolete">Okno</translation>
+        <translation type="unfinished">Okno</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="obsolete">O programie...</translation>
+        <translation type="unfinished">O programie...</translation>
     </message>
     <message>
         <source>Author:</source>
-        <translation type="obsolete">Autor:</translation>
+        <translation type="unfinished">Autor:</translation>
     </message>
     <message>
         <source>Group</source>
-        <translation type="obsolete">Grupa</translation>
+        <translation type="unfinished">Grupa</translation>
     </message>
     <message>
         <source>Academic Year</source>
-        <translation type="obsolete">Rok akademicki</translation>
+        <translation type="unfinished">Rok akademicki</translation>
+    </message>
+    <message utf8="true">
+        <source>Michał Krakiewicz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>331 IZZ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2013/2014</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ErrorDialog</name>
     <message>
         <source>Dialog</source>
-        <translation type="obsolete">Okno</translation>
+        <translation type="unfinished">Okno</translation>
     </message>
     <message>
         <source>Information</source>
-        <translation type="obsolete">Informacja</translation>
+        <translation type="unfinished">Informacja</translation>
     </message>
     <message>
         <source>Message</source>
-        <translation type="obsolete">Wiadomość</translation>
+        <translation type="unfinished">Wiadomość</translation>
     </message>
 </context>
 <context>
     <name>PuzzleSolverStartScreen</name>
     <message>
         <source>Puzzle Solver</source>
-        <translation type="obsolete">Program Rozwiązywanie Puzzli</translation>
+        <translation type="unfinished">Program Rozwiązywanie Puzzli</translation>
     </message>
     <message>
         <source>Set up Board</source>
-        <translation type="obsolete">Ustawianie planszy</translation>
+        <translation type="unfinished">Ustawianie planszy</translation>
     </message>
     <message>
         <source>Welcome in PuzzleSolver</source>
-        <translation type="obsolete">Program Układanie Puzzli</translation>
+        <translation type="unfinished">Program Układanie Puzzli</translation>
     </message>
     <message>
         <source>Please choose board size first:</source>
-        <translation type="obsolete">Prosze wybrać rozmiar planszy:</translation>
+        <translation type="unfinished">Prosze wybrać rozmiar planszy:</translation>
     </message>
     <message>
         <source>Horizontal size(X)</source>
-        <translation type="obsolete">Szerokość(X)</translation>
+        <translation type="unfinished">Szerokość(X)</translation>
     </message>
     <message>
         <source>Vertical size(Y)</source>
-        <translation type="obsolete">Wysokość(Y)</translation>
+        <translation type="unfinished">Wysokość(Y)</translation>
     </message>
     <message>
         <source>Create new board</source>
-        <translation type="obsolete">Utwórz nową planszę</translation>
+        <translation type="unfinished">Utwórz nową planszę</translation>
     </message>
     <message>
         <source>Preview</source>
-        <translation type="obsolete">Podgląd</translation>
+        <translation type="unfinished">Podgląd</translation>
     </message>
     <message>
         <source>Solve Puzzle</source>
         <translatorcomment> </translatorcomment>
-        <translation type="obsolete">Szukanie rozwiązania</translation>
+        <translation type="unfinished">Szukanie rozwiązania</translation>
     </message>
     <message>
         <source>Puzzle view</source>
-        <translation type="obsolete">Widok Puzzli</translation>
+        <translation type="unfinished">Widok Puzzli</translation>
     </message>
     <message>
         <source>By steps</source>
-        <translation type="obsolete">Kroki</translation>
+        <translation type="unfinished">Kroki</translation>
     </message>
     <message>
         <source>By percentage</source>
-        <translation type="obsolete">% nieułożonych</translation>
+        <translation type="unfinished">% nieułożonych</translation>
     </message>
     <message>
         <source>Shuffle</source>
-        <translation type="obsolete">Tasuj</translation>
+        <translation type="unfinished">Tasuj</translation>
     </message>
     <message>
         <source>Puzzle options</source>
-        <translation type="obsolete">Opcje puzzli</translation>
+        <translation type="unfinished">Opcje puzzli</translation>
     </message>
     <message>
         <source>Priority functions</source>
-        <translation type="obsolete">Funkcje priorytetu</translation>
+        <translation type="unfinished">Funkcje priorytetu</translation>
     </message>
     <message>
         <source>Hamming</source>
-        <translation type="obsolete">Hamminga</translation>
+        <translation type="unfinished">Hamminga</translation>
     </message>
     <message>
         <source>Manhattan</source>
-        <translation type="obsolete">Manhattan</translation>
+        <translation type="unfinished">Manhattan</translation>
     </message>
     <message>
         <source>Break search after checking</source>
-        <translation type="obsolete">Przerwij po przeszukaniu</translation>
+        <translation type="unfinished">Przerwij po przeszukaniu</translation>
     </message>
     <message>
         <source>states.</source>
-        <translation type="obsolete">stanów.</translation>
+        <translation type="unfinished">stanów.</translation>
     </message>
     <message>
         <source>Show solution animation</source>
-        <translation type="obsolete">Pokaż animację rozwiązania</translation>
+        <translation type="unfinished">Pokaż animację rozwiązania</translation>
     </message>
     <message>
         <source>Solve</source>
-        <translation type="obsolete">Znajdź rozwiązanie</translation>
+        <translation type="unfinished">Znajdź rozwiązanie</translation>
     </message>
     <message>
         <source>Solution</source>
-        <translation type="obsolete">Rozwiązanie</translation>
+        <translation type="unfinished">Rozwiązanie</translation>
     </message>
     <message>
         <source>Solution steps</source>
-        <translation type="obsolete">Kroki do rozwiązania</translation>
+        <translation type="unfinished">Kroki do rozwiązania</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="obsolete">Brak</translation>
+        <translation type="unfinished">Brak</translation>
     </message>
     <message>
         <source>UP</source>
@@ -156,51 +168,75 @@
     </message>
     <message>
         <source>Solution statistics</source>
-        <translation type="obsolete">Statystyki rozwiązania</translation>
+        <translation type="unfinished">Statystyki rozwiązania</translation>
     </message>
     <message>
         <source>Not solved</source>
-        <translation type="obsolete">Nie rozwiązane</translation>
+        <translation type="unfinished">Nie rozwiązane</translation>
     </message>
     <message>
         <source>Steps:</source>
-        <translation type="obsolete">Kroki</translation>
+        <translation type="unfinished">Kroki:</translation>
     </message>
     <message>
         <source>States checked:</source>
-        <translation type="obsolete">Przeszukane stany:</translation>
+        <translation type="unfinished">Przeszukane stany:</translation>
     </message>
     <message>
         <source>Menu</source>
-        <translation type="obsolete">Menu</translation>
+        <translation type="unfinished">Menu</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="obsolete">Opcje</translation>
+        <translation type="unfinished">Opcje</translation>
     </message>
     <message>
         <source>Language</source>
-        <translation type="obsolete">Język</translation>
+        <translation type="unfinished">Język</translation>
     </message>
     <message>
         <source>Info</source>
-        <translation type="obsolete">Info</translation>
+        <translation type="unfinished">Info</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="obsolete">Wyjście</translation>
+        <translation type="unfinished">Wyjście</translation>
     </message>
     <message>
         <source>Polish</source>
-        <translation type="obsolete">Polski</translation>
+        <translation type="unfinished">Polski</translation>
     </message>
     <message>
         <source>English</source>
-        <translation type="obsolete">Angielski</translation>
+        <translation type="unfinished">Angielski</translation>
     </message>
     <message>
         <source>Author</source>
-        <translation type="obsolete">Autor</translation>
+        <translation type="unfinished">Autor</translation>
+    </message>
+    <message>
+        <source>3 x 3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open states:</source>
+        <translation type="unfinished">Otwarte stany:</translation>
+    </message>
+    <message>
+        <source>Closed states:</source>
+        <translation type="unfinished">Zamknięte stany:</translation>
+    </message>
+    <message>
+        <source>Success</source>
+        <translation type="unfinished">Znaleziono rozwiązanie</translation>
+    </message>
+    <message>
+        <source>Searching...</source>
+        <translation type="unfinished">Szukanie...</translation>
+    </message>
+    <message>
+        <source>Solution not found</source>
+        <translation type="unfinished">Nie znaleziono rozwiązania</translation>
     </message>
 </context>
 <context>

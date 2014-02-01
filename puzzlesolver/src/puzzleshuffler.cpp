@@ -63,13 +63,9 @@ float PuzzleShuffler::getPercentageShuffled()
 
 bool PuzzleShuffler::tryMoveInAllDirections()
 {
-    Position2D p;
-
     for (u_int i=0; i<(PuzzleBoard::directions).size(); i++)
     {
         SLIDE_DIRECTIONS dir = getRandomDirection();
-        p = boardToShuffle->determineEmptyPosAfterSlide(dir);
-
             bool success = trySlide(dir);
             if (success)
               return true;
@@ -83,8 +79,8 @@ bool PuzzleShuffler::tryMoveInNewRandomPos()
     for (int i=0; i<10; i++)
     {
         auto dir = getRandomDirection();
-        Position2D after = boardToShuffle->determineEmptyPosAfterSlide(dir);
-        if (boardToShuffle->isValidPos(after) && (!wasEmptyThere(after)))
+        auto after = boardToShuffle->determineEmptyPosAfterSlide(dir);
+        if (boardToShuffle->isValidPos(*after) && (!wasEmptyThere(*after)))
         {
             if (trySlide(dir))
                 return true;

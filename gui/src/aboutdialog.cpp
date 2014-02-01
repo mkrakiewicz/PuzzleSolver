@@ -8,6 +8,11 @@ AboutDialog::AboutDialog(QWidget *parent) :
     ui->setupUi(this);
 }
 
+void AboutDialog::retranslateEverything()
+{
+    ui->retranslateUi(this);
+}
+
 AboutDialog::~AboutDialog()
 {
     delete ui;

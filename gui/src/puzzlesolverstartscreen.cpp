@@ -23,6 +23,7 @@
 #include "qsolverthread.h"
 
 
+using namespace std;
 using namespace board;
 
 PuzzleSolverStartScreen::PuzzleSolverStartScreen(QWidget *parent) :
@@ -45,7 +46,6 @@ PuzzleSolverStartScreen::PuzzleSolverStartScreen(QWidget *parent) :
 
     polishTranslator->load("lang");
     qApp->installTranslator(&(*polishTranslator));
-//    clearSolutionList();
     retranslateEverything();
 
 }
@@ -59,7 +59,11 @@ void PuzzleSolverStartScreen::retranslateEverything()
 {
     ui->retranslateUi(this);
     updateSolutionGUI();
-}
+    if (errorDialog)
+        errorDialog->retranslateEverything();
+    if (aboutDialog)
+        aboutDialog->retranslateEverything();
+    }
 
 const Position2D &PuzzleSolverStartScreen::positionToPixelPosition(const Position2D &pos)
 {
@@ -143,6 +147,8 @@ void PuzzleSolverStartScreen::updateSolutionGUI()
 
 void PuzzleSolverStartScreen::setSolutionStepsToGUI(const std::vector<board::SLIDE_DIRECTIONS> &r)
 {
+    ui->listSolutionSteps->clear();
+
     for (u_int i=0; i<r.size(); i++)
     {
         QListWidgetItem* l = new QListWidgetItem(PuzzleSolverStartScreen::tr(dirToStr(r[i]).c_str()));
@@ -154,7 +160,8 @@ void PuzzleSolverStartScreen::setSolutionStatstoGUI(const std::vector<board::SLI
 {
     ui->labelSteps->setText(QString::number(r.size()));
     ui->labelStatesChecked->setText(QString::number(solver->getStatesChecked()));
-
+    ui->labelOpenStates->setText(QString::number(solver->currentOpenStates()));
+    ui->labelClosedStates->setText(QString::number(solver->currentClosedStates()));
 }
 
 void PuzzleSolverStartScreen::on_horizontalBoardSizeSlider_valueChanged(int value)
@@ -200,17 +207,23 @@ void PuzzleSolverStartScreen::clearSolutionList()
     ui->listSolutionSteps->addItem(l);
 }
 
+
 void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
 {
-    ui->labelSteps->setText("");
+    updateSolutionGUI();
+
     ui->listSolutionSteps->clear();
     bool result = false;
 
     ui->labelSuccess->setText(tr("Searching..."));
+    QApplication::processEvents();
     try{
+        qDebug() << "Started";
         solver = new QSolverThread(this);
         solver->setBoardToSolve(*board->getInnerBoard());
         solver->setStateCheckLimit(ui->checkMaxStates->value());
+        PriorityFunction p = ui->radioHamming->isChecked() ? HAMMING : MANHATTAN ;
+        solver->setPriorityFunction(p);
         solver->solve();
         result = solver->isSolved();
     }catch(const Exception &e)

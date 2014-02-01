@@ -107,11 +107,11 @@ bool QPuzzleBoard::trySlidePuzzle(QPuzzle & puzzle)
 QLabelPuzzle *QPuzzleBoard::getSlidablePuzzle(const SLIDE_DIRECTIONS &direction)
 {
     auto p = innerBoard->getEmptyPuzzlePos();
-    Position2D desired = innerBoard->determineEmptyPosAfterSlide(direction);
+    auto desired = innerBoard->determineEmptyPosAfterSlide(direction);
 
-    if (innerBoard->isValidPos(desired))
+    if (innerBoard->isValidPos(*desired))
     {
-        auto puzzl = innerBoard->getPuzzle(desired);
+        auto puzzl = innerBoard->getPuzzle(*desired);
         if (puzzl->getType() == puzzle::PUZZLE_TYPES::OBJECT)
         {
             auto p = std::dynamic_pointer_cast<IntPuzzle> (puzzl->clone());

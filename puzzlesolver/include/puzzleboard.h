@@ -140,7 +140,7 @@ public:
 
 
     board::SLIDE_DIRECTIONS emptyPuzzleSlideDirection(const board::SLIDE_DIRECTIONS &puzzleSlideDirection);
-    Position2D determineEmptyPosAfterSlide(const board::SLIDE_DIRECTIONS &dir);
+    std::shared_ptr<Position2D> determineEmptyPosAfterSlide(const board::SLIDE_DIRECTIONS &dir);
     bool slidePuzzle(const board::SLIDE_DIRECTIONS &dir);
     std::shared_ptr<Position2D> getEmptyPuzzlePos();
     std::shared_ptr<board::SLIDE_DIRECTIONS> getSlideDir(puzzle::Puzzle &puz);

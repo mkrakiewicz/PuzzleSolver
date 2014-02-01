@@ -321,20 +321,20 @@ SLIDE_DIRECTIONS PuzzleBoard::emptyPuzzleSlideDirection(const SLIDE_DIRECTIONS &
     }
 }
 
-Position2D PuzzleBoard::determineEmptyPosAfterSlide(const SLIDE_DIRECTIONS &dir)
+std::shared_ptr<Position2D> PuzzleBoard::determineEmptyPosAfterSlide(const SLIDE_DIRECTIONS &dir)
 {
     Position2D emptyPos = *puzzles.getEmptyPuzzlePos();
 
     switch(emptyPuzzleSlideDirection(dir))
     {
     case UP:
-        return Position2D(emptyPos.X, emptyPos.Y-1);
+        return std::shared_ptr<Position2D>(new Position2D(emptyPos.X, emptyPos.Y-1));
     case DOWN:
-        return Position2D(emptyPos.X, emptyPos.Y+1);
+        return std::shared_ptr<Position2D>(new Position2D(emptyPos.X, emptyPos.Y+1));
     case LEFT:
-        return Position2D(emptyPos.X-1, emptyPos.Y);
+        return std::shared_ptr<Position2D>(new Position2D(emptyPos.X-1, emptyPos.Y));
     case RIGHT:
-        return Position2D(emptyPos.X+1, emptyPos.Y);
+        return std::shared_ptr<Position2D>(new Position2D(emptyPos.X+1, emptyPos.Y));
 
     default:
         throw Exception("Forgot to implement new direction for determineNewSlidePos");
@@ -344,12 +344,12 @@ Position2D PuzzleBoard::determineEmptyPosAfterSlide(const SLIDE_DIRECTIONS &dir)
 bool PuzzleBoard::slidePuzzle(const SLIDE_DIRECTIONS &dir)
 {
     Position2D* emptyPos = puzzles.getEmptyPuzzlePos();
-    Position2D newPos = determineEmptyPosAfterSlide(dir);
+    auto newPos = determineEmptyPosAfterSlide(dir);
 
-    if (!isValidPos(newPos))
+    if (!isValidPos(*newPos))
         return false;
 
-    puzzles.swap(*emptyPos,newPos);
+    puzzles.swap(*emptyPos,*newPos);
     return true;
 
 }
