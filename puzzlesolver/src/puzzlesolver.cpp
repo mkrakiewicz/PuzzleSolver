@@ -33,61 +33,10 @@ void PuzzleSolver::newSearch()
 
 
 
+#ifdef MY_DEBUG
 
-void PuzzleSolver::solve()
+void PuzzleSolver::debugPrint()
 {
-    if (!boardToSolve)
-        return;
-
-    newSearch();
-    this->statesChecked = 0;
-#ifdef MY_DEBUG
-    Avg mainLoop;
-    Avg gst;
-    Avg trn;
-    Avg addst;
-    Avg stnxt;
-#endif
-
-    while (!isSolved())
-    {
-#ifdef MY_DEBUG
-        mainLoop.stop();
-        mainLoop.start();
-#endif
-        this->statesChecked++;
-#ifdef MY_DEBUG
-        gst.start();
-#endif
-        auto states = getAvailableStates(getCurrentState());
-#ifdef MY_DEBUG
-        gst.stop();
-        trn.start();
-#endif
-        stateManager->transferToClosedList(stateManager->getCurrentStateIterator());
-#ifdef MY_DEBUG
-        trn.stop();
-        addst.start();
-#endif
-        for (u_int i = 0; i<states->size(); i++)
-        {
-            stateManager->addState((*states)[i]);
-        }
-#ifdef MY_DEBUG
-        addst.stop();
-        stnxt.start();
-#endif
-        stateManager->setNextCurrentState();
-#ifdef MY_DEBUG
-        stnxt.stop();
-#endif
-        if (statesChecked > stateCheckLimit) {
-            stringstream s;
-            s << "Over " << stateCheckLimit << " states checked.";
-            throw Exception(s.str().c_str());
-        }
-    }
-#ifdef MY_DEBUG
     qDebug() << "\n============================================\n: ";
 
     qDebug() << "Mainloop: " << mainLoop.getAvg();
@@ -111,9 +60,42 @@ void PuzzleSolver::solve()
     qDebug() << "all: " << all.getAvg();
     qDebug() << "inner loop: " << innerLoop.getAvg();
     qDebug() << "calc prior: " << calcPrior.getAvg();
-
+}
 #endif
 
+void PuzzleSolver::solve()
+{
+    if (!boardToSolve)
+        return;
+
+    newSearch();
+    this->statesChecked = 0;
+    while (!isSolved())
+    {
+
+        this->statesChecked++;
+
+        auto states = getAvailableStates(getCurrentState());
+
+        stateManager->transferToClosedList(stateManager->getCurrentStateIterator());
+
+        for (u_int i = 0; i<states->size(); i++)
+        {
+            stateManager->addState((*states)[i]);
+        }
+
+        stateManager->setNextCurrentState();
+
+        if (statesChecked > stateCheckLimit) {
+            stringstream s;
+            s << "Over " << stateCheckLimit << " states checked.";
+            throw Exception(s.str().c_str());
+        }
+    }
+
+#ifdef MY_DEBUG
+    debugPrint();
+#endif
 
 
 }
