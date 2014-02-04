@@ -123,6 +123,9 @@ public:
     void setPriorityFunction(const PriorityFunction &value);
     int calculatePriority(board::PuzzleBoard &, const int &moveCount);
 
+#ifdef MY_DEBUG
+    void debugPrint();
+#endif
 protected:
     PriorityFunction priorityFunction;
     void setGoalBoard();
