@@ -6,8 +6,9 @@
 #include <memory>
 #include <set>
 #include "enums.h"
-
-#define DEBUG_PUZZLESOLVER
+#ifdef MY_DEBUG
+#include "dbg.h"
+#endif
 
 namespace board {
     class PuzzleBoard;
@@ -25,6 +26,11 @@ class PuzzleBoardState;
 struct PuzzleBoardStateParams
 {
     PuzzleBoardStateParams();
+    PuzzleBoardStateParams(std::shared_ptr<PuzzleBoardState> cameFrom,
+                           std::shared_ptr<board::PuzzleBoard> currentBoard,
+                           u_int movesMadeSoFar,
+                           u_int priority,
+                           std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState);
     std::shared_ptr<PuzzleBoardState> cameFrom;
     std::shared_ptr<board::PuzzleBoard> currentBoard;
 
@@ -84,6 +90,20 @@ class PuzzleShuffler;
 typedef std::shared_ptr< std::vector < std::shared_ptr<PuzzleBoardState > > > StateVectorPtr;
 class PuzzleSolver
 {
+#ifdef MY_DEBUG
+    Avg beforeloop;
+    Avg clone;
+    Avg slide;
+    Avg stateparam;
+    Avg checkchecked;
+    Avg push;
+    Avg all;
+    Avg firstHalf;
+    Avg secondHalf;
+    Avg innerLoop;
+    Avg calcPrior;
+#endif
+
 public:
     PuzzleSolver();
     void newSearch();
@@ -101,7 +121,7 @@ public:
     void setStateCheckLimit(const u_int &value);
 
     void setPriorityFunction(const PriorityFunction &value);
-    int calculatePriority(board::PuzzleBoard &, int moveCount);
+    int calculatePriority(board::PuzzleBoard &, const int &moveCount);
 
 protected:
     PriorityFunction priorityFunction;

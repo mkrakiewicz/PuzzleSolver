@@ -10,7 +10,9 @@ class QPuzzleBoard;
 namespace board {
     class IntPuzzleBoard;
 }
-
+namespace puzzle {
+    class IntPuzzle;
+}
 class QPuzzleCreator
 {
 public:
@@ -20,7 +22,7 @@ public:
     QPuzzleBoard* parentBoard;
     QWidget *parentObject;
 
-    QLabelPuzzle *createPuzzle(u_int ID);
+    QLabelPuzzle *createPuzzle(const puzzle::IntPuzzle &puzzle);
 };
 
 #endif // PUZZLECREATOR_H

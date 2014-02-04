@@ -10,8 +10,14 @@
 #include "enums.h"
 
 
+#ifdef MY_DEBUG
+#include <QDebug>
+#include "dbg.h"
+#endif
+
 namespace puzzle {
     class Puzzle;
+    class IntPuzzle;
 }
 
 
@@ -44,12 +50,12 @@ class PuzzlePointerPool
 {
 public:
     Position2D* getPointerForObject(Position2D &pos);
-    puzzle::Puzzle* getPointerForObject(puzzle::Puzzle &pos);
+    puzzle::Puzzle* getPointerForObject(const puzzle::Puzzle &puzzle);
 
     virtual ~PuzzlePointerPool();
 protected:
     Position2D* createNew(Position2D &pos);
-    puzzle::Puzzle* createNew(puzzle::Puzzle &puzzle);
+    puzzle::Puzzle* createNew(const puzzle::Puzzle &puzzle);
 
     std::vector< std::shared_ptr<puzzle::Puzzle> > puzzles;
     std::vector< std::shared_ptr<Position2D> > points;
@@ -62,7 +68,7 @@ public:
 
     void insertPuzzle(puzzle::Puzzle&puzzle, Position2D& point);
     puzzle::Puzzle* findPuzzle(Position2D &point) ;
-    puzzle::Puzzle* findPuzzle(u_int val);
+    puzzle::Puzzle* findPuzzle(const puzzle::Puzzle &puzzle);
     Position2D* findPoint(puzzle::Puzzle &puzzle);
     Position2D* getEmptyPuzzlePos();
     void swap(Position2D &pos1,Position2D &pos2);
@@ -93,16 +99,18 @@ enum BoardType
 };
 
 
-
 class PuzzleBoard : public Dimension2D
 {
 public:
     PuzzleBoard(const Dimension2D &d);
 
+#ifdef MY_DEBUG
+    static AVG avg;
+#endif
 
     void setPuzzle(Position2D pos, puzzle::Puzzle &puz);
     puzzle::Puzzle *getPuzzle(Position2D &pos) ;
-    puzzle::Puzzle *getPuzzle(u_int value);
+    puzzle::Puzzle *getPuzzle(const puzzle::Puzzle &puzzle);
     Position2D *getPuzzlePos(puzzle::Puzzle &puzzle);
 
 
@@ -150,8 +158,8 @@ public:
 
     virtual ~PuzzleBoard(){}
 
-    int calculateHammingPriority(int movesMadeSoFar);
-    int calculateManhattanPriority(int movesMadeSoFar);
+    int calculateHammingPriority(const int &movesMadeSoFar);
+    int calculateManhattanPriority(const int &movesMadeSoFar);
 protected:
     virtual std::shared_ptr<PuzzleBoard> getBoardToCompare() = 0;
 

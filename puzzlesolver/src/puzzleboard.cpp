@@ -10,7 +10,6 @@
 #include "position2d.h"
 #include "enums.h"
 
-
 using namespace puzzle;
 using namespace std;
 
@@ -19,6 +18,9 @@ namespace board {
 
 std::vector<board::SLIDE_DIRECTIONS> PuzzleBoard::directions = {UP,DOWN,LEFT,RIGHT};
 
+#ifdef MY_DEBUG
+AVG PuzzleBoard::avg;
+#endif
 
 PuzzlePointerPool PuzzlePositionContainer::pool;
 
@@ -67,7 +69,8 @@ bool Dimension2D::operator <(const Dimension2D &toCompare) const
 
 Dimension2D Dimension2D::getDimensions() const
 {
-    return *this;
+    const Dimension2D  &dims  = *this;
+    return dims;
 }
 
 u_int Dimension2D::getMultipliedDimensions()
@@ -99,17 +102,16 @@ Puzzle *PuzzlePositionContainer::findPuzzle(Position2D &point)
 {
     Position2D* pos = pool.getPointerForObject(point);
     auto result = positionToPuzzle.find(pos);
-    if ( result == positionToPuzzle.end() ) {
-        throw Exception("Position not found? object should have been created!");
-    }
+    //    if ( result == positionToPuzzle.end() ) {
+    //        throw Exception("Position not found? object should have been created!");
+    //    }
     return result->second;
 
 }
 
-Puzzle* PuzzlePositionContainer::findPuzzle(u_int val)
+Puzzle* PuzzlePositionContainer::findPuzzle(const Puzzle &puzzle)
 {
-    IntPuzzle a(val);
-    Puzzle* puz = pool.getPointerForObject(a);
+    Puzzle* puz = pool.getPointerForObject(puzzle);
     return puz;
 
 }
@@ -157,18 +159,18 @@ void PuzzleBoard::setPuzzle(Position2D pos, Puzzle &puz)
 Puzzle* PuzzleBoard::getPuzzle(Position2D &pos)
 {
     auto p = puzzles.findPuzzle(pos);
-    if (p == 0) {
-        stringstream s;
-        s << "Puzzle Not found? Requested position:";
-        s << pos.toString() << endl;
-        throw Exception(s.str());
-    }
+    //    if (p == 0) {
+    //        stringstream s;
+    //        s << "Puzzle Not found? Requested position:";
+    //        s << pos.toString() << endl;
+    //        throw Exception(s.str());
+    //    }
     return p;
 }
 
-Puzzle* PuzzleBoard::getPuzzle(u_int value)
+Puzzle* PuzzleBoard::getPuzzle(const Puzzle &puzzle)
 {
-    return puzzles.findPuzzle(value);
+    return puzzles.findPuzzle(puzzle);
 }
 
 Position2D* PuzzleBoard::getPuzzlePos(Puzzle &puzzle)
@@ -199,22 +201,51 @@ std::shared_ptr<PuzzleBoard> PuzzleBoard::getBoardWithCorrectAlignment()
 
 u_int PuzzleBoard::getNumberOfPuzzlesInWrongPosition()
 {
+#ifdef MY_DEBUG
+    avg.all.start();
+#endif
     u_int wrong = 0;
-    EmptyPuzzle e;
+
+#ifdef MY_DEBUG
+    avg.getCorrect.start();
+#endif
     auto reference = getBoardWithCorrectAlignment();
+#ifdef MY_DEBUG
+    avg.getCorrect.stop();
+    avg.innerLoop.start();
+#endif
+    Position2D tmpPos;
     for (u_int x=0; x<horizontalSize; x++)
     {
         for (u_int y=0; y<verticalSize; y++)
         {
-            Position2D pos(x,y);
-            Puzzle* p1 = getPuzzle(pos);
-            if (e.operator ==(*p1))
-                continue;
-            Puzzle* p2 = reference->getPuzzle(pos);
+#ifdef MY_DEBUG
+            avg.innerinner.start();
+#endif
+            tmpPos.X =x;
+            tmpPos.Y =y;
+
+#ifdef MY_DEBUG
+            avg.getPuzzle.start();
+#endif
+            Puzzle* p1 = getPuzzle(tmpPos);
+
+
+            Puzzle* p2 = reference->getPuzzle(tmpPos);
+#ifdef MY_DEBUG
+            avg.getPuzzle2.stop();
+#endif
             if (p1->operator !=(*p2))
                 wrong++;
+#ifdef MY_DEBUG
+            avg.innerinner.stop();
+#endif
         }
     }
+#ifdef MY_DEBUG
+    avg.innerLoop.stop();
+    avg.all.stop();
+#endif
     return wrong;
 }
 
@@ -223,19 +254,21 @@ u_int PuzzleBoard::getSumOfDistances()
     u_int sum = 0;
     EmptyPuzzle e;
     auto reference = getBoardWithCorrectAlignment();
+    Position2D tmpPos;
     for (u_int x=0; x<horizontalSize; x++)
     {
         for (u_int y=0; y<verticalSize; y++)
         {
-            Position2D pos(x,y);
-            auto thisPuzzle = (getPuzzle(pos));
+            tmpPos.X = x;
+            tmpPos.Y = y;
+            auto thisPuzzle = (getPuzzle(tmpPos));
             if ((*thisPuzzle) == e)
                 continue;
             auto goalPuzzlePos = reference->getPuzzlePos(*thisPuzzle);
-            if (pos != (*goalPuzzlePos))
+            if (tmpPos != (*goalPuzzlePos))
             {
-                sum += (abs(pos.X - goalPuzzlePos->X));
-                sum += (abs(pos.Y - goalPuzzlePos->Y));
+                sum += (abs(tmpPos.X - goalPuzzlePos->X));
+                sum += (abs(tmpPos.Y - goalPuzzlePos->Y));
             }
 
         }
@@ -243,13 +276,13 @@ u_int PuzzleBoard::getSumOfDistances()
     return sum;
 }
 
-int PuzzleBoard::calculateHammingPriority(int movesMadeSoFar)
+int PuzzleBoard::calculateHammingPriority(const int &movesMadeSoFar)
 {
     int misaligned = getNumberOfPuzzlesInWrongPosition();
     return misaligned + movesMadeSoFar;
 }
 
-int PuzzleBoard::calculateManhattanPriority(int movesMadeSoFar)
+int PuzzleBoard::calculateManhattanPriority(const int &movesMadeSoFar)
 {
     int distance = getSumOfDistances();
     return distance + movesMadeSoFar;
@@ -371,14 +404,14 @@ std::shared_ptr<board::SLIDE_DIRECTIONS> PuzzleBoard::getSlideDir(Puzzle &puz)
     Position2D p3 = Position2D(pos->X-1, pos->Y);
     Position2D p4 = Position2D(pos->X+1, pos->Y);
 
-     if ((*empty) == p1)
-            return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(UP));
-     if ((*empty) == p2)
-            return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(DOWN));
-     if ((*empty) == p3)
+    if ((*empty) == p1)
+        return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(UP));
+    if ((*empty) == p2)
+        return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(DOWN));
+    if ((*empty) == p3)
         return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(LEFT));
-     if ((*empty) == p4)
-            return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(RIGHT));
+    if ((*empty) == p4)
+        return result = std::shared_ptr<board::SLIDE_DIRECTIONS> (new SLIDE_DIRECTIONS(RIGHT));
 
 
     return result;
@@ -498,7 +531,7 @@ Position2D* PuzzlePointerPool::getPointerForObject(Position2D &pos)
 
     for (i=0; i<points.size(); i++)
     {
-        if (*points[i] == pos)
+        if ((points[i])->operator ==(pos))
         {
             found = true;
             break;
@@ -514,14 +547,14 @@ Position2D* PuzzlePointerPool::getPointerForObject(Position2D &pos)
     }
 }
 
-Puzzle *PuzzlePointerPool::getPointerForObject(Puzzle &puzzle)
+Puzzle *PuzzlePointerPool::getPointerForObject(const Puzzle &puzzle)
 {
     u_int i;
     bool found = false;
 
     for (i=0; i<puzzles.size(); i++)
     {
-        if (puzzle == (*puzzles[i]))
+        if ((puzzles[i])->operator==(puzzle))
         {
             found = true;
             break;
@@ -541,14 +574,14 @@ PuzzlePointerPool::~PuzzlePointerPool()
 {
 }
 
- Position2D* PuzzlePointerPool::createNew(Position2D &pos)
+Position2D* PuzzlePointerPool::createNew(Position2D &pos)
 {
     std::shared_ptr<Position2D> p(pos.clone());
     points.push_back(p);
     return p.get();
 }
 
-Puzzle* PuzzlePointerPool::createNew(Puzzle &puz)
+Puzzle* PuzzlePointerPool::createNew(const Puzzle &puz)
 {
     std::shared_ptr<Puzzle> p(puz.clone());
     puzzles.push_back(p);

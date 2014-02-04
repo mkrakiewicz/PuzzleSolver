@@ -6,12 +6,14 @@
 #include <QFrame>
 #include <QSequentialAnimationGroup>
 #include <QTranslator>
+#include <chrono>
 #include "puzzlesolverstartscreen.h"
 #include "config.h"
 #include "ui_puzzlesolverstartscreen.h"
 #include "puzzleboard.h"
 #include "position2d.h"
 #include "qpuzzle.h"
+#include "puzzle.h"
 #include "qpuzzlecreator.h"
 #include "qpuzzleboard.h"
 #include "puzzlesolver.h"
@@ -103,6 +105,7 @@ void PuzzleSolverStartScreen::createNewBoard()
 
     //    const QPoint initialPosition(BOARD_MARGIN,BOARD_MARGIN);
     u_int count = 1;
+
     for (u_int y=0; y<boardSize->verticalSize; y++)
     {
         for (u_int x=0; x<boardSize->horizontalSize; x++)
@@ -113,7 +116,7 @@ void PuzzleSolverStartScreen::createNewBoard()
             pC.xOffsetMultiplier = x;
             pC.yOffsetMultiplier = y;
 
-            auto p = pC.createPuzzle(count);
+            auto p = pC.createPuzzle(puzzle::IntPuzzle(count));
             board->setObjectForPuzzle(p);
             (*puzzles)[count] = p;
 
@@ -215,25 +218,43 @@ void PuzzleSolverStartScreen::on_buttonSolvePuzzle_clicked()
     ui->listSolutionSteps->clear();
     bool result = false;
 
-    ui->labelSuccess->setText(tr("Searching..."));
+    ui->labelSuccess->setText(PuzzleSolverStartScreen::tr("Searching..."));
     QApplication::processEvents();
+    auto end = chrono::high_resolution_clock::now();
+    auto begin = chrono::high_resolution_clock::now();
+
     try{
-        qDebug() << "Started";
         solver = new QSolverThread(this);
         solver->setBoardToSolve(*board->getInnerBoard());
         solver->setStateCheckLimit(ui->checkMaxStates->value());
         PriorityFunction p = ui->radioHamming->isChecked() ? HAMMING : MANHATTAN ;
         solver->setPriorityFunction(p);
+        begin = chrono::high_resolution_clock::now();
         solver->solve();
-        result = solver->isSolved();
+        end = chrono::high_resolution_clock::now();
+
     }catch(const Exception &e)
     {
+        end = chrono::high_resolution_clock::now();
         showErrorDialog(e.what());
     }
     catch(...)
     {
         showErrorDialog("Unknown error?");
     }
+
+    auto dur = end - begin;
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+    int sec = ms/1000;
+    QString str;
+    if (sec>1) {
+        str += QString::number(sec) + "s ";
+        ms -= sec*1000;
+    }
+    str += QString::number(ms) + "ms";
+
+    ui->labelTimeElapsed->setText(str);
+    result = solver->isSolved();
 
     if (result){
         solutionFoundAction();

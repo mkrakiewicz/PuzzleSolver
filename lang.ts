@@ -238,6 +238,10 @@
         <source>Solution not found</source>
         <translation type="unfinished">Nie znaleziono rozwiązania</translation>
     </message>
+    <message>
+        <source>Time elapsed:</source>
+        <translation type="unfinished">Czas rozwiązania:</translation>
+    </message>
 </context>
 <context>
     <name>QTranslator</name>

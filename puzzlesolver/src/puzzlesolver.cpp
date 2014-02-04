@@ -32,6 +32,8 @@ void PuzzleSolver::newSearch()
 }
 
 
+
+
 void PuzzleSolver::solve()
 {
     if (!boardToSolve)
@@ -39,22 +41,80 @@ void PuzzleSolver::solve()
 
     newSearch();
     this->statesChecked = 0;
+#ifdef MY_DEBUG
+    Avg mainLoop;
+    Avg gst;
+    Avg trn;
+    Avg addst;
+    Avg stnxt;
+#endif
+
     while (!isSolved())
     {
+#ifdef MY_DEBUG
+        mainLoop.stop();
+        mainLoop.start();
+#endif
         this->statesChecked++;
+#ifdef MY_DEBUG
+        gst.start();
+#endif
         auto states = getAvailableStates(getCurrentState());
+#ifdef MY_DEBUG
+        gst.stop();
+        trn.start();
+#endif
         stateManager->transferToClosedList(stateManager->getCurrentStateIterator());
+#ifdef MY_DEBUG
+        trn.stop();
+        addst.start();
+#endif
         for (u_int i = 0; i<states->size(); i++)
         {
             stateManager->addState((*states)[i]);
         }
+#ifdef MY_DEBUG
+        addst.stop();
+        stnxt.start();
+#endif
         stateManager->setNextCurrentState();
+#ifdef MY_DEBUG
+        stnxt.stop();
+#endif
         if (statesChecked > stateCheckLimit) {
             stringstream s;
             s << "Over " << stateCheckLimit << " states checked.";
             throw Exception(s.str().c_str());
         }
     }
+#ifdef MY_DEBUG
+    qDebug() << "\n============================================\n: ";
+
+    qDebug() << "Mainloop: " << mainLoop.getAvg();
+    qDebug() << "Getstates: " << gst.getAvg();
+    qDebug() << "transfer: " << trn.getAvg();
+    qDebug() << "add states: " << addst.getAvg();
+    qDebug() << "Set next st: " << stnxt.getAvg();
+    /*
+     *  Avg beforeloop;
+    Avg clone;
+    Avg slide;
+    Avg stateparam;
+    Avg checkchecked;
+    Avg push;
+     */
+    qDebug() << "beforlup: " << beforeloop.getAvg();
+    qDebug() << "clone: " << clone.getAvg();
+    qDebug() << "slide: " << slide.getAvg();
+    qDebug() << "stateparam: " << stateparam.getAvg();
+    qDebug() << "push: " << push.getAvg();
+    qDebug() << "all: " << all.getAvg();
+    qDebug() << "inner loop: " << innerLoop.getAvg();
+    qDebug() << "calc prior: " << calcPrior.getAvg();
+
+#endif
+
+
 
 }
 
@@ -85,9 +145,9 @@ const std::shared_ptr<PuzzleBoardState> PuzzleSolver::getCurrentState()
 {
     std::shared_ptr<PuzzleBoardState> result(0);
 
-        auto it = stateManager->getCurrentStateIterator();
-        if (stateManager->openStateList.end() != it)
-            result = (*it).second;
+    auto it = stateManager->getCurrentStateIterator();
+    if (stateManager->openStateList.end() != it)
+        result = (*it).second;
 
 
     return result;
@@ -95,31 +155,76 @@ const std::shared_ptr<PuzzleBoardState> PuzzleSolver::getCurrentState()
 
 const StateVectorPtr PuzzleSolver::getAvailableStates(const shared_ptr<PuzzleBoardState> &stateToCheck)
 {
-
+#ifdef MY_DEBUG
+    all.start();
+    beforeloop.start();
+#endif
     StateVectorPtr states = std::make_shared< vector< shared_ptr<PuzzleBoardState> > >();
     auto currentBoard = stateToCheck->currentBoard;
 
     const u_int moveCount = stateToCheck->movesMadeSoFar +1;
-
+#ifdef MY_DEBUG
+    beforeloop.stop();
+    innerLoop.start();
+#endif
     for (u_int i=0; i<PuzzleBoard::directions.size(); i++)
     {
+#ifdef MY_DEBUG
+        clone.start();
+#endif
         auto tmpBoard = currentBoard->clone();
-        if (tmpBoard->slidePuzzle(PuzzleBoard::directions[i]))
+#ifdef MY_DEBUG
+        clone.stop();
+        slide.start();
+#endif
+        const bool &slided = tmpBoard->slidePuzzle(PuzzleBoard::directions[i]);
+#ifdef MY_DEBUG
+        slide.stop();
+#endif
+        if (slided)
         {
+#ifdef MY_DEBUG
+            stateparam.start();
+#endif
             std::shared_ptr<board::SLIDE_DIRECTIONS> dptr = make_shared<board::SLIDE_DIRECTIONS>(PuzzleBoard::directions[i]);
-            PuzzleBoardStateParams p;
-            p.movesMadeSoFar = moveCount;
-            p.currentBoard = tmpBoard;
-            p.directionToThisState = dptr;
-            p.cameFrom = getCurrentState();
-            p.priority = calculatePriority(*tmpBoard,moveCount);
+#ifdef MY_DEBUG
+            calcPrior.start();
+#endif
+            const  auto &prior = calculatePriority(*tmpBoard,moveCount);
+#ifdef MY_DEBUG
+            calcPrior.stop();
+#endif
+
+            PuzzleBoardStateParams p(getCurrentState(),tmpBoard,moveCount,prior,dptr);
+#ifdef MY_DEBUG
+            stateparam.stop();
+#endif
+
             std::shared_ptr<PuzzleBoardState> tmp = make_shared<PuzzleBoardState>(p);
-            if (stateManager->hasThisStateBeenChecked(tmp))
+#ifdef MY_DEBUG
+            checkchecked.start();
+#endif
+            const  bool &checked = stateManager->hasThisStateBeenChecked(tmp);
+
+#ifdef MY_DEBUG
+            checkchecked.stop();
+#endif
+            if (checked)
                 continue;
+#ifdef MY_DEBUG
+            push.start();
+#endif
+
             states->push_back(tmp);
+#ifdef MY_DEBUG
+            push.stop();
+#endif
         }
     }
-
+#ifdef MY_DEBUG
+    innerLoop.stop();
+    all.stop();
+#endif
     return states;
 }
 
@@ -162,7 +267,7 @@ void StateManager::setNextCurrentState()
 {
     auto s = getStateWithLowestPriority();
     currentStateIt = s;
-//    openStateList.erase(s);
+    //    openStateList.erase(s);
 
 }
 
@@ -191,7 +296,7 @@ bool StateManager::hasThisStateBeenChecked(shared_ptr<PuzzleBoardState> &state)
     {
         auto tmpBoard = (*it)->currentBoard;
         if (*tmpBoard == *board)
-           return true;
+            return true;
     }
 
     return false;
@@ -208,8 +313,8 @@ void StateManager::transferToClosedList(StateListIterator state)
 
 StateListIterator StateManager::getStateWithLowestPriority()
 {
-       auto it = openStateList.begin();
-       return it;
+    auto it = openStateList.begin();
+    return it;
 }
 
 void StateManager::clear()
@@ -227,7 +332,7 @@ PuzzleBoardState::~PuzzleBoardState()
 
 PuzzleBoardState::PuzzleBoardState(const PuzzleBoardStateParams &params):
     cameFrom(params.cameFrom),
-    currentBoard(params.currentBoard->clone()),
+    currentBoard(params.currentBoard),
     movesMadeSoFar(params.movesMadeSoFar),
     priority(params.priority),
     directionToThisState(params.directionToThisState)
@@ -238,7 +343,7 @@ PuzzleBoardState::PuzzleBoardState(const PuzzleBoardStateParams &params):
 
 
 StateManager::StateManager():
-   currentStateIt(0)
+    currentStateIt(0)
 {
 }
 
@@ -275,14 +380,14 @@ void PuzzleSolver::setStateCheckLimit(const u_int &value)
     stateCheckLimit = value;
 }
 
-int PuzzleSolver::calculatePriority(PuzzleBoard &b, int moveCount)
+int PuzzleSolver::calculatePriority(PuzzleBoard &b, const int &moveCount)
 {
     switch(priorityFunction)
     {
-        case HAMMING:
-            return b.calculateHammingPriority(moveCount);
-        case MANHATTAN:
-            return b.calculateManhattanPriority(moveCount);
+    case HAMMING:
+        return b.calculateHammingPriority(moveCount);
+    case MANHATTAN:
+        return b.calculateManhattanPriority(moveCount);
     }
     return 0;
 }
@@ -295,6 +400,15 @@ PuzzleBoardStateParams::PuzzleBoardStateParams():
     movesMadeSoFar(0),
     priority(0),
     directionToThisState(0)
+{
+}
+
+PuzzleBoardStateParams::PuzzleBoardStateParams( std::shared_ptr<PuzzleBoardState> cameFrom,
+                                                std::shared_ptr<board::PuzzleBoard> currentBoard,
+                                                u_int movesMadeSoFar,
+                                                u_int priority,
+                                                std::shared_ptr<board::SLIDE_DIRECTIONS> directionToThisState):
+    cameFrom(cameFrom),currentBoard(currentBoard),movesMadeSoFar(movesMadeSoFar),priority(priority),directionToThisState(directionToThisState)
 {
 }
 
