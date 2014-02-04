@@ -22,7 +22,7 @@ QPuzzleCreator::QPuzzleCreator():
 
 }
 
-QLabelPuzzle* QPuzzleCreator::createPuzzle(u_int ID)
+QLabelPuzzle* QPuzzleCreator::createPuzzle(const IntPuzzle &puzzle)
 {
 
     if (realBoard == 0)
@@ -36,9 +36,9 @@ QLabelPuzzle* QPuzzleCreator::createPuzzle(u_int ID)
 
 
     {
-        auto puzzle = realBoard->getPuzzle(ID);
+        auto  p_ = realBoard->getPuzzle(puzzle);
 
-        p->setInnerPuzzle(((IntPuzzle*) (puzzle)));
+        p->setInnerPuzzle((IntPuzzle*)p_);
     }
 
     p->setText(QString::number(p->getInnerPuzzle()->Value));
